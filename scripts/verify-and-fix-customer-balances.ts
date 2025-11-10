@@ -220,8 +220,7 @@ async function main() {
       diff: inc.diff,
       timestamp: new Date(),
       severity:
-        Math.abs(inc.diff.total) > 100000 ||
-        Math.abs(inc.diff.vencido) > 50000
+        Math.abs(inc.diff.total) > 100000 || Math.abs(inc.diff.vencido) > 50000
           ? "critical"
           : "warning",
     }));

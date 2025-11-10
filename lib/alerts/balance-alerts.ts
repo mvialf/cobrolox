@@ -118,7 +118,9 @@ export async function sendDailyInconsistencyReport(
   const adminEmail = process.env.ADMIN_EMAIL || process.env.RESEND_FROM_EMAIL;
 
   if (!apiKey || !adminEmail) {
-    console.warn("⚠️  Email report skipped: RESEND_API_KEY or ADMIN_EMAIL not configured");
+    console.warn(
+      "⚠️  Email report skipped: RESEND_API_KEY or ADMIN_EMAIL not configured",
+    );
     return false;
   }
 
@@ -169,7 +171,9 @@ export async function sendDailyInconsistencyReport(
           ${stats.failed > 0 ? `<li style="color: red;"><strong>FALLOS:</strong> ${stats.failed}</li>` : ""}
         </ul>
 
-        ${inconsistencies.length > 0 ? `
+        ${
+          inconsistencies.length > 0
+            ? `
           <h3>Top Inconsistencias:</h3>
           <table style="border-collapse: collapse; width: 100%;">
             <thead>
@@ -185,17 +189,23 @@ export async function sendDailyInconsistencyReport(
             </tbody>
           </table>
           ${inconsistencies.length > 10 ? `<p><em>... y ${inconsistencies.length - 10} más</em></p>` : ""}
-        ` : `
+        `
+            : `
           <p style="color: green;">✅ No se detectaron inconsistencias.</p>
-        `}
+        `
+        }
 
-        ${stats.failed > 0 ? `
+        ${
+          stats.failed > 0
+            ? `
           <div style="background: #fee; padding: 15px; border-left: 4px solid red; margin: 20px 0;">
             <h3 style="color: red; margin-top: 0;">⚠️ ATENCIÓN REQUERIDA</h3>
             <p>${stats.failed} cliente(s) NO pudieron ser corregidos automáticamente.</p>
             <p>Se requiere intervención manual.</p>
           </div>
-        ` : ""}
+        `
+            : ""
+        }
 
         <hr />
         <p style="color: #666; font-size: 12px;">
