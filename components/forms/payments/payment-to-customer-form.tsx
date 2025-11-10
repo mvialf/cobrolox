@@ -1,0 +1,527 @@
+"use client";
+
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useForm, useFieldArray } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useQuery } from "@tanstack/react-query";
+import { Trash2 } from "lucide-react";
+import {
+  paymentToCustomerSchema,
+  type PaymentToCustomerFormValues,
+  type InvoiceWithBalance,
+  parseInvoicesWithBalance,
+} from "@/lib/validations/payment-validations";
+import { calculateFIFO } from "@/lib/business-logic/payment-fifo";
+import { formatCurrency } from "@/lib/format";
+import { cn } from "@/lib/utils";
+
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { CurrencyInput } from "@/components/ui/currency-input";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { PaymentMethodFields } from "@/components/forms/fields/payment-method-fields";
+import { PaymentAmountDateFields } from "@/components/forms/fields/payment-amount-date-fields";
+import { CustomerSearchField } from "@/components/forms/search/customer-search-field";
+
+// ✅ Constantes fuera del componente para evitar re-renders infinitos
+const EMPTY_INVOICES: InvoiceWithBalance[] = [];
+const EMPTY_PAYMENT_METHODS: Array<{
+  id: string;
+  name: string;
+  hasInstallments: boolean;
+  maxInstallments: number | null;
+}> = [];
+
+interface PaymentToCustomerFormProps {
+  onSubmit: (
+    data: PaymentToCustomerFormValues,
+    currency: string,
+  ) => void | Promise<void>;
+  isSubmitting?: boolean;
+  preselectedCustomerId?: string; // ← NUEVO: Si viene, el cliente está pre-seleccionado
+  formId?: string; // ← NUEVO: ID del form para submit externo
+}
+
+/**
+ * Formulario para "Pago a Cliente" (1:N)
+ *
+ * Flujo donde el usuario:
+ * 1. Selecciona un cliente
+ * 2. Ingresa el monto total del pago
+ * 3. Distribuye el monto entre múltiples facturas:
+ *    - Modo FIFO: Distribución automática por antigüedad de emisión
+ *    - Modo Manual: Distribución personalizada
+ * 4. La suma de allocations debe ser exactamente igual al monto total
+ */
+export function PaymentToCustomerForm({
+  onSubmit,
+  isSubmitting = false,
+  preselectedCustomerId,
+  formId,
+}: PaymentToCustomerFormProps) {
+  // State para cliente seleccionado
+  const [selectedCustomerId, setSelectedCustomerId] = useState<string | null>(
+    null,
+  );
+
+  // State para facturas del cliente
+  const [customerInvoices, setCustomerInvoices] = useState<
+    InvoiceWithBalance[]
+  >([]);
+
+  // State para modo de distribución
+  const [distributionMode, setDistributionMode] = useState<"fifo" | "manual">(
+    "manual",
+  );
+
+  // Form setup
+  const defaultValues = useMemo(
+    () => ({
+      customerId: preselectedCustomerId || "", // Pre-cargar si viene
+      amount: 0,
+      date: new Date(),
+      paymentMethodId: "",
+      notes: "",
+      allocations: [],
+    }),
+    [preselectedCustomerId],
+  );
+
+  const form = useForm<PaymentToCustomerFormValues>({
+    resolver: zodResolver(paymentToCustomerSchema),
+    defaultValues,
+  });
+
+  // useFieldArray para manejar allocations dinámicamente
+  const { fields, replace, update, remove } = useFieldArray({
+    control: form.control,
+    name: "allocations",
+  });
+
+  // Fetch facturas pendientes del cliente seleccionado
+  const { data: invoicesData, isLoading: loadingInvoices } = useQuery({
+    queryKey: ["customer-invoices", selectedCustomerId],
+    queryFn: async () => {
+      if (!selectedCustomerId) return [];
+      const res = await fetch(
+        `/api/invoices?customerId=${selectedCustomerId}&withBalance=true&pendingOnly=true&limit=100`,
+      );
+      if (!res.ok) throw new Error("Error al cargar facturas");
+      const data = await res.json();
+      // ⚠️ IMPORTANTE: Transformar strings ISO a Date objects
+      return parseInvoicesWithBalance(data.invoices || []);
+    },
+    enabled: !!selectedCustomerId,
+  });
+
+  // Memoize para evitar re-renders infinitos
+  const invoices = useMemo(
+    () => invoicesData || EMPTY_INVOICES,
+    [invoicesData],
+  );
+
+  // Fetch payment methods
+  const { data: paymentMethodsData } = useQuery({
+    queryKey: ["payment-methods"],
+    queryFn: async () => {
+      const res = await fetch("/api/payment-methods");
+      if (!res.ok) throw new Error("Error al cargar métodos de pago");
+      const data = await res.json();
+      return data.paymentMethods || [];
+    },
+  });
+
+  // Memoize para evitar re-renders infinitos
+  const paymentMethods = useMemo(
+    () => paymentMethodsData || EMPTY_PAYMENT_METHODS,
+    [paymentMethodsData],
+  );
+
+  // Auto-seleccionar el primer método de pago activo como default
+  const currentPaymentMethodId = form.watch("paymentMethodId");
+
+  useEffect(() => {
+    if (!currentPaymentMethodId && paymentMethods.length > 0) {
+      // El primer método activo (ya viene ordenado por active DESC, order ASC)
+      const defaultMethod =
+        paymentMethods.find((m: { active?: boolean }) => m.active) ||
+        paymentMethods[0];
+      if (defaultMethod) {
+        form.setValue("paymentMethodId", defaultMethod.id);
+      }
+    }
+  }, [paymentMethods, currentPaymentMethodId, form]);
+
+  // Watch amount para calcular FIFO
+  const watchedAmount = form.watch("amount");
+
+  // Inicializar allocations cuando se cargan facturas
+  useEffect(() => {
+    if (invoices && invoices.length > 0) {
+      setCustomerInvoices(invoices);
+      // Inicializar allocations en el form directamente
+      const initialAllocations = invoices.map((invoice) => ({
+        invoiceId: invoice.id,
+        allocatedAmount: 0,
+      }));
+      replace(initialAllocations);
+    } else {
+      setCustomerInvoices([]);
+      replace([]);
+    }
+  }, [invoices, replace]);
+
+  // Auto-recalcular FIFO cuando cambia el monto en modo FIFO
+  useEffect(() => {
+    if (
+      distributionMode === "fifo" &&
+      watchedAmount > 0 &&
+      customerInvoices.length > 0 &&
+      fields.length > 0
+    ) {
+      handleCalculateFIFO();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [watchedAmount, distributionMode]);
+
+  // Handler: Calcular FIFO
+  const handleCalculateFIFO = useCallback(() => {
+    if (!watchedAmount || watchedAmount <= 0) {
+      form.setError("amount", {
+        message: "Ingrese un monto válido antes de calcular FIFO",
+      });
+      return;
+    }
+
+    if (customerInvoices.length === 0) {
+      alert("No hay facturas pendientes para distribuir");
+      return;
+    }
+
+    // Calcular distribución FIFO (ahora incluye facturas con $0)
+    const fifoAllocations = calculateFIFO(watchedAmount, customerInvoices);
+
+    // Actualizar cada field individualmente en lugar de replace
+    // Esto mantiene todas las facturas visibles, solo cambia los montos
+    fields.forEach((field, index) => {
+      const fifoAllocation = fifoAllocations.find(
+        (f) => f.invoiceId === field.invoiceId,
+      );
+      update(index, {
+        invoiceId: field.invoiceId,
+        allocatedAmount: fifoAllocation?.allocatedAmount || 0, // $0 si no está en FIFO
+      });
+    });
+  }, [watchedAmount, customerInvoices, form, fields, update]);
+
+  // Handler: Eliminar allocation
+  const handleRemoveAllocation = useCallback(
+    (index: number) => {
+      remove(index);
+    },
+    [remove],
+  );
+
+  // Handler: Cambiar monto asignado
+  const handleChangeAllocation = useCallback(
+    (index: number, amount: number) => {
+      const currentValue = fields[index];
+      update(index, {
+        ...currentValue,
+        allocatedAmount: amount,
+      });
+    },
+    [fields, update],
+  );
+
+  // Handler: Reset installments cuando cambia método de pago
+  const handlePaymentMethodChange = useCallback(() => {
+    form.setValue("selectedInstallments", null);
+  }, [form]);
+
+  // Calcular suma de allocations desde form fields
+  const totalAllocated = fields.reduce((sum, _, index) => {
+    const amount = form.getValues(`allocations.${index}.allocatedAmount`) || 0;
+    return sum + amount;
+  }, 0);
+  const difference = watchedAmount - totalAllocated;
+  const isValidSum = Math.abs(difference) < 0.01;
+
+  // Submit handler
+  const handleSubmit = (values: PaymentToCustomerFormValues) => {
+    // 1. Filtrar allocations con monto > 0
+    const allocationsWithValue = values.allocations.filter(
+      (a) => a.allocatedAmount > 0,
+    );
+
+    // 2. Validar que hay al menos una allocation con valor
+    if (allocationsWithValue.length === 0) {
+      form.setError("allocations", {
+        message: "Debe asignar el pago a al menos una factura",
+      });
+      return;
+    }
+
+    // 3. Validar suma (con las allocations filtradas)
+    const totalAllocated = allocationsWithValue.reduce(
+      (sum, a) => sum + a.allocatedAmount,
+      0,
+    );
+    const difference = watchedAmount - totalAllocated;
+    if (Math.abs(difference) >= 0.01) {
+      form.setError("allocations", {
+        message: "La suma de allocations debe ser igual al monto total",
+      });
+      return;
+    }
+
+    // 4. Derivar currency de la primera factura
+    const firstAllocation = allocationsWithValue[0];
+    const invoice = customerInvoices.find(
+      (inv) => inv.id === firstAllocation.invoiceId,
+    );
+    const currency = invoice?.currency || "CLP";
+
+    // 5. Enviar solo las allocations con valor > 0
+    onSubmit({ ...values, allocations: allocationsWithValue }, currency);
+  };
+
+  return (
+    <Form {...form}>
+      <form
+        id={formId}
+        onSubmit={form.handleSubmit(handleSubmit)}
+        className="space-y-3"
+      >
+        {/* 1. Cliente: Búsqueda o Pre-seleccionado */}
+        <CustomerSearchField
+          control={form.control}
+          preselectedCustomerId={preselectedCustomerId}
+          onCustomerSelect={(customer) => {
+            if (customer) {
+              setSelectedCustomerId(customer.id);
+            } else {
+              setSelectedCustomerId(null);
+            }
+            // Reset allocations y modo cuando cambia cliente
+            replace([]);
+            setDistributionMode("manual");
+          }}
+        />
+
+        {/* 3. Monto y Fecha */}
+        <PaymentAmountDateFields
+          control={form.control}
+          currency={customerInvoices[0]?.currency}
+          disabled={!selectedCustomerId || customerInvoices.length === 0}
+          amountLabel="Monto Total del Pago *"
+        />
+
+        {/* 5. Método de Pago + Cuotas */}
+        <PaymentMethodFields
+          control={form.control}
+          paymentMethods={paymentMethods}
+          onPaymentMethodChange={handlePaymentMethodChange}
+        />
+
+        {/* 6. Sección de Allocations (solo si hay cliente seleccionado) */}
+        {selectedCustomerId && (
+          <div className="space-y-4">
+            <FormLabel className="text-center">Distribución del Pago</FormLabel>
+
+            {/* Loading State */}
+            {loadingInvoices && (
+              <div className="text-center py-8 text-muted-foreground">
+                <p>Cargando facturas...</p>
+              </div>
+            )}
+
+            {/* Empty State */}
+            {!loadingInvoices && fields.length === 0 && (
+              <div className="text-center py-8 text-muted-foreground">
+                <p>Este cliente no tiene facturas con saldo pendiente.</p>
+              </div>
+            )}
+            {/* Validación Visual */}
+            {fields.length > 0 && (
+              <div className="flex justify-center gap-4">
+                <Card className="p-2">
+                  <CardContent className="flex flex-col">
+                    <span className="text-sm text-center text-muted-foreground">
+                      Asignado:
+                    </span>
+                    <span className="text-center font-semibold">
+                      {formatCurrency(totalAllocated, "CLP")}
+                    </span>
+                  </CardContent>
+                </Card>
+                <Card className="p-2">
+                  <CardContent className="flex flex-col">
+                    <span className="text-sm text-center text-muted-foreground">
+                      Diferencia:
+                    </span>
+                    <span
+                      className={cn(
+                        "text-center font-semibold",
+                        isValidSum ? "text-green-600" : "text-red-600",
+                      )}
+                    >
+                      {formatCurrency(Math.abs(difference), "CLP")}
+                      {!isValidSum &&
+                        (difference > 0
+                          ? " (falta asignar)"
+                          : " (sobrepasado)")}
+                    </span>
+                  </CardContent>
+                </Card>
+                <Card className="p-2">
+                  <CardContent className="flex flex-col gap-1">
+                    <label
+                      htmlFor="auto-fifo"
+                      className={cn(
+                        "text-sm",
+                        !watchedAmount || watchedAmount <= 0
+                          ? "text-muted-foreground cursor-not-allowed"
+                          : "cursor-pointer",
+                      )}
+                    >
+                      Auto
+                    </label>
+                    <input
+                      type="checkbox"
+                      id="auto-fifo"
+                      checked={distributionMode === "fifo"}
+                      disabled={!watchedAmount || watchedAmount <= 0}
+                      onChange={(e) => {
+                        const newMode = e.target.checked ? "fifo" : "manual";
+                        setDistributionMode(newMode);
+                        if (newMode === "fifo") {
+                          handleCalculateFIFO();
+                        }
+                      }}
+                      className="h-4 w-4"
+                    />
+                  </CardContent>
+                </Card>
+              </div>
+            )}
+
+            {/* Tabla de Allocations */}
+            {!loadingInvoices && fields.length > 0 && (
+              <div className="border rounded-lg">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Factura</TableHead>
+                      <TableHead className="text-right">Balance</TableHead>
+                      <TableHead className="text-right">
+                        Monto Asignado
+                      </TableHead>
+                      <TableHead className="w-[50px]"></TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {fields.map((field, index) => {
+                      const invoice = customerInvoices.find(
+                        (inv) => inv.id === field.invoiceId,
+                      );
+                      if (!invoice) return null;
+
+                      // Visual feedback: facturas con $0 se ven "apagadas"
+                      const isUnallocated = field.allocatedAmount === 0;
+                      const rowClassName = cn(
+                        isUnallocated &&
+                          distributionMode === "fifo" &&
+                          "text-muted-foreground opacity-60",
+                      );
+
+                      return (
+                        <TableRow key={field.id} className={rowClassName}>
+                          <TableCell>
+                            <div>
+                              <div className="font-medium">
+                                {invoice.invoiceNumber}
+                              </div>
+                              <div className="text-sm text-muted-foreground">
+                                Vence:{" "}
+                                {new Date(invoice.dueDate).toLocaleDateString(
+                                  "es-CL",
+                                )}
+                              </div>
+                            </div>
+                          </TableCell>
+                          <TableCell className="text-right">
+                            {formatCurrency(invoice.balance, invoice.currency)}
+                          </TableCell>
+                          <TableCell className="text-right">
+                            <CurrencyInput
+                              value={field.allocatedAmount}
+                              onChange={(value) =>
+                                handleChangeAllocation(index, value)
+                              }
+                              currency={invoice.currency}
+                              className="text-right"
+                              disabled={distributionMode === "fifo"}
+                            />
+                          </TableCell>
+                          <TableCell>
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => handleRemoveAllocation(index)}
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
+                  </TableBody>
+                </Table>
+              </div>
+            )}
+
+            <FormMessage />
+          </div>
+        )}
+
+        {/* 7. Notas (opcional) */}
+        <FormField
+          control={form.control}
+          name="notes"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Notas (opcional)</FormLabel>
+              <FormControl>
+                <Textarea
+                  placeholder="Notas adicionales sobre el pago..."
+                  className="resize-none"
+                  {...field}
+                  value={field.value || ""}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      </form>
+    </Form>
+  );
+}

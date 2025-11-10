@@ -1,0 +1,457 @@
+# Page snapshot
+
+```yaml
+- generic:
+    - generic:
+        - generic:
+            - generic:
+                - generic:
+                    - generic:
+                        - generic:
+                            - list:
+                                - listitem:
+                                    - link:
+                                        - /url: /
+                                        - generic:
+                                            - img
+                                        - generic:
+                                            - generic: Mi Aplicación
+                                            - generic: v1.0.0
+                        - generic:
+                            - generic:
+                                - generic:
+                                    - list:
+                                        - listitem:
+                                            - link:
+                                                - /url: /
+                                                - img
+                                                - generic: Panel Principal
+                                        - listitem:
+                                            - link:
+                                                - /url: /customer
+                                                - img
+                                                - generic: Clientes
+                                        - listitem:
+                                            - link:
+                                                - /url: /projects
+                                                - img
+                                                - generic: Proyectos
+                                        - listitem:
+                                            - button:
+                                                - img
+                                                - generic: Pagos
+                                                - img
+                                        - listitem:
+                                            - button:
+                                                - img
+                                                - generic: Ejemplos
+                                                - img
+                                        - listitem:
+                                            - button:
+                                                - img
+                                                - generic: Configuración
+                                                - img
+                        - generic:
+                            - list:
+                                - listitem:
+                                    - button:
+                                        - img
+                                        - text: Usuario
+                                        - img
+                                - listitem:
+                                    - button:
+                                        - img
+                                        - generic: Cambiar tema
+            - main:
+                - generic:
+                    - generic:
+                        - navigation:
+                            - list:
+                                - generic:
+                                    - listitem:
+                                        - link:
+                                            - /url: /
+                                            - text: Inicio
+                                    - listitem:
+                                        - img
+                                - generic:
+                                    - listitem:
+                                        - link [disabled]: Proyectos
+                        - generic:
+                            - generic:
+                                - heading [level=1]: Proyectos
+                                - paragraph: Gestiona tus proyectos y su información
+                            - generic:
+                                - button [expanded]:
+                                    - img
+                                    - text: Nuevo Proyecto
+                    - generic:
+                        - generic:
+                            - generic:
+                                - generic:
+                                    - generic:
+                                        - generic:
+                                            - img
+                                            - textbox:
+                                                - /placeholder: Buscar por número, cliente o nombre...
+                                        - button:
+                                            - img
+                                            - text: Estado
+                                        - button:
+                                            - img
+                                            - text: Estado Proyecto
+                                    - generic:
+                                        - button:
+                                            - img
+                                            - text: Columnas
+                                - generic:
+                                    - generic:
+                                        - table:
+                                            - rowgroup:
+                                                - row:
+                                                    - cell: Proyecto
+                                                    - cell: Estado
+                                                    - cell: Estado Proyecto
+                                                    - cell: Total
+                                                    - cell: Fecha Ingreso
+                                                    - cell: Total Pagado
+                                                    - cell: Saldo
+                                                    - cell
+                                            - rowgroup:
+                                                - row:
+                                                    - cell:
+                                                        - generic:
+                                                            - generic: P - 17398 - Maria Gonzalez
+                                                            - generic: UserTron
+                                                    - cell:
+                                                        - button:
+                                                            - generic: Pendiente
+                                                    - cell:
+                                                        - generic: Activo
+                                                    - cell: $232.050
+                                                    - cell: 22-10-2025
+                                                    - cell:
+                                                        - generic:
+                                                            - generic: $0
+                                                            - generic: 0%
+                                                    - cell: $232.050
+                                                    - cell:
+                                                        - button:
+                                                            - generic: Abrir menu
+                                                            - img
+                                                - row:
+                                                    - cell:
+                                                        - generic:
+                                                            - generic: P - 2024-006 - Pedro Sanchez
+                                                            - generic: Puertas Local Comercial
+                                                    - cell:
+                                                        - button:
+                                                            - generic: En Progreso
+                                                    - cell:
+                                                        - generic: Activo
+                                                    - cell: $450.000
+                                                    - cell: 04-11-2024
+                                                    - cell:
+                                                        - generic:
+                                                            - generic: $350.000
+                                                            - generic: 78%
+                                                    - cell: $100.000
+                                                    - cell:
+                                                        - button:
+                                                            - generic: Abrir menu
+                                                            - img
+                                                - row:
+                                                    - cell:
+                                                        - generic:
+                                                            - generic: P - 2024-005 - Pedro Sanchez
+                                                            - generic: Ventanas Departamento
+                                                    - cell:
+                                                        - button:
+                                                            - generic: Pendiente
+                                                    - cell:
+                                                        - generic: Activo
+                                                    - cell: $600.000
+                                                    - cell: 24-10-2024
+                                                    - cell:
+                                                        - generic:
+                                                            - generic: $0
+                                                            - generic: 0%
+                                                    - cell: $600.000
+                                                    - cell:
+                                                        - button:
+                                                            - generic: Abrir menu
+                                                            - img
+                                                - row:
+                                                    - cell:
+                                                        - generic:
+                                                            - generic: P - 2024-003 - Juan Perez
+                                                            - generic: Ventanas Casa Particular
+                                                    - cell:
+                                                        - button:
+                                                            - generic: Pendiente
+                                                    - cell:
+                                                        - generic: Activo
+                                                    - cell: $300.000
+                                                    - cell: 09-10-2024
+                                                    - cell:
+                                                        - generic:
+                                                            - generic: $45.000
+                                                            - generic: 15%
+                                                    - cell: $255.000
+                                                    - cell:
+                                                        - button:
+                                                            - generic: Abrir menu
+                                                            - img
+                                                - row:
+                                                    - cell:
+                                                        - generic:
+                                                            - generic: P - 2024-002 - Juan Perez
+                                                            - generic: Puertas Bodega Norte
+                                                    - cell:
+                                                        - button:
+                                                            - generic: En Progreso
+                                                    - cell:
+                                                        - generic: Activo
+                                                    - cell: $400.000
+                                                    - cell: 19-08-2024
+                                                    - cell:
+                                                        - generic:
+                                                            - generic: $450.000
+                                                            - generic: 113%
+                                                    - cell: $-50.000
+                                                    - cell:
+                                                        - button:
+                                                            - generic: Abrir menu
+                                                            - img
+                                                - row:
+                                                    - cell:
+                                                        - generic:
+                                                            - generic: P - 2024-001 - Juan Perez
+                                                            - generic: Ventanas Oficina Central
+                                                    - cell:
+                                                        - button:
+                                                            - generic: En Progreso
+                                                    - cell:
+                                                        - generic: Activo
+                                                    - cell: $500.000
+                                                    - cell: 14-06-2024
+                                                    - cell:
+                                                        - generic:
+                                                            - generic: $500.000
+                                                            - generic: 100%
+                                                    - cell: $0
+                                                    - cell:
+                                                        - button:
+                                                            - generic: Abrir menu
+                                                            - img
+                                                - row:
+                                                    - cell:
+                                                        - generic:
+                                                            - generic: P - 2024-006 - Pedro Sanchez
+                                                            - generic: Puertas Local Comercial
+                                                    - cell:
+                                                        - button:
+                                                            - generic: Pendiente
+                                                    - cell:
+                                                        - generic: Activo
+                                                    - cell: $450.000
+                                                    - cell: 04-11-2024
+                                                    - cell:
+                                                        - generic:
+                                                            - generic: $0
+                                                            - generic: 0%
+                                                    - cell: $450.000
+                                                    - cell:
+                                                        - button:
+                                                            - generic: Abrir menu
+                                                            - img
+                                                - row:
+                                                    - cell:
+                                                        - generic:
+                                                            - generic: P - 2024-005 - Pedro Sanchez
+                                                            - generic: Ventanas Departamento
+                                                    - cell:
+                                                        - button:
+                                                            - generic: Pendiente
+                                                    - cell:
+                                                        - generic: Activo
+                                                    - cell: $600.000
+                                                    - cell: 24-10-2024
+                                                    - cell:
+                                                        - generic:
+                                                            - generic: $0
+                                                            - generic: 0%
+                                                    - cell: $600.000
+                                                    - cell:
+                                                        - button:
+                                                            - generic: Abrir menu
+                                                            - img
+                                                - row:
+                                                    - cell:
+                                                        - generic:
+                                                            - generic: P - 2024-003 - Juan Perez
+                                                            - generic: Ventanas Casa Particular
+                                                    - cell:
+                                                        - button:
+                                                            - generic: Pendiente
+                                                    - cell:
+                                                        - generic: Activo
+                                                    - cell: $300.000
+                                                    - cell: 09-10-2024
+                                                    - cell:
+                                                        - generic:
+                                                            - generic: $0
+                                                            - generic: 0%
+                                                    - cell: $300.000
+                                                    - cell:
+                                                        - button:
+                                                            - generic: Abrir menu
+                                                            - img
+                                                - row:
+                                                    - cell:
+                                                        - generic:
+                                                            - generic: P - 2024-002 - Juan Perez
+                                                            - generic: Puertas Bodega Norte
+                                                    - cell:
+                                                        - button:
+                                                            - generic: En Progreso
+                                                    - cell:
+                                                        - generic: Activo
+                                                    - cell: $400.000
+                                                    - cell: 19-08-2024
+                                                    - cell:
+                                                        - generic:
+                                                            - generic: $350.000
+                                                            - generic: 88%
+                                                    - cell: $50.000
+                                                    - cell:
+                                                        - button:
+                                                            - generic: Abrir menu
+                                                            - img
+                                - generic:
+                                    - generic:
+                                        - generic:
+                                            - paragraph: Filas por página
+                                            - combobox:
+                                                - generic: "10"
+                                                - img
+                                        - generic: Página 1 de 1
+                                        - generic:
+                                            - button [disabled]:
+                                                - generic: Ir a la primera página
+                                                - img
+                                            - button [disabled]:
+                                                - generic: Ir a la página anterior
+                                                - img
+                                            - button [disabled]:
+                                                - generic: Ir a la página siguiente
+                                                - img
+                                            - button [disabled]:
+                                                - generic: Ir a la última página
+                                                - img
+    - generic:
+        - generic:
+            - img
+        - button:
+            - img
+    - button "Open Next.js Dev Tools" [ref=e6] [cursor=pointer]:
+        - img [ref=e7]
+    - alert
+    - dialog:
+        - generic:
+            - heading [level=2]: Nuevo Proyecto
+        - generic:
+            - generic:
+                - paragraph: Ingresa los datos del nuevo proyecto. Haz clic en guardar cuando termines.
+                - generic:
+                    - generic:
+                        - generic:
+                            - generic: Cliente *
+                            - combobox [expanded]:
+                                - generic: Seleccionar cliente
+                                - img
+                        - generic:
+                            - generic: Proyecto *
+                            - textbox
+                    - generic:
+                        - generic:
+                            - generic: Glosa
+                            - textbox
+                        - generic:
+                            - generic: Teléfono *
+                            - generic:
+                                - generic:
+                                    - generic: "+56"
+                                - generic:
+                                    - textbox:
+                                        - /placeholder: +56 9 1234 5678
+                    - generic:
+                        - generic:
+                            - generic: Estado *
+                            - combobox:
+                                - generic: Pendiente
+                                - img
+                        - generic:
+                            - generic: Fecha de Ingreso *
+                            - textbox: 2025-10-30
+                    - generic:
+                        - generic:
+                            - generic:
+                                - generic: Calle y numeración *
+                                - textbox
+                            - generic:
+                                - generic: Casa/Depto
+                                - textbox
+                        - generic:
+                            - generic:
+                                - generic: Región *
+                                - combobox:
+                                    - generic: Selecciona una región...
+                                    - img
+                            - generic:
+                                - generic: Comuna *
+                                - combobox [disabled]:
+                                    - generic: Primero selecciona una región
+                                    - img
+                    - generic:
+                        - generic:
+                            - generic: Subtotal *
+                            - textbox:
+                                - /placeholder: $ 0
+                                - text: $ 0
+                        - generic:
+                            - generic: Impuesto
+                            - textbox:
+                                - /placeholder: "19.0"
+                                - text: 19.0%
+                        - generic:
+                            - generic: Total
+                            - textbox [disabled]:
+                                - /placeholder: $ 0
+                                - text: $ 0
+                    - generic:
+                        - generic:
+                            - generic: Elementos
+                            - spinbutton: "0"
+                        - generic:
+                            - generic: m²
+                            - spinbutton: "0"
+                    - generic:
+                        - generic: Descripción
+                        - textbox:
+                            - /placeholder: Descripción detallada del proyecto
+        - generic:
+            - generic:
+                - button: Cancelar
+                - button: Guardar Proyecto
+        - button:
+            - img
+            - generic: Cerrar
+    - dialog [ref=e12]:
+        - generic [ref=e13]:
+            - generic [ref=e15]:
+                - img [ref=e16]
+                - combobox [expanded] [active] [ref=e19]: Test
+            - listbox "Suggestions" [ref=e20]:
+                - generic [ref=e21]: No se encontraron clientes
+```
