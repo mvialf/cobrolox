@@ -23,7 +23,7 @@ function getEmailClient(): Resend {
     if (!apiKey) {
       throw new Error(
         "RESEND_API_KEY no está configurada en variables de entorno. " +
-          "Obtén tu API key en https://resend.com/api-keys y agrégala al .env.local"
+          "Obtén tu API key en https://resend.com/api-keys y agrégala al .env.local",
       );
     }
 

@@ -10,7 +10,9 @@ export const invoiceSchema = z
     invoiceNumber: z.string().min(1, "El número de factura es requerido"),
 
     // Fecha de emisión - Obligatorio, no puede ser futura
-    issueDate: z.date().max(new Date(), "La fecha no puede ser futura"),
+    // Nota: No usar .max(new Date()) porque se evalúa solo una vez al crear el schema
+    // En su lugar, usamos .refine() más abajo para validar dinámicamente
+    issueDate: z.date(),
 
     // Fecha de vencimiento - Obligatorio, debe ser >= issueDate
     dueDate: z.date(),
@@ -78,6 +80,29 @@ export const invoiceSchema = z
         "La fecha de vencimiento debe ser mayor o igual a la fecha de emisión",
       path: ["dueDate"],
     },
+  )
+  .refine(
+    (data) => {
+      // Validación: issueDate no puede ser futura
+      // Usamos refine() para que se evalúe dinámicamente en cada validación
+      const now = new Date();
+      // Comparamos solo fechas, ignorando horas/minutos/segundos
+      const issueDateOnly = new Date(
+        data.issueDate.getFullYear(),
+        data.issueDate.getMonth(),
+        data.issueDate.getDate(),
+      );
+      const nowDateOnly = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate(),
+      );
+      return issueDateOnly <= nowDateOnly;
+    },
+    {
+      message: "La fecha de emisión no puede ser futura",
+      path: ["issueDate"],
+    },
   );
 
 /**
@@ -91,18 +116,43 @@ export type InvoiceFormData = z.infer<typeof invoiceSchema>;
  * Nota: No se puede usar .partial() en schemas con .refine(), por lo que
  * simplemente usamos el schema base para validación y permitimos campos opcionales en el tipo
  */
-export const updateInvoiceSchema = z.object({
-  id: z.string().uuid("ID de factura inválido"),
-  invoiceNumber: z.string().min(1).optional(),
-  issueDate: z.date().max(new Date()).optional(),
-  dueDate: z.date().optional(),
-  subtotal: z.number().positive().min(1).optional(),
-  taxAmount: z.number().nonnegative().optional(),
-  total: z.number().positive().optional(),
-  customerId: z.string().min(1).optional(),
-  statusId: z.string().optional(),
-  termsDay: z.number().int().nonnegative().optional(),
-});
+export const updateInvoiceSchema = z
+  .object({
+    id: z.string().uuid("ID de factura inválido"),
+    invoiceNumber: z.string().min(1).optional(),
+    issueDate: z.date().optional(),
+    dueDate: z.date().optional(),
+    subtotal: z.number().positive().min(1).optional(),
+    taxAmount: z.number().nonnegative().optional(),
+    total: z.number().positive().optional(),
+    customerId: z.string().min(1).optional(),
+    statusId: z.string().optional(),
+    termsDay: z.number().int().nonnegative().optional(),
+  })
+  .refine(
+    (data) => {
+      // Solo validar si issueDate está presente
+      if (!data.issueDate) return true;
+
+      // Validación: issueDate no puede ser futura
+      const now = new Date();
+      const issueDateOnly = new Date(
+        data.issueDate.getFullYear(),
+        data.issueDate.getMonth(),
+        data.issueDate.getDate(),
+      );
+      const nowDateOnly = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate(),
+      );
+      return issueDateOnly <= nowDateOnly;
+    },
+    {
+      message: "La fecha de emisión no puede ser futura",
+      path: ["issueDate"],
+    },
+  );
 
 /**
  * Tipo inferido del schema de actualización
