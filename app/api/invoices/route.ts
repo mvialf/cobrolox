@@ -6,7 +6,7 @@ import {
   INVOICE_STATUS,
   PAYMENT_STATUS,
 } from "@/lib/constants/invoice-status-constants";
-import { recalculateCustomerBalances } from "@/lib/business-logic/customer-balance";
+import { recalculateCustomerBalancesWithRetry } from "@/lib/business-logic/customer-balance-retry";
 
 /**
  * GET /api/invoices
@@ -411,21 +411,12 @@ export const POST = withLogging(async (request, logger) => {
       "Invoice created successfully",
     );
 
-    // Recalcular balances del cliente después de crear factura
+    // Recalcular balances del cliente después de crear factura (con retry automático)
     invoiceLogger.debug(
       { customerId },
       "Recalculating customer balances after invoice creation",
     );
-    try {
-      await recalculateCustomerBalances(customerId);
-      invoiceLogger.debug("Customer balances recalculated successfully");
-    } catch (error) {
-      // Log error pero no fallar el request (la factura ya fue creada exitosamente)
-      invoiceLogger.warn(
-        { err: error, customerId },
-        "Failed to recalculate customer balances, but invoice was created",
-      );
-    }
+    await recalculateCustomerBalancesWithRetry(customerId, invoiceLogger);
 
     return NextResponse.json(invoice, { status: 201 });
   } catch (error) {

@@ -1,13 +1,12 @@
 "use client";
 
-import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { toast } from "sonner";
 
 import {
   type PaymentToCustomerFormValues,
   paymentToCustomerToPayload,
 } from "@/lib/validations/payment-validations";
+import { useCreatePayment } from "@/hooks/queries/use-payments";
 
 import { PaymentToCustomerForm } from "@/components/forms/payments/payment-to-customer-form";
 import {
@@ -44,35 +43,22 @@ export function PaymentToCustomerDialog({
   preselectedCustomerId,
 }: PaymentToCustomerDialogProps) {
   const router = useRouter();
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const createPayment = useCreatePayment();
 
   const handleSubmit = async (
     values: PaymentToCustomerFormValues,
     currency: string,
   ) => {
     try {
-      setIsSubmitting(true);
-
       // Convertir form values a payload del API
       const payload = paymentToCustomerToPayload(values, currency);
 
-      // POST /api/payments
-      const res = await fetch("/api/payments", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.error || "Error al registrar el pago");
-      }
-
-      // Success
-      toast.success("Pago registrado exitosamente", {
-        description: `Pago de ${currency} ${values.amount.toLocaleString()} distribuido entre ${values.allocations.length} proyecto${values.allocations.length !== 1 ? "s" : ""}`,
-      });
+      // Usar hook de React Query que maneja:
+      // - POST a /api/payments
+      // - Invalidación automática de queries relacionadas
+      // - Toast de éxito/error
+      // - Estado de loading
+      await createPayment.mutateAsync(payload);
 
       // Cerrar dialog
       onOpenChange(false);
@@ -80,18 +66,11 @@ export function PaymentToCustomerDialog({
       // Callback para refetch (si existe)
       onSuccess?.();
 
-      // Refresh para actualizar data
+      // Refresh para actualizar Server Components (si los hay)
       router.refresh();
     } catch (error: unknown) {
+      // El error ya fue manejado por useCreatePayment (toast automático)
       console.error("Error submitting payment:", error);
-      toast.error("Error al registrar el pago", {
-        description:
-          error instanceof Error
-            ? error.message
-            : "Ocurrió un error inesperado",
-      });
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
@@ -107,7 +86,7 @@ export function PaymentToCustomerDialog({
         <ScrollableDialogBody>
           <PaymentToCustomerForm
             onSubmit={handleSubmit}
-            isSubmitting={isSubmitting}
+            isSubmitting={createPayment.isPending}
             preselectedCustomerId={preselectedCustomerId}
             formId="payment-to-customer-form"
           />
@@ -117,9 +96,9 @@ export function PaymentToCustomerDialog({
           <Button
             type="submit"
             form="payment-to-customer-form"
-            disabled={isSubmitting}
+            disabled={createPayment.isPending}
           >
-            {isSubmitting ? "Registrando..." : "Registrar Pago"}
+            {createPayment.isPending ? "Registrando..." : "Registrar Pago"}
           </Button>
         </ScrollableDialogFooter>
       </ScrollableDialogContent>

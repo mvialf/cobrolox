@@ -1,14 +1,13 @@
 "use client";
 
-import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { toast } from "sonner";
 
 import {
   type PaymentToInvoiceFormValues,
   type InvoiceWithBalance,
   paymentToInvoiceToPayload,
 } from "@/lib/validations/payment-validations";
+import { useCreatePayment } from "@/hooks/queries/use-payments";
 
 import { PaymentToInvoiceForm } from "@/components/forms/payments/payment-to-invoice-form";
 import {
@@ -46,35 +45,22 @@ export function PaymentToInvoiceDialog({
   preselectedInvoiceId,
 }: PaymentToInvoiceDialogProps) {
   const router = useRouter();
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const createPayment = useCreatePayment();
 
   const handleSubmit = async (
     values: PaymentToInvoiceFormValues,
     invoice: InvoiceWithBalance,
   ) => {
     try {
-      setIsSubmitting(true);
-
       // Convertir form values a payload del API
       const payload = paymentToInvoiceToPayload(values, invoice);
 
-      // POST /api/payments
-      const res = await fetch("/api/payments", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.error || "Error al registrar el pago");
-      }
-
-      // Success
-      toast.success("Pago registrado exitosamente", {
-        description: `Pago de ${values.amount} registrado a factura ${invoice.invoiceNumber}`,
-      });
+      // Usar hook de React Query que maneja:
+      // - POST a /api/payments
+      // - Invalidación automática de queries relacionadas
+      // - Toast de éxito/error
+      // - Estado de loading
+      await createPayment.mutateAsync(payload);
 
       // Cerrar dialog
       onOpenChange(false);
@@ -82,18 +68,11 @@ export function PaymentToInvoiceDialog({
       // Callback para refetch (si existe)
       onSuccess?.();
 
-      // Refresh para actualizar data
+      // Refresh para actualizar Server Components (si los hay)
       router.refresh();
     } catch (error: unknown) {
+      // El error ya fue manejado por useCreatePayment (toast automático)
       console.error("Error submitting payment:", error);
-      toast.error("Error al registrar el pago", {
-        description:
-          error instanceof Error
-            ? error.message
-            : "Ocurrió un error inesperado",
-      });
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
@@ -111,7 +90,7 @@ export function PaymentToInvoiceDialog({
 
         <PaymentToInvoiceForm
           onSubmit={handleSubmit}
-          isSubmitting={isSubmitting}
+          isSubmitting={createPayment.isPending}
           preselectedInvoiceId={preselectedInvoiceId}
         />
       </DialogContent>

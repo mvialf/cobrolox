@@ -3,7 +3,7 @@ import { prisma } from "@/lib/db";
 import { Decimal } from "@prisma/client/runtime/library";
 import { AllocationInput, PaymentWhereInput } from "@/types/api";
 import { withLogging } from "@/lib/logger-middleware";
-import { recalculateCustomerBalances } from "@/lib/business-logic/customer-balance";
+import { recalculateCustomerBalancesWithRetry } from "@/lib/business-logic/customer-balance-retry";
 
 /**
  * GET /api/payments
@@ -568,21 +568,12 @@ export const POST = withLogging(async (request, logger) => {
       "Payment created successfully",
     );
 
-    // Recalcular balances del cliente después de crear pago con allocations
+    // Recalcular balances del cliente después de crear pago con allocations (con retry automático)
     paymentLogger.debug(
       { customerId },
       "Recalculating customer balances after payment creation",
     );
-    try {
-      await recalculateCustomerBalances(customerId);
-      paymentLogger.debug("Customer balances recalculated successfully");
-    } catch (error) {
-      // Log error pero no fallar el request (el pago ya fue creado exitosamente)
-      paymentLogger.warn(
-        { err: error, customerId },
-        "Failed to recalculate customer balances, but payment was created",
-      );
-    }
+    await recalculateCustomerBalancesWithRetry(customerId, paymentLogger);
 
     return NextResponse.json(payment, { status: 201 });
   } catch (error) {
