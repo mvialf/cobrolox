@@ -4,11 +4,10 @@ import { redirect } from "next/navigation";
 import { AppLayout } from "@/components/layout/app-layout";
 import { DataTable } from "@/components/data-table/data-table";
 import { columns, UserRow } from "./columns";
-import { ForceResetPasswordDialog } from "@/components/dialogs/admin/force-reset-password-dialog";
 
 /**
  * Página de gestión de usuarios (solo admin)
- * Permite ver todos los usuarios y forzar reset de contraseñas
+ * Permite ver todos los usuarios del sistema
  */
 export default async function UsersPage() {
   // Verificar autenticación
@@ -63,9 +62,6 @@ export default async function UsersPage() {
       <div className="space-y-4">
         <DataTable columns={columns} data={userRows} />
       </div>
-
-      {/* Dialog para forzar reset de contraseña */}
-      <ForceResetPasswordDialog />
     </AppLayout>
   );
 }

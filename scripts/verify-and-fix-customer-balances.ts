@@ -208,10 +208,10 @@ async function main() {
   console.log(`   Duración: ${duration}s`);
   console.log(`   Finalizado: ${new Date().toISOString()}`);
 
-  // 6. Enviar reporte por email si hay inconsistencias o errores
+  // 6. Enviar reporte de alertas si hay inconsistencias o errores
   if (inconsistencies.length > 0 || errorCount > 0) {
     console.log();
-    console.log("📧 Enviando reporte de inconsistencias...");
+    console.log("📊 Enviando reporte de inconsistencias...");
 
     const alerts: BalanceInconsistencyAlert[] = inconsistencies.map((inc) => ({
       customerId: inc.customerId,
@@ -225,17 +225,17 @@ async function main() {
           : "warning",
     }));
 
-    const emailSent = await sendDailyInconsistencyReport(alerts, {
+    const reportSent = await sendDailyInconsistencyReport(alerts, {
       totalCustomers: processedCount,
       fixed: fixedCount || 0,
       failed: fixErrorCount || 0,
     });
 
-    if (emailSent) {
-      console.log("✓ Reporte enviado por email");
+    if (reportSent) {
+      console.log("✓ Reporte enviado");
     } else {
       console.warn(
-        "⚠️  No se pudo enviar el reporte (verifica configuración de RESEND_API_KEY y ADMIN_EMAIL)",
+        "⚠️  No se pudo enviar el reporte (verifica configuración de SLACK_WEBHOOK_URL)",
       );
     }
   }

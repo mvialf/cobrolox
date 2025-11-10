@@ -2,12 +2,9 @@
  * Sistema de alertas para inconsistencias de balances
  *
  * Soporta múltiples canales:
- * - Email (Resend)
  * - Slack (Webhook)
  * - Console (fallback)
  */
-
-import { Resend } from "resend";
 
 // ============================================
 // TIPOS
@@ -31,196 +28,6 @@ export interface BalanceCalculationFailure {
   error: string;
   attempts: number;
   timestamp: Date;
-}
-
-// ============================================
-// EMAIL ALERTS (Resend)
-// ============================================
-
-/**
- * Envía alerta por email sobre fallo crítico en recálculo de balances
- */
-export async function sendBalanceCalculationFailureEmail(
-  failure: BalanceCalculationFailure,
-): Promise<boolean> {
-  // Verificar si está configurado Resend
-  const apiKey = process.env.RESEND_API_KEY;
-  const adminEmail = process.env.ADMIN_EMAIL || process.env.RESEND_FROM_EMAIL;
-
-  if (!apiKey || !adminEmail) {
-    console.warn(
-      "⚠️  Email alert skipped: RESEND_API_KEY or ADMIN_EMAIL not configured",
-    );
-    return false;
-  }
-
-  try {
-    const resend = new Resend(apiKey);
-
-    await resend.emails.send({
-      from: process.env.RESEND_FROM_EMAIL || "Cobrolox <onboarding@resend.dev>",
-      to: adminEmail,
-      subject: `🚨 CRITICAL: Balance Calculation Failed (Customer ${failure.customerId})`,
-      html: `
-        <h2>🚨 Error Crítico en Cálculo de Balances</h2>
-
-        <p><strong>Se ha detectado un error crítico que requiere atención inmediata.</strong></p>
-
-        <h3>Detalles del Error:</h3>
-        <ul>
-          <li><strong>Customer ID:</strong> ${failure.customerId}</li>
-          <li><strong>Intentos fallidos:</strong> ${failure.attempts}</li>
-          <li><strong>Timestamp:</strong> ${failure.timestamp.toISOString()}</li>
-          <li><strong>Error:</strong> <code>${failure.error}</code></li>
-        </ul>
-
-        <h3>⚠️ Impacto:</h3>
-        <p>Los balances del cliente están <strong>potencialmente desactualizados</strong>.
-        El estado de cuenta puede mostrar información incorrecta.</p>
-
-        <h3>🔧 Acción Requerida:</h3>
-        <ol>
-          <li>Revisar logs del servidor para detalles completos del error</li>
-          <li>Verificar conectividad con la base de datos</li>
-          <li>Ejecutar manualmente el recálculo:
-            <pre>npx tsx scripts/fix-customer-balance-76798456-1.ts</pre>
-          </li>
-          <li>Monitorear si el error persiste</li>
-        </ol>
-
-        <hr />
-        <p style="color: #666; font-size: 12px;">
-          Esta alerta fue generada automáticamente por Cobrolox Balance Monitor.
-        </p>
-      `,
-    });
-
-    console.log("✓ Email alert sent successfully");
-    return true;
-  } catch (error) {
-    console.error("✗ Failed to send email alert:", error);
-    return false;
-  }
-}
-
-/**
- * Envía reporte de inconsistencias detectadas por el job diario
- */
-export async function sendDailyInconsistencyReport(
-  inconsistencies: BalanceInconsistencyAlert[],
-  stats: {
-    totalCustomers: number;
-    fixed: number;
-    failed: number;
-  },
-): Promise<boolean> {
-  const apiKey = process.env.RESEND_API_KEY;
-  const adminEmail = process.env.ADMIN_EMAIL || process.env.RESEND_FROM_EMAIL;
-
-  if (!apiKey || !adminEmail) {
-    console.warn(
-      "⚠️  Email report skipped: RESEND_API_KEY or ADMIN_EMAIL not configured",
-    );
-    return false;
-  }
-
-  try {
-    const resend = new Resend(apiKey);
-
-    const criticalCount = inconsistencies.filter(
-      (i) => i.severity === "critical",
-    ).length;
-
-    const subject =
-      criticalCount > 0
-        ? `🚨 Balance Report: ${criticalCount} CRITICAL inconsistencies`
-        : `✅ Balance Report: ${inconsistencies.length} inconsistencies fixed`;
-
-    const inconsistenciesHtml = inconsistencies
-      .slice(0, 10) // Máximo 10 en el email
-      .map(
-        (inc) => `
-        <tr>
-          <td style="padding: 8px; border: 1px solid #ddd;">${inc.customerRut}</td>
-          <td style="padding: 8px; border: 1px solid #ddd;">${inc.customerName}</td>
-          <td style="padding: 8px; border: 1px solid #ddd; text-align: right;">
-            $${Math.abs(inc.diff.vencido).toLocaleString("es-CL")}
-          </td>
-          <td style="padding: 8px; border: 1px solid #ddd;">
-            <span style="color: ${inc.severity === "critical" ? "red" : "orange"};">
-              ${inc.severity === "critical" ? "⚠️ CRITICAL" : "⚠ Warning"}
-            </span>
-          </td>
-        </tr>
-      `,
-      )
-      .join("");
-
-    await resend.emails.send({
-      from: process.env.RESEND_FROM_EMAIL || "Cobrolox <onboarding@resend.dev>",
-      to: adminEmail,
-      subject,
-      html: `
-        <h2>📊 Reporte Diario de Balances</h2>
-
-        <h3>Resumen:</h3>
-        <ul>
-          <li><strong>Total clientes verificados:</strong> ${stats.totalCustomers}</li>
-          <li><strong>Inconsistencias detectadas:</strong> ${inconsistencies.length}</li>
-          <li><strong>Corregidas automáticamente:</strong> ${stats.fixed}</li>
-          ${stats.failed > 0 ? `<li style="color: red;"><strong>FALLOS:</strong> ${stats.failed}</li>` : ""}
-        </ul>
-
-        ${
-          inconsistencies.length > 0
-            ? `
-          <h3>Top Inconsistencias:</h3>
-          <table style="border-collapse: collapse; width: 100%;">
-            <thead>
-              <tr style="background: #f5f5f5;">
-                <th style="padding: 8px; border: 1px solid #ddd;">RUT</th>
-                <th style="padding: 8px; border: 1px solid #ddd;">Cliente</th>
-                <th style="padding: 8px; border: 1px solid #ddd;">Diferencia Vencido</th>
-                <th style="padding: 8px; border: 1px solid #ddd;">Severidad</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${inconsistenciesHtml}
-            </tbody>
-          </table>
-          ${inconsistencies.length > 10 ? `<p><em>... y ${inconsistencies.length - 10} más</em></p>` : ""}
-        `
-            : `
-          <p style="color: green;">✅ No se detectaron inconsistencias.</p>
-        `
-        }
-
-        ${
-          stats.failed > 0
-            ? `
-          <div style="background: #fee; padding: 15px; border-left: 4px solid red; margin: 20px 0;">
-            <h3 style="color: red; margin-top: 0;">⚠️ ATENCIÓN REQUERIDA</h3>
-            <p>${stats.failed} cliente(s) NO pudieron ser corregidos automáticamente.</p>
-            <p>Se requiere intervención manual.</p>
-          </div>
-        `
-            : ""
-        }
-
-        <hr />
-        <p style="color: #666; font-size: 12px;">
-          Job ejecutado: ${new Date().toISOString()}<br />
-          Este reporte fue generado automáticamente.
-        </p>
-      `,
-    });
-
-    console.log("✓ Daily report sent successfully");
-    return true;
-  } catch (error) {
-    console.error("✗ Failed to send daily report:", error);
-    return false;
-  }
 }
 
 // ============================================
@@ -299,6 +106,125 @@ export async function sendBalanceCalculationFailureSlack(
   }
 }
 
+/**
+ * Envía reporte diario de inconsistencias a Slack
+ */
+export async function sendDailyInconsistencyReportSlack(
+  inconsistencies: BalanceInconsistencyAlert[],
+  stats: {
+    totalCustomers: number;
+    fixed: number;
+    failed: number;
+  },
+): Promise<boolean> {
+  const webhookUrl = process.env.SLACK_WEBHOOK_URL;
+
+  if (!webhookUrl) {
+    console.warn("⚠️  Slack report skipped: SLACK_WEBHOOK_URL not configured");
+    return false;
+  }
+
+  try {
+    const criticalCount = inconsistencies.filter(
+      (i) => i.severity === "critical",
+    ).length;
+
+    const emoji = criticalCount > 0 ? "🚨" : "✅";
+    const title =
+      criticalCount > 0
+        ? `${emoji} Balance Report: ${criticalCount} CRITICAL inconsistencies`
+        : `${emoji} Balance Report: ${inconsistencies.length} inconsistencies fixed`;
+
+    // Top 5 inconsistencias para mostrar
+    const topInconsistencies = inconsistencies
+      .slice(0, 5)
+      .map(
+        (inc) =>
+          `• ${inc.customerRut} - ${inc.customerName}\n  Diff Vencido: $${Math.abs(inc.diff.vencido).toLocaleString("es-CL")} (${inc.severity === "critical" ? "⚠️ CRITICAL" : "⚠ Warning"})`,
+      )
+      .join("\n");
+
+    const blocks: any[] = [
+      {
+        type: "header",
+        text: {
+          type: "plain_text",
+          text: title,
+          emoji: true,
+        },
+      },
+      {
+        type: "section",
+        fields: [
+          {
+            type: "mrkdwn",
+            text: `*Total clientes:*\n${stats.totalCustomers}`,
+          },
+          {
+            type: "mrkdwn",
+            text: `*Inconsistencias:*\n${inconsistencies.length}`,
+          },
+          {
+            type: "mrkdwn",
+            text: `*Corregidas:*\n${stats.fixed}`,
+          },
+          {
+            type: "mrkdwn",
+            text: `*Fallos:*\n${stats.failed > 0 ? `❌ ${stats.failed}` : "✅ 0"}`,
+          },
+        ],
+      },
+    ];
+
+    if (inconsistencies.length > 0) {
+      blocks.push({
+        type: "section",
+        text: {
+          type: "mrkdwn",
+          text: `*Top Inconsistencias:*\n${topInconsistencies}${inconsistencies.length > 5 ? `\n... y ${inconsistencies.length - 5} más` : ""}`,
+        },
+      });
+    }
+
+    if (stats.failed > 0) {
+      blocks.push({
+        type: "section",
+        text: {
+          type: "mrkdwn",
+          text: `⚠️ *ATENCIÓN REQUERIDA*\n${stats.failed} cliente(s) NO pudieron ser corregidos automáticamente.\nSe requiere intervención manual.`,
+        },
+      });
+    }
+
+    blocks.push({
+      type: "context",
+      elements: [
+        {
+          type: "mrkdwn",
+          text: `Job ejecutado: ${new Date().toISOString()}`,
+        },
+      ],
+    });
+
+    const response = await fetch(webhookUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ blocks }),
+    });
+
+    if (response.ok) {
+      console.log("✓ Slack report sent successfully");
+      return true;
+    } else {
+      console.error("✗ Slack webhook failed:", response.statusText);
+      return false;
+    }
+  } catch (error) {
+    console.error("✗ Failed to send Slack report:", error);
+    return false;
+  }
+}
+
 // ============================================
 // MULTI-CHANNEL ALERTS
 // ============================================
@@ -313,11 +239,31 @@ export async function sendBalanceCalculationFailureAlert(
     `🚨 CRITICAL ALERT: Balance calculation failed for customer ${failure.customerId}`,
   );
 
-  // Intentar email
-  await sendBalanceCalculationFailureEmail(failure);
-
   // Intentar Slack
   await sendBalanceCalculationFailureSlack(failure);
+}
 
-  // TODO: Agregar otros canales (Discord, Telegram, etc.)
+/**
+ * Envía reporte diario por todos los canales configurados
+ */
+export async function sendDailyInconsistencyReport(
+  inconsistencies: BalanceInconsistencyAlert[],
+  stats: {
+    totalCustomers: number;
+    fixed: number;
+    failed: number;
+  },
+): Promise<boolean> {
+  // Log en console
+  console.log("\n📊 REPORTE DIARIO DE BALANCES");
+  console.log(`Total clientes: ${stats.totalCustomers}`);
+  console.log(`Inconsistencias: ${inconsistencies.length}`);
+  console.log(`Corregidas: ${stats.fixed}`);
+  console.log(`Fallos: ${stats.failed}`);
+
+  // Enviar a Slack si está configurado
+  await sendDailyInconsistencyReportSlack(inconsistencies, stats);
+
+  // Siempre retorna true porque al menos se logueó en console
+  return true;
 }

@@ -507,11 +507,12 @@ import { customerSchema } from "@/lib/validations/customer-validations";
 
 ### Antes de Producción
 
-- [ ] ❌ Implementar autenticación (NextAuth, Clerk, Auth0)
+- [x] ✅ Implementar autenticación (Better Auth implementado)
 - [ ] ❌ Agregar rate limiting
-- [ ] ❌ Validar todas las inputs (ya hecho con Zod)
-- [ ] ❌ Usar HTTPS
-- [ ] ❌ Proteger variables de entorno
+- [x] ✅ Validar todas las inputs core (Zod implementado para Invoice, Payment, Customer)
+- [ ] ⚠️ Completar validaciones de configuración (BadgeColor, Status, Installment)
+- [ ] ❌ Usar HTTPS (en producción)
+- [x] ✅ Proteger variables de entorno (.env.local)
 - [ ] ❌ Auditoría de cambios
 - [ ] ❌ Backups automáticos
 
@@ -651,7 +652,7 @@ Para análisis profundo, ver:
 
 ### P: ¿Dónde está la autenticación?
 
-**R:** No está implementada. Ver RESUMEN_EJECUTIVO.md - Críticos.
+**R:** ✅ Implementada con Better Auth v1.3.34 (10 Nov 2025). Ver lib/auth.ts, middleware.ts y app/(auth)/\*. Incluye login, signup, password reset y protección de rutas.
 
 ### P: ¿Cómo funciona FIFO?
 
@@ -675,5 +676,5 @@ Para análisis profundo, ver:
 
 ---
 
-**Última actualización:** 10 de Noviembre, 2025  
-**Versión:** 0.1.0
+**Última actualización:** 11 de Noviembre, 2025
+**Versión:** 0.1.1

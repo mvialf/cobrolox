@@ -2,14 +2,12 @@ import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { prisma } from "@/lib/db";
 import { createAuthMiddleware, APIError } from "better-auth/api";
-import { sendPasswordResetEmail } from "@/lib/email";
 
 /**
  * Better Auth Configuration
  *
  * Sistema de autenticación usando Better Auth con:
  * - Email/Password authentication
- * - Password reset functionality
  * - Session management
  * - Sistema de invitaciones (solo usuarios invitados pueden registrarse)
  * - Prisma adapter para PostgreSQL (Neon)
@@ -106,52 +104,10 @@ export const auth = betterAuth({
   // Email & Password authentication
   emailAndPassword: {
     enabled: true,
-    requireEmailVerification: false, // Por ahora false para facilitar testing
+    requireEmailVerification: false,
     autoSignIn: true, // Auto login después de signup
     minPasswordLength: 8,
     maxPasswordLength: 128,
-
-    // Password reset configuration
-    sendResetPassword: async ({ user, url, token }, _request) => {
-      try {
-        // Log para desarrollo (opcional - remover en producción)
-        if (process.env.NODE_ENV === "development") {
-          console.log("===================================");
-          console.log("PASSWORD RESET REQUEST");
-          console.log("User:", user.email);
-          console.log("Reset URL:", url);
-          console.log("===================================");
-        }
-
-        // Enviar email usando módulo centralizado
-        const { data, error } = await sendPasswordResetEmail({
-          email: user.email,
-          resetUrl: url,
-          userName: user.name,
-        });
-
-        if (error) {
-          console.error("Error al enviar email de reset:", error);
-          throw new Error(
-            `Failed to send password reset email: ${error.message}`,
-          );
-        }
-
-        console.log("Email de reset enviado exitosamente:", data?.id);
-      } catch (error) {
-        console.error("Error en sendResetPassword:", error);
-        // Re-lanzar el error para que Better Auth lo maneje
-        throw error;
-      }
-    },
-
-    // Callback después de reset exitoso
-    onPasswordReset: async ({ user }, _request) => {
-      console.log(`Password reset exitoso para: ${user.email}`);
-    },
-
-    // Token expiration (1 hora)
-    resetPasswordTokenExpiresIn: 3600, // segundos
   },
 
   // Email verification (opcional, por ahora deshabilitado)
