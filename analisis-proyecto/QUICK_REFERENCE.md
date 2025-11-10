@@ -159,15 +159,15 @@ queryClient.invalidateQueries({ queryKey: ["customers"] });
 
 ### Archivos Clave
 
-| Archivo                           | Propósito                              | Líneas |
-| --------------------------------- | -------------------------------------- | ------ |
-| `lib/auth.ts`                     | Servidor Better Auth + config          | ~80    |
-| `lib/auth-client.ts`              | Cliente React + hooks                  | ~35    |
-| `middleware.ts`                   | Protección de rutas (Node.js runtime) | ~90    |
-| `app/api/auth/[...all]/route.ts`  | API handler de Better Auth             | ~5     |
-| `app/(auth)/login/page.tsx`       | Página de login                        | ~135   |
-| `app/(auth)/signup/page.tsx`      | Página de registro                     | ~178   |
-| `app/(auth)/forgot-password/*.tsx` | Password reset flow                    | ~200   |
+| Archivo                            | Propósito                             | Líneas |
+| ---------------------------------- | ------------------------------------- | ------ |
+| `lib/auth.ts`                      | Servidor Better Auth + config         | ~80    |
+| `lib/auth-client.ts`               | Cliente React + hooks                 | ~35    |
+| `middleware.ts`                    | Protección de rutas (Node.js runtime) | ~90    |
+| `app/api/auth/[...all]/route.ts`   | API handler de Better Auth            | ~5     |
+| `app/(auth)/login/page.tsx`        | Página de login                       | ~135   |
+| `app/(auth)/signup/page.tsx`       | Página de registro                    | ~178   |
+| `app/(auth)/forgot-password/*.tsx` | Password reset flow                   | ~200   |
 
 ### Modelos de Base de Datos
 

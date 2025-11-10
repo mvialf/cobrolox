@@ -53,6 +53,7 @@ Datos confidenciales de la empresa (clientes, pagos, proyectos) requieren contro
 **Decisión:**
 
 Implementar **Better Auth** con **sistema de invitaciones por token** en lugar de:
+
 - NextAuth.js (10-15 hrs setup, invitaciones manual)
 - Clerk ($300/año, vendor lock-in alto)
 - Stack Auth (documentación limitada, vendor lock-in medio)
@@ -69,30 +70,36 @@ Implementar **Better Auth** con **sistema de invitaciones por token** en lugar d
 **Implementación:**
 
 **Fase 1: Database Schema**
+
 - Agregar modelo `User` con field `role` (admin/user)
 - Agregar modelo `Invitation` con token, email, expiresAt, usedAt
 - Aplicar migration con `npm run db:push`
 
 **Fase 2: Better Auth Configuration**
+
 - Configurar Better Auth con Prisma adapter
 - Implementar hooks `before` y `after` para validación de invitaciones
 - Configuración: email/password, auto-login, session 7 días
 
 **Fase 3: API Routes**
+
 - `POST /api/invitations/generate` - Generar token (solo admins)
 - `GET /api/invitations` - Listar invitaciones con estados (activa/usada/expirada)
 
 **Fase 4: Frontend Pages**
+
 - `app/(auth)/login/page.tsx` - Página de login con Better Auth
 - `app/(auth)/signup/page.tsx` - Signup con validación de token en URL
 - `app/settings/invitations/page.tsx` - Admin UI para gestión de invitaciones
 
 **Fase 5: Middleware & Protection**
+
 - `middleware.ts` - Protección de rutas con session checks
 - Redirect a /login si no autenticado
 - Redirect a / si ya autenticado (en páginas de auth)
 
 **Fase 6: Admin Setup**
+
 - Script `update-mvial-to-admin.ts` para actualizar role
 - Admin inicial: `mvial@cristaluxspa.cl` con role admin
 
@@ -139,6 +146,7 @@ Implementar **Better Auth** con **sistema de invitaciones por token** en lugar d
 **Testing realizado:**
 
 ✅ **Backend validation:**
+
 - Signup sin token → Error: "Se requiere una invitación"
 - Signup con token inválido → Error: "Invitación inválida"
 - Signup con token expirado → Error: "Esta invitación ha expirado"
@@ -147,24 +155,28 @@ Implementar **Better Auth** con **sistema de invitaciones por token** en lugar d
 - Signup con token válido → Success (usuario creado, token marcado usado)
 
 ✅ **Frontend flows:**
+
 - Admin genera invitación → Token creado, URL copiado
 - Usuario accede a link → Form pre-llenado con email
 - Usuario completa signup → Auto-login y redirect
 - Usuario no-admin intenta generar → Error 403
 
 ✅ **Playwright E2E:**
+
 - Navegación a /signup sin token → Form deshabilitado con mensaje
 - Fill form con credenciales admin → Submit exitoso
 - Auto-login funcionando → Redirect a / con sesión activa
 - Admin puede acceder a /settings/invitations
 
 **Validación:**
+
 - ✅ Tests: Manual E2E con Playwright
 - ✅ Build: Success (npm run lint, npm run typecheck pass)
 - ✅ Database: Schema aplicado correctamente
 - ✅ Admin creado: `mvial@cristaluxspa.cl` con role admin
 
 **Commits:**
+
 - `a05715e4` - feat: implementar sistema de invitaciones para registro controlado
 - `2578d09c` - docs: agregar ADR-006 Better Auth con sistema de invitaciones
 

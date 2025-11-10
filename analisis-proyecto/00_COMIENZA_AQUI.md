@@ -183,7 +183,7 @@ Contiene:
 - **Estado:** ✅ IMPLEMENTADO (10 Nov 2025)
 - **Solución:** Better Auth v1.3.34 con Prisma
 - **Características:** Email/password, password reset, sesiones, middleware, 4 páginas
-- **Archivos:** lib/auth.ts, middleware.ts, app/(auth)/*
+- **Archivos:** lib/auth.ts, middleware.ts, app/(auth)/\*
 
 ### ⚠️ 2. SIN RATE LIMITING
 

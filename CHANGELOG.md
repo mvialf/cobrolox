@@ -23,15 +23,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Validación exhaustiva: 6 checks (token existe, no expirado, no usado, email match, etc.)
 
 **Páginas de Autenticación:**
+
 - `/login` - Página de login con Better Auth
 - `/signup` - Registro con validación de token en URL
 - `/settings/invitations` - Admin dashboard para invitaciones
 
 **API Endpoints:**
+
 - `POST /api/invitations/generate` - Generar invitación (solo admins)
 - `GET /api/invitations` - Listar invitaciones con estados (activa/usada/expirada)
 
 **Database Models:**
+
 - `User` - Usuarios con field `role` (admin/user)
 - `Invitation` - Tokens de invitación con tracking de uso
 - `Session` - Sesiones de Better Auth (7 días)
@@ -39,6 +42,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `Verification` - Tokens de verificación
 
 **Scripts:**
+
 - `scripts/update-mvial-to-admin.ts` - Helper para crear admin inicial
 
 ### Changed
@@ -70,6 +74,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - One-time use tokens (no reutilizables)
 
 **Admin Credentials:**
+
 - Email: `mvial@cristaluxspa.cl`
 - Role: `admin`
 - Can: Generar invitaciones, acceder a todas las features
@@ -81,23 +86,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added - MVP Inicial
 
 **Sistema de Pagos:**
+
 - PaymentAllocation architecture (N:M Payment ↔ Project)
 - Dual payment flows (Project vs Customer)
 - Sistema de cuotas sin interés (FIFO allocation)
 - Validaciones exhaustivas (15+ checks)
 
 **Data Model:**
+
 - Customer, Project, Payment, PaymentAllocation, Installment
 - Regional Chile: RUT validation, regiones, comunas
 - Balance tracking automático por proyecto
 
 **UI Components:**
+
 - AppLayout + AppSidebar (layout de 2 capas)
 - 50+ shadcn/ui components
 - DataTable con sorting, filtering, pagination
 - Forms con React Hook Form + Zod validation
 
 **Infrastructure:**
+
 - Next.js 15 (App Router)
 - React 19
 - TypeScript
@@ -106,6 +115,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Pino structured logging
 
 **Testing:**
+
 - Vitest (unit tests)
 - React Testing Library
 - Playwright (E2E)
@@ -127,6 +137,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### [0.3.0] - Q1 2026 (Planned)
 
 **Email & Advanced Auth:**
+
 - Email verification habilitado
 - Envío automático de invitaciones por email
 - Password reset flow completo
@@ -135,6 +146,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### [0.4.0] - Q2 2026 (Planned)
 
 **RBAC Granular:**
+
 - Roles avanzados: viewer, editor, admin, owner
 - Permisos por recurso (payments, customers, projects)
 - Row-Level Security (Neon RLS)
@@ -142,6 +154,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### [0.5.0] - Q3 2026 (Planned)
 
 **Audit & Analytics:**
+
 - Audit logs completos (createdBy, updatedBy FK)
 - Timeline de cambios por entidad
 - Dashboard de analytics
@@ -158,6 +171,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ---
 
 **Legend:**
+
 - 🔐 Authentication & Security
 - 💰 Payment System
 - 🗄️ Database

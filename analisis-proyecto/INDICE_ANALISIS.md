@@ -415,16 +415,16 @@
 
 ## 🎯 PROBLEMAS COMUNES & SOLUCIONES
 
-| Problema                     | Ver Documento     | Sección             |
-| ---------------------------- | ----------------- | ------------------- |
+| Problema                      | Ver Documento     | Sección             |
+| ----------------------------- | ----------------- | ------------------- |
 | ✅ Autenticación implementada | QUICK_REFERENCE   | Autenticación       |
-| Cómo usar autenticación      | QUICK_REFERENCE   | Autenticación       |
-| Type mismatch en hooks       | QUICK_REFERENCE   | Debugging Común     |
-| React Query no refetch       | QUICK_REFERENCE   | Debugging Común     |
-| Form field no actualiza      | QUICK_REFERENCE   | Debugging Común     |
-| Balance desincronizado       | QUICK_REFERENCE   | Debugging Común     |
-| Duplicación de código        | ANALISIS_COMPLETO | Inconsistencias     |
-| Quiero agregar feature       | QUICK_REFERENCE   | Crear Nuevo Feature |
+| Cómo usar autenticación       | QUICK_REFERENCE   | Autenticación       |
+| Type mismatch en hooks        | QUICK_REFERENCE   | Debugging Común     |
+| React Query no refetch        | QUICK_REFERENCE   | Debugging Común     |
+| Form field no actualiza       | QUICK_REFERENCE   | Debugging Común     |
+| Balance desincronizado        | QUICK_REFERENCE   | Debugging Común     |
+| Duplicación de código         | ANALISIS_COMPLETO | Inconsistencias     |
+| Quiero agregar feature        | QUICK_REFERENCE   | Crear Nuevo Feature |
 
 ---
 

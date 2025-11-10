@@ -7,6 +7,13 @@
     "neon": {
       "command": "npx",
       "args": ["-y", "mcp-remote", "https://mcp.neon.tech/mcp"]
+    },
+    "vercel": {
+      "command": "npx",
+      "args": ["-y", "@vercel/mcp-server"],
+      "env": {
+        "VERCEL_ACCESS_TOKEN": "IqmZ7gXnUM9Q3BqYT6Cl1mwR"
+      }
     }
   }
 }

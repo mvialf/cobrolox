@@ -70,6 +70,7 @@ Esta es la documentación de **Cobrolox**, una herramienta de gestión interna p
 Ver documentación completa en [`architecture/01-data-model/`](architecture/01-data-model/):
 
 **Entidades principales:**
+
 - **Customer** - Clientes del negocio
 - **Project** - Proyectos de instalación
 - **Payment** - Pagos recibidos
@@ -79,6 +80,7 @@ Ver documentación completa en [`architecture/01-data-model/`](architecture/01-d
 - **Invitation** - Tokens de invitación para registro
 
 **Relaciones clave:**
+
 - Customer 1:N Project
 - Payment N:M Project (via PaymentAllocation)
 - Payment 1:N Installment
@@ -89,6 +91,7 @@ Ver documentación completa en [`architecture/01-data-model/`](architecture/01-d
 Ver documentación en [`architecture/02-business-flows/`](architecture/02-business-flows/):
 
 **Flujos principales:**
+
 1. **Payment to Project** - Pago directo a proyecto específico
 2. **Payment to Customer** - Pago distribuido entre múltiples proyectos
 3. **Installment Generation** - Generación de cuotas sin interés
@@ -97,6 +100,7 @@ Ver documentación en [`architecture/02-business-flows/`](architecture/02-busine
 ### Technical Stack
 
 **Frontend:**
+
 - Next.js 15 (App Router)
 - React 19
 - TypeScript
@@ -104,22 +108,26 @@ Ver documentación en [`architecture/02-business-flows/`](architecture/02-busine
 - shadcn/ui (50+ components)
 
 **Backend:**
+
 - Next.js API Routes
 - Better Auth (autenticación)
 - Prisma ORM
 - Zod (validación)
 
 **Database:**
+
 - PostgreSQL (Neon)
 - Database branching
 - Connection pooling (PgBouncer)
 
 **Testing:**
+
 - Vitest (unit tests)
 - React Testing Library
 - Playwright (E2E)
 
 **Logging:**
+
 - Pino (structured logging)
 - Request correlation
 - Security redaction
@@ -129,6 +137,7 @@ Ver documentación en [`architecture/02-business-flows/`](architecture/02-busine
 Ver logs detallados en [`implementation/`](implementation/):
 
 ### 2025-11-10: Sistema de Autenticación
+
 - ✅ Implementar Better Auth + hooks de validación
 - ✅ Crear sistema de invitaciones por token
 - ✅ API routes para gestión de invitaciones
@@ -137,12 +146,14 @@ Ver logs detallados en [`implementation/`](implementation/):
 - ✅ Crear admin inicial (`mvial@cristaluxspa.cl`)
 
 ### 2025-10-XX: Sistema de Pagos
+
 - ✅ Implementar PaymentAllocation (N:M)
 - ✅ Dual payment flows (Project vs Customer)
 - ✅ Sistema de cuotas sin interés
 - ✅ Validaciones exhaustivas (15+ checks)
 
 ### 2025-10-XX: Setup Inicial
+
 - ✅ Configurar Neon PostgreSQL
 - ✅ Prisma schema con modelos core
 - ✅ Layout system (AppLayout + AppSidebar)
@@ -222,17 +233,20 @@ Ver logs detallados en [`implementation/`](implementation/):
 ## 🎯 Roadmap Futuro
 
 ### Fase 2: Email & Advanced Auth (Q1 2026)
+
 - Email verification habilitado
 - Envío automático de invitaciones
 - Password reset flow completo
 - Multi-factor authentication (opcional)
 
 ### Fase 3: RBAC Granular (Q2 2026)
+
 - Roles avanzados: viewer, editor, admin, owner
 - Permisos por recurso (payments, customers, projects)
 - Row-Level Security (Neon RLS)
 
 ### Fase 4: Audit & Analytics (Q3 2026)
+
 - Audit logs completos (createdBy, updatedBy FK)
 - Timeline de cambios por entidad
 - Dashboard de analytics

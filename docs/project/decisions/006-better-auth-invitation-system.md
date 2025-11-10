@@ -47,6 +47,7 @@ https://cobrolox.com/login
 ### Por qué Cambiamos de "No Auth" a Auth con Invitaciones
 
 En **ADR-005** decidimos lanzar el MVP sin autenticación porque:
+
 - Era una herramienta interna con 1-2 usuarios
 - Red local (no pública)
 - Foco en validar business logic
@@ -58,6 +59,7 @@ El usuario solicitó explícitamente **control de acceso** con el siguiente requ
 > "Es una herramienta interna de la empresa, la idea es que no cualquiera se registre y tenga acceso a mis datos"
 
 Este requisito cambió el contexto fundamentalmente:
+
 - 🚨 **Datos confidenciales** de la empresa (clientes, pagos, proyectos)
 - 🚨 **Control de acceso crítico** - No puede ser abierto
 - 🚨 **Escalabilidad prevista** - Más usuarios en el futuro
@@ -95,32 +97,35 @@ El trigger fue: **Necesidad de control de acceso por datos confidenciales** (inc
 
 ### Comparativa Rápida
 
-| Factor | Better Auth (✅) | NextAuth.js | Stack Auth | Clerk |
-|--------|-----------------|-------------|------------|-------|
-| **Setup time** | 4-6 hrs | 10-15 hrs | 5-10 hrs | 2-3 hrs |
-| **Vendor lock-in** | Bajo | Ninguno | Medio | Alto |
-| **Custom hooks** | ✅ Built-in | ⚠️ Manual | ⚠️ Limited | ❌ No |
-| **UI incluida** | ✅ Components | ❌ Manual | ✅ Components | ✅ Complete |
-| **Invitations** | ✅ Custom hooks | ⚠️ Manual | ⚠️ Plugin | ✅ Built-in |
-| **Costo** | $0 | $0 | $0-$20/mes | $25/mes |
-| **Prisma native** | ✅ Adapter | ✅ Adapter | ✅ Adapter | ⚠️ Sync |
-| **Documentación** | ✅ Excelente | ✅ Excelente | ⚠️ Limitada | ✅ Excelente |
+| Factor             | Better Auth (✅) | NextAuth.js  | Stack Auth    | Clerk        |
+| ------------------ | ---------------- | ------------ | ------------- | ------------ |
+| **Setup time**     | 4-6 hrs          | 10-15 hrs    | 5-10 hrs      | 2-3 hrs      |
+| **Vendor lock-in** | Bajo             | Ninguno      | Medio         | Alto         |
+| **Custom hooks**   | ✅ Built-in      | ⚠️ Manual    | ⚠️ Limited    | ❌ No        |
+| **UI incluida**    | ✅ Components    | ❌ Manual    | ✅ Components | ✅ Complete  |
+| **Invitations**    | ✅ Custom hooks  | ⚠️ Manual    | ⚠️ Plugin     | ✅ Built-in  |
+| **Costo**          | $0               | $0           | $0-$20/mes    | $25/mes      |
+| **Prisma native**  | ✅ Adapter       | ✅ Adapter   | ✅ Adapter    | ⚠️ Sync      |
+| **Documentación**  | ✅ Excelente     | ✅ Excelente | ⚠️ Limitada   | ✅ Excelente |
 
 ### Alternativa 1: NextAuth.js
 
 **Pros:**
+
 - ✅ Zero vendor lock-in (open-source completo)
 - ✅ Ecosistema maduro, community enorme
 - ✅ Múltiples providers (Google, GitHub, Email, etc.)
 - ✅ Control total sobre flujo de auth
 
 **Contras:**
+
 - ❌ **10-15 horas de setup** (UI manual, no components)
 - ❌ **Sistema de invitaciones completamente manual** (DB + lógica custom)
 - ❌ **Hooks personalizados requieren middleware custom** (más código)
 - ❌ **UI debe construirse desde cero** (login, signup, forgot password)
 
 **Por qué NO:**
+
 - El requisito de "sistema de invitaciones" con NextAuth requiere:
   - Modelo Invitation custom
   - Validación en signup (manual)
@@ -131,18 +136,21 @@ El trigger fue: **Necesidad de control de acceso por datos confidenciales** (inc
 ### Alternativa 2: Clerk
 
 **Pros:**
+
 - ✅ **Setup ultra-rápido** (2-3 horas)
 - ✅ **UI completa** premium (login, signup, user profile)
 - ✅ **Sistema de invitaciones built-in** (Clerk Invitations)
 - ✅ **Admin dashboard** robusto con gestión de usuarios
 
 **Contras:**
+
 - ❌ **Vendor lock-in MUY alto** (API propietaria difícil de migrar)
 - ❌ **$25/mes** después de 10,000 MAU → $300/año mínimo
 - ❌ **Complejidad innecesaria** (SAML, MFA, org switching)
 - ❌ **Data hosted** en servidores de Clerk (no control total)
 
 **Por qué NO:**
+
 - Para herramienta interna con <10 usuarios, $300/año es overkill
 - Vendor lock-in hace difícil migrar si crece el proyecto
 - Features enterprise (SAML, MFA) no necesarios para MVP
@@ -150,18 +158,21 @@ El trigger fue: **Necesidad de control de acceso por datos confidenciales** (inc
 ### Alternativa 3: Stack Auth
 
 **Pros:**
+
 - ✅ **Integración con Neon** PostgreSQL (mismo DB que usamos)
 - ✅ **Setup medio** (5-10 horas)
 - ✅ **UI React components** incluidos
 - ✅ **Pricing friendly** para startups ($0-$20/mes)
 
 **Contras:**
+
 - ❌ **Vendor lock-in medio** (menos que Clerk, más que NextAuth)
 - ❌ **Sistema de invitaciones limitado** (plugin, no core)
 - ❌ **Documentación menos madura** que NextAuth/Clerk
 - ❌ **Custom hooks difíciles** (validación en signup no trivial)
 
 **Por qué NO:**
+
 - El requisito de "validar token en signup" requiere custom logic compleja
 - Documentación limitada para casos edge (token expirado, usado, etc.)
 - **Vendor lock-in no justificado** vs open-source
@@ -169,6 +180,7 @@ El trigger fue: **Necesidad de control de acceso por datos confidenciales** (inc
 ### Alternativa 4: Better Auth (Decisión Tomada)
 
 **Pros:**
+
 - ✅ **Setup rápido** (4-6 horas con invitaciones)
 - ✅ **Hooks nativos** para custom logic (`before`, `after` middleware)
 - ✅ **Prisma adapter oficial** (integración perfecta)
@@ -178,19 +190,21 @@ El trigger fue: **Necesidad de control de acceso por datos confidenciales** (inc
 - ✅ **Sistema de invitaciones via hooks** (clean implementation)
 
 **Contras:**
+
 - ⚠️ **Ecosistema más nuevo** (menos maduro que NextAuth)
 - ⚠️ **Community más pequeña** (menos Stack Overflow answers)
 - ⚠️ **Menos providers** que NextAuth (pero suficiente para MVP)
 
 **Por qué SÍ:**
+
 - **Hooks nativos** permiten validación de invitaciones clean:
   ```typescript
   hooks: {
     before: createAuthMiddleware(async (ctx) => {
       // Validar token de invitación
-      if (!invitationToken) throw new APIError("UNAUTHORIZED")
+      if (!invitationToken) throw new APIError("UNAUTHORIZED");
       // Validar expiración, uso, email match
-    })
+    });
   }
   ```
 - **Setup 40% más rápido** que NextAuth (4-6 hrs vs 10-15 hrs)
@@ -306,39 +320,39 @@ export const auth = betterAuth({
       // 1. Token requerido
       if (!invitationToken) {
         throw new APIError("UNAUTHORIZED", {
-          message: "Se requiere una invitación para registrarse."
+          message: "Se requiere una invitación para registrarse.",
         });
       }
 
       // 2. Token debe existir
       const invitation = await prisma.invitation.findUnique({
-        where: { token: invitationToken }
+        where: { token: invitationToken },
       });
 
       if (!invitation) {
         throw new APIError("UNAUTHORIZED", {
-          message: "Invitación inválida."
+          message: "Invitación inválida.",
         });
       }
 
       // 3. No debe estar usado
       if (invitation.usedAt) {
         throw new APIError("UNAUTHORIZED", {
-          message: "Esta invitación ya ha sido utilizada."
+          message: "Esta invitación ya ha sido utilizada.",
         });
       }
 
       // 4. No debe estar expirado
       if (invitation.expiresAt < new Date()) {
         throw new APIError("UNAUTHORIZED", {
-          message: "Esta invitación ha expirado."
+          message: "Esta invitación ha expirado.",
         });
       }
 
       // 5. Email debe coincidir
       if (invitation.email.toLowerCase() !== email.toLowerCase()) {
         throw new APIError("UNAUTHORIZED", {
-          message: "El email no coincide con la invitación."
+          message: "El email no coincide con la invitación.",
         });
       }
 
@@ -354,12 +368,12 @@ export const auth = betterAuth({
       if (invitationToken) {
         await prisma.invitation.update({
           where: { token: invitationToken },
-          data: { usedAt: new Date() }
+          data: { usedAt: new Date() },
         });
       }
 
       return { context: ctx };
-    })
+    }),
   },
 
   emailAndPassword: {
@@ -371,7 +385,7 @@ export const auth = betterAuth({
 
   session: {
     expiresIn: 60 * 60 * 24 * 7, // 7 días
-  }
+  },
 });
 ```
 
@@ -385,12 +399,13 @@ export const auth = betterAuth({
 export async function POST(request: NextRequest) {
   // 1. Verificar sesión
   const session = await auth.api.getSession({ headers: request.headers });
-  if (!session) return NextResponse.json({ error: "No autenticado" }, { status: 401 });
+  if (!session)
+    return NextResponse.json({ error: "No autenticado" }, { status: 401 });
 
   // 2. Verificar que user es admin
   const user = await prisma.user.findUnique({
     where: { id: session.user.id },
-    select: { role: true }
+    select: { role: true },
   });
 
   if (user?.role !== "admin") {
@@ -410,8 +425,8 @@ export async function POST(request: NextRequest) {
       email: body.email,
       token,
       expiresAt,
-      invitedBy: session.user.id
-    }
+      invitedBy: session.user.id,
+    },
   });
 
   // 6. Construir URL
@@ -434,20 +449,16 @@ export async function GET(request: NextRequest) {
     orderBy: { createdAt: "desc" },
     include: {
       inviter: {
-        select: { name: true, email: true }
-      }
-    }
+        select: { name: true, email: true },
+      },
+    },
   });
 
   // Agregar estado calculado
   const now = new Date();
-  const invitationsWithStatus = invitations.map(inv => ({
+  const invitationsWithStatus = invitations.map((inv) => ({
     ...inv,
-    status: inv.usedAt
-      ? "used"
-      : inv.expiresAt < now
-        ? "expired"
-        : "active"
+    status: inv.usedAt ? "used" : inv.expiresAt < now ? "expired" : "active",
   }));
 
   return NextResponse.json({ invitations: invitationsWithStatus });
@@ -575,8 +586,9 @@ export default async function middleware(request: NextRequest) {
     headers: request.headers,
   });
 
-  const isAuthPage = request.nextUrl.pathname.startsWith("/login") ||
-                     request.nextUrl.pathname.startsWith("/signup");
+  const isAuthPage =
+    request.nextUrl.pathname.startsWith("/login") ||
+    request.nextUrl.pathname.startsWith("/signup");
 
   // Redirigir a login si no hay sesión y no está en página auth
   if (!session && !isAuthPage) {
@@ -736,6 +748,7 @@ NEXT_PUBLIC_APP_URL="http://localhost:3000" # Para invitationUrl
 ### Admin Inicial
 
 **Credenciales:**
+
 - Email: `mvial@cristaluxspa.cl`
 - Password: `Pirula4180`
 - Role: `admin`
@@ -746,7 +759,7 @@ NEXT_PUBLIC_APP_URL="http://localhost:3000" # Para invitationUrl
 // Script actualiza role de user a admin después de signup
 const user = await prisma.user.update({
   where: { email: "mvial@cristaluxspa.cl" },
-  data: { role: "admin" }
+  data: { role: "admin" },
 });
 ```
 
@@ -819,23 +832,27 @@ const user = await prisma.user.update({
 ### Roadmap Futuro
 
 **Fase 1: ✅ COMPLETADA (este ADR)**
+
 - Better Auth + Sistema de invitaciones
 - Admin puede generar invitaciones
 - Solo usuarios invitados se registran
 
 **Fase 2: Email Verification (Futuro)**
+
 - Habilitar `requireEmailVerification: true`
 - Configurar email provider (Resend, SendGrid, Nodemailer)
 - Enviar emails automáticos de invitación
 - **Trigger:** Cuando >10 usuarios activos
 
 **Fase 3: RBAC Granular (Futuro)**
+
 - Roles adicionales: `viewer`, `editor`, `admin`, `owner`
 - Permisos por recurso (payments, customers, projects)
 - Row-Level Security (Neon RLS)
 - **Trigger:** Cuando necesitemos permisos complejos
 
 **Fase 4: Audit Logs (Futuro)**
+
 - Agregar `createdBy`, `updatedBy` FK a User
 - Tracking de cambios por usuario
 - Timeline de modificaciones
@@ -851,6 +868,7 @@ Considerar migración si:
 4. ❌ **Enterprise requirements** que Better Auth no cubre
 
 **Costo de migración estimado:** 8-12 horas
+
 - Schema ya compatible (User, Account, Session)
 - Lógica de invitaciones se preserva (custom logic)
 - UI puede reutilizarse parcialmente
@@ -865,6 +883,7 @@ Considerar si:
 4. ✅ **Admin dashboard robusto** necesario (user management)
 
 **Costo de migración estimado:** 12-16 horas
+
 - Reescritura de auth logic (Clerk API)
 - Data migration (User/Session a Clerk)
 - Testing extensivo
