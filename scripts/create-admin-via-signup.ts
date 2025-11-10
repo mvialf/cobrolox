@@ -21,8 +21,9 @@ async function main() {
     console.log("\n⚠️  OPCIÓN MANUAL:");
     console.log("1. Ve a http://localhost:3000/signup");
     console.log("2. Ignora el error de invitación requerida");
-    console.log("3. Voy a desactivar temporalmente la validación de invitación");
-
+    console.log(
+      "3. Voy a desactivar temporalmente la validación de invitación",
+    );
   } catch (error) {
     console.error("❌ Error:", error);
   }

@@ -2,6 +2,11 @@ import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { prisma } from "@/lib/db";
 import { createAuthMiddleware, APIError } from "better-auth/api";
+import { Resend } from "resend";
+import { renderResetPasswordEmail } from "@/components/emails/reset-password-email";
+
+// Inicializar Resend con API key desde variables de entorno
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 /**
  * Better Auth Configuration
@@ -111,28 +116,44 @@ export const auth = betterAuth({
     maxPasswordLength: 128,
 
     // Password reset configuration
-    // TODO: Implementar envío de emails real (ej: Resend, SendGrid, Nodemailer)
     sendResetPassword: async ({ user, url, token }, _request) => {
-      console.log("===================================");
-      console.log("PASSWORD RESET REQUEST");
-      console.log("User:", user.email);
-      console.log("Reset URL:", url);
-      console.log("Token:", token);
-      console.log("===================================");
+      try {
+        // Log para desarrollo (opcional - remover en producción)
+        if (process.env.NODE_ENV === "development") {
+          console.log("===================================");
+          console.log("PASSWORD RESET REQUEST");
+          console.log("User:", user.email);
+          console.log("Reset URL:", url);
+          console.log("===================================");
+        }
 
-      // TODO: Reemplazar con servicio de email real
-      // Ejemplo con Resend:
-      // await resend.emails.send({
-      //   from: "noreply@cobrolox.com",
-      //   to: user.email,
-      //   subject: "Restablecer contraseña - Cobrolox",
-      //   html: `
-      //     <h1>Restablecer contraseña</h1>
-      //     <p>Haz clic en el siguiente enlace para restablecer tu contraseña:</p>
-      //     <a href="${url}">Restablecer contraseña</a>
-      //     <p>Este enlace expira en 1 hora.</p>
-      //   `
-      // });
+        // Generar HTML del email usando template
+        const emailHtml = renderResetPasswordEmail({
+          resetUrl: url,
+          userName: user.name,
+        });
+
+        // Enviar email usando Resend
+        const { data, error } = await resend.emails.send({
+          from: "Cobrolox <mvial@cristaluxspa.cl>",
+          to: user.email,
+          subject: "Recupera tu contraseña - Cobrolox",
+          html: emailHtml,
+        });
+
+        if (error) {
+          console.error("Error al enviar email de reset:", error);
+          throw new Error(
+            `Failed to send password reset email: ${error.message}`,
+          );
+        }
+
+        console.log("Email de reset enviado exitosamente:", data?.id);
+      } catch (error) {
+        console.error("Error en sendResetPassword:", error);
+        // Re-lanzar el error para que Better Auth lo maneje
+        throw error;
+      }
     },
 
     // Callback después de reset exitoso

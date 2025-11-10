@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Globe, ListTodo, CreditCard, UserPlus } from "lucide-react";
+import { Globe, ListTodo, CreditCard, UserPlus, Users } from "lucide-react";
 import { AppLayout } from "@/components/layout/app-layout";
 import { cn } from "@/lib/utils";
 
@@ -19,6 +19,12 @@ const settingsSections: SettingsSection[] = [
     href: "/settings/general",
     icon: Globe,
     description: "Configuración regional, idioma y zona horaria",
+  },
+  {
+    title: "Usuarios",
+    href: "/settings/users",
+    icon: Users,
+    description: "Gestionar usuarios y permisos (solo admin)",
   },
   {
     title: "Invitaciones",
