@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { authClient } from "@/lib/auth-client";
@@ -18,16 +18,9 @@ import {
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
 /**
- * Página de Registro con Sistema de Invitaciones
- *
- * Solo usuarios con link de invitación válido pueden registrarse.
- * Requiere parámetros en la URL:
- * - ?token=xxx (obligatorio) - Token de invitación
- * - ?email=xxx (opcional) - Email pre-llenado
- *
- * Auto-login después de registro exitoso.
+ * Componente interno que usa useSearchParams
  */
-export default function SignupPage() {
+function SignupForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -199,5 +192,33 @@ export default function SignupPage() {
         </form>
       </Card>
     </div>
+  );
+}
+
+/**
+ * Página de Registro con Sistema de Invitaciones
+ *
+ * Solo usuarios con link de invitación válido pueden registrarse.
+ * Requiere parámetros en la URL:
+ * - ?token=xxx (obligatorio) - Token de invitación
+ * - ?email=xxx (opcional) - Email pre-llenado
+ *
+ * Auto-login después de registro exitoso.
+ */
+export default function SignupPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex min-h-screen items-center justify-center p-4">
+          <Card className="w-full max-w-md">
+            <CardHeader>
+              <CardTitle>Cargando...</CardTitle>
+            </CardHeader>
+          </Card>
+        </div>
+      }
+    >
+      <SignupForm />
+    </Suspense>
   );
 }
