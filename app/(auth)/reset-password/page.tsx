@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { authClient } from "@/lib/auth-client";
@@ -18,12 +18,9 @@ import {
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
 /**
- * Página de Restablecimiento de Contraseña
- *
- * Recibe un token de reset via URL query params y permite
- * al usuario establecer una nueva contraseña.
+ * Componente interno que usa useSearchParams
  */
-export default function ResetPasswordPage() {
+function ResetPasswordForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [password, setPassword] = useState("");
@@ -208,5 +205,34 @@ export default function ResetPasswordPage() {
         </form>
       </Card>
     </div>
+  );
+}
+
+/**
+ * Página de Restablecimiento de Contraseña
+ *
+ * Recibe un token de reset via URL query params y permite
+ * al usuario establecer una nueva contraseña.
+ */
+export default function ResetPasswordPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex min-h-screen items-center justify-center bg-muted/50 p-4">
+          <Card className="w-full max-w-md">
+            <CardHeader>
+              <CardTitle className="text-2xl font-bold">Cargando...</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground">
+                Verificando token de restablecimiento...
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+      }
+    >
+      <ResetPasswordForm />
+    </Suspense>
   );
 }
