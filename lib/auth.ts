@@ -2,11 +2,7 @@ import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { prisma } from "@/lib/db";
 import { createAuthMiddleware, APIError } from "better-auth/api";
-import { Resend } from "resend";
-import { renderResetPasswordEmail } from "@/components/emails/reset-password-email";
-
-// Inicializar Resend con API key desde variables de entorno
-const resend = new Resend(process.env.RESEND_API_KEY);
+import { sendPasswordResetEmail } from "@/lib/email";
 
 /**
  * Better Auth Configuration
@@ -127,18 +123,11 @@ export const auth = betterAuth({
           console.log("===================================");
         }
 
-        // Generar HTML del email usando template
-        const emailHtml = renderResetPasswordEmail({
+        // Enviar email usando módulo centralizado
+        const { data, error } = await sendPasswordResetEmail({
+          email: user.email,
           resetUrl: url,
           userName: user.name,
-        });
-
-        // Enviar email usando Resend
-        const { data, error } = await resend.emails.send({
-          from: "Cobrolox <mvial@cristaluxspa.cl>",
-          to: user.email,
-          subject: "Recupera tu contraseña - Cobrolox",
-          html: emailHtml,
         });
 
         if (error) {
