@@ -18,6 +18,7 @@ import {
 
 // Extender ColumnMeta para incluir clases CSS personalizadas
 declare module "@tanstack/react-table" {
+  // eslint-disable-next-line unused-imports/no-unused-vars
   interface ColumnMeta<TData, TValue> {
     headerClassName?: string;
     cellClassName?: string;
@@ -57,6 +58,18 @@ interface DataTableProps<TData, TValue> {
   showCompleted?: boolean;
   onToggleCompleted?: (show: boolean) => void;
   initialColumnVisibility?: VisibilityState;
+  // Server-side pagination support
+  manualPagination?: boolean;
+  pageCount?: number;
+  pagination?: { pageIndex: number; pageSize: number };
+  onPaginationChange?: (
+    updater:
+      | { pageIndex: number; pageSize: number }
+      | ((old: { pageIndex: number; pageSize: number }) => {
+          pageIndex: number;
+          pageSize: number;
+        }),
+  ) => void;
 }
 
 export function DataTable<TData, TValue>({
@@ -73,6 +86,10 @@ export function DataTable<TData, TValue>({
   showCompleted,
   onToggleCompleted,
   initialColumnVisibility = {},
+  manualPagination = false,
+  pageCount,
+  pagination: externalPagination,
+  onPaginationChange,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -82,6 +99,14 @@ export function DataTable<TData, TValue>({
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>(initialColumnVisibility);
   const [rowSelection, setRowSelection] = React.useState({});
+  const [internalPagination, setInternalPagination] = React.useState({
+    pageIndex: 0,
+    pageSize: TABLE_DEFAULT_PAGE_SIZE,
+  });
+
+  // Use external pagination if provided, otherwise use internal
+  const currentPagination = externalPagination ?? internalPagination;
+  const handlePaginationChange = onPaginationChange ?? setInternalPagination;
 
   const table = useReactTable({
     data,
@@ -97,6 +122,7 @@ export function DataTable<TData, TValue>({
       globalFilter,
       columnVisibility,
       rowSelection,
+      pagination: currentPagination,
     },
     enableRowSelection,
     onRowSelectionChange: setRowSelection,
@@ -104,11 +130,20 @@ export function DataTable<TData, TValue>({
     onColumnFiltersChange: setColumnFilters,
     onGlobalFilterChange: setGlobalFilter,
     onColumnVisibilityChange: setColumnVisibility,
+    onPaginationChange: handlePaginationChange,
     globalFilterFn,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
+    // Server-side pagination: delegate pagination to backend
+    ...(manualPagination
+      ? {
+          manualPagination: true,
+          pageCount: pageCount ?? -1,
+        }
+      : {
+          getPaginationRowModel: getPaginationRowModel(),
+        }),
     meta,
   });
 

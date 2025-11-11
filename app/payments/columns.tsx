@@ -1,6 +1,6 @@
 "use client";
 
-import { type ColumnDef } from "@tanstack/react-table";
+import { type ColumnDef, type Table } from "@tanstack/react-table";
 import { Eye, XCircle, Loader2 } from "lucide-react";
 import { DataTableDropdown } from "@/components/data-table";
 import {
@@ -55,7 +55,7 @@ interface PaymentsTableMeta {
 /**
  * Helper type-safe para extraer meta del table sin usar `as any`
  */
-function getPaymentsTableMeta(table: any): PaymentsTableMeta {
+function getPaymentsTableMeta(table: Table<Payment>): PaymentsTableMeta {
   return (table.options.meta || {}) as PaymentsTableMeta;
 }
 

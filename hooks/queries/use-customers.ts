@@ -96,6 +96,8 @@ export function useCustomers(params: CustomersQueryParams = {}) {
 
       return response.json();
     },
+    staleTime: 5 * 60 * 1000, // 5 minutos - datos considerados "frescos"
+    gcTime: 10 * 60 * 1000, // 10 minutos - mantener en cache
   });
 }
 
@@ -255,7 +257,7 @@ export function useUpdateCustomer() {
 
       return response.json();
     },
-    onSuccess: (updatedCustomer) => {
+    onSuccess: (_updatedCustomer) => {
       // Invalidar queries relacionadas
       queryClient.invalidateQueries({
         predicate: (query) => {

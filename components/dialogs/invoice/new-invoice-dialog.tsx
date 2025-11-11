@@ -22,7 +22,9 @@ interface NewInvoiceDialogProps {
  * Dialog modal para crear una nueva factura
  * Se muestra centrado en la pantalla con overlay
  */
-export function NewInvoiceDialog({ lastInvoiceNumber }: NewInvoiceDialogProps) {
+export function NewInvoiceDialog({
+  lastInvoiceNumber: _lastInvoiceNumber,
+}: NewInvoiceDialogProps) {
   const [open, setOpen] = useState(false);
   const createMutation = useCreateInvoice();
 

@@ -1,12 +1,10 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
+import { Prisma } from "@prisma/client";
 import { withLogging } from "@/lib/logger-middleware";
 import { calculateInvoiceStatuses } from "@/lib/business-logic/invoice-status";
-import {
-  INVOICE_STATUS,
-  PAYMENT_STATUS,
-} from "@/lib/constants/invoice-status-constants";
 import { recalculateCustomerBalancesWithRetry } from "@/lib/business-logic/customer-balance-retry";
+import { getInvoiceStatuses } from "@/lib/cache/invoice-statuses";
 
 /**
  * GET /api/invoices
@@ -54,7 +52,7 @@ export const GET = withLogging(async (request, logger) => {
 
   try {
     // Construir filtro de búsqueda
-    const where: any = {};
+    const where: Prisma.InvoiceWhereInput = {};
 
     if (search) {
       where.OR = [
@@ -79,6 +77,11 @@ export const GET = withLogging(async (request, logger) => {
       where.customerId = customerId;
     }
 
+    // Filtrar por balance en SQL (más eficiente que en JS)
+    if (pendingOnly) {
+      where.balance = { gt: 0 };
+    }
+
     // Obtener facturas con datos relacionados y total count
     const [invoicesRaw, total] = await Promise.all([
       prisma.invoice.findMany({
@@ -86,7 +89,10 @@ export const GET = withLogging(async (request, logger) => {
         where,
         skip,
         take: limit, // Si es undefined, trae todos los registros
-        orderBy: { issueDate: "asc" }, // Ascendente: más antiguas primero (consistente con FIFO)
+        orderBy: [
+          { balance: "desc" }, // Pendientes primero (mayor balance)
+          { issueDate: "asc" }, // Luego por fecha (FIFO)
+        ],
         include: {
           customer: {
             select: {
@@ -106,92 +112,19 @@ export const GET = withLogging(async (request, logger) => {
               color: true,
             },
           },
-          // Incluir allocations solo si se necesita calcular balance
-          allocations: withBalance
-            ? {
-                select: {
-                  allocatedAmount: true,
-                },
-              }
-            : false,
         },
       }),
       prisma.invoice.count({ where }),
     ]);
 
-    // Obtener estados del sistema para cálculo automático
-    const [currentStatus, overdueStatus, completedStatus] = await Promise.all([
-      prisma.invoiceStatus.findUnique({
-        where: { name: INVOICE_STATUS.CURRENT },
-        include: { color: true },
-      }),
-      prisma.invoiceStatus.findUnique({
-        where: { name: INVOICE_STATUS.OVERDUE },
-        include: { color: true },
-      }),
-      prisma.invoiceStatus.findUnique({
-        where: { name: INVOICE_STATUS.COMPLETED },
-        include: { color: true },
-      }),
-    ]);
+    // Obtener estados del sistema (con cache - elimina 6 queries repetidas)
+    const availableStatuses = await getInvoiceStatuses();
 
-    const [pendingPayment, partialPayment, paidPayment] = await Promise.all([
-      prisma.paymentInvoiceStatus.findUnique({
-        where: { name: PAYMENT_STATUS.PENDING },
-        include: { color: true },
-      }),
-      prisma.paymentInvoiceStatus.findUnique({
-        where: { name: PAYMENT_STATUS.PARTIAL },
-        include: { color: true },
-      }),
-      prisma.paymentInvoiceStatus.findUnique({
-        where: { name: PAYMENT_STATUS.PAID },
-        include: { color: true },
-      }),
-    ]);
-
-    if (
-      !currentStatus ||
-      !overdueStatus ||
-      !completedStatus ||
-      !pendingPayment ||
-      !partialPayment ||
-      !paidPayment
-    ) {
-      logger.error("Estados del sistema no encontrados");
-      throw new Error("Estados del sistema no configurados correctamente");
-    }
-
-    const availableStatuses = {
-      invoice: {
-        current: currentStatus,
-        overdue: overdueStatus,
-        completed: completedStatus,
-      },
-      payment: {
-        pending: pendingPayment,
-        partial: partialPayment,
-        paid: paidPayment,
-      },
-    };
-
-    // Calcular balance y estados automáticos
+    // Calcular estados automáticos (balance ya viene de DB)
     const invoices = invoicesRaw.map((invoice) => {
-      // Inicializar valores por defecto (balance = total cuando no hay pagos)
-      let paidAmount = 0;
-      let balance = Number(invoice.total);
-
-      // Calcular balance real si hay allocations disponibles
-      if (withBalance && "allocations" in invoice) {
-        paidAmount = invoice.allocations.reduce(
-          (sum, alloc) => sum + Number(alloc.allocatedAmount),
-          0,
-        );
-        balance = Number(invoice.total) - paidAmount;
-      }
-
-      // Remover allocations del response (solo usados para calcular)
-      const { allocations, ...invoiceData } = invoice as any;
+      // Balance y paidAmount ya vienen calculados de DB
+      const balance = Number(invoice.balance);
+      const paidAmount = Number(invoice.paidAmount);
 
       // Calcular estados correctos basados en balance y fecha
       const calculatedStatuses = calculateInvoiceStatuses(
@@ -205,7 +138,7 @@ export const GET = withLogging(async (request, logger) => {
 
       // Retornar factura con estados calculados
       return {
-        ...invoiceData,
+        ...invoice,
         paidAmount,
         balance,
         invoiceStatus: calculatedStatuses.invoiceStatus,
@@ -214,14 +147,9 @@ export const GET = withLogging(async (request, logger) => {
     });
 
     // Filtrar por estado completado si no se solicitó incluirlas (default: ocultar completadas)
-    let filteredInvoices = includeCompleted
+    const filteredInvoices = includeCompleted
       ? invoices
       : invoices.filter((inv) => inv.invoiceStatus.name !== "completed");
-
-    // Filtrar por pendingOnly si se solicitó (solo facturas con balance > 0)
-    if (pendingOnly) {
-      filteredInvoices = filteredInvoices.filter((inv) => inv.balance > 0);
-    }
 
     logger.info(
       {
@@ -375,6 +303,8 @@ export const POST = withLogging(async (request, logger) => {
         subtotal,
         taxAmount,
         total,
+        balance: total, // Balance inicial = total (sin pagos)
+        paidAmount: 0, // Sin pagos inicialmente
         currency: currency || "CLP",
         issueDate: new Date(issueDate),
         dueDate: new Date(dueDate),

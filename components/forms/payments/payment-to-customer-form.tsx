@@ -71,7 +71,7 @@ interface PaymentToCustomerFormProps {
  */
 export function PaymentToCustomerForm({
   onSubmit,
-  isSubmitting = false,
+  isSubmitting: _isSubmitting = false,
   preselectedCustomerId,
   formId,
 }: PaymentToCustomerFormProps) {

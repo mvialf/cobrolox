@@ -9,9 +9,9 @@ import { recalculateCustomerBalances } from "./customer-balance";
 import { sendBalanceCalculationFailureAlert } from "@/lib/alerts/balance-alerts";
 
 interface RetryLogger {
-  debug: (message: string | object, ...args: any[]) => void;
-  warn: (message: string | object, ...args: any[]) => void;
-  error: (message: string | object, ...args: any[]) => void;
+  debug: (message: string | object, ...args: unknown[]) => void;
+  warn: (message: string | object, ...args: unknown[]) => void;
+  error: (message: string | object, ...args: unknown[]) => void;
 }
 
 export interface RecalculateBalancesOptions {

@@ -19,6 +19,7 @@ const eslintConfig = [
       "next-env.d.ts",
       ".playwright-mcp/**",
       "coverage/**",
+      "scripts/.archive/**",
     ],
   },
   ...compat.config({

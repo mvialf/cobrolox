@@ -14,7 +14,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Separator } from "@/components/ui/separator";
-import { Info, Copy, FileText, Image, Loader2 } from "lucide-react";
+import { Info, Copy, FileText, Loader2 } from "lucide-react";
 
 // Form Dialog imports
 import { UserProfileDialog } from "@/components/dialogs/examples/user-profile-dialog";
@@ -618,8 +618,7 @@ export default function MyPage() {
           {/* Ejemplo 1: Básico */}
           <section className="space-y-4">
             <div>
-              <h3 className="text-lg font-semibold flex items-center gap-2">
-                <Image className="h-5 w-5" />
+              <h3 className="text-lg font-semibold">
                 1. Uso Básico (Zero Config)
               </h3>
               <p className="text-muted-foreground text-sm">

@@ -10,6 +10,38 @@
 // TIPOS
 // ============================================
 
+// Tipos para bloques de Slack
+type SlackBlock =
+  | {
+      type: "header";
+      text: {
+        type: "plain_text";
+        text: string;
+        emoji?: boolean;
+      };
+    }
+  | {
+      type: "section";
+      text?: {
+        type: "mrkdwn";
+        text: string;
+      };
+      fields?: Array<{
+        type: "mrkdwn";
+        text: string;
+      }>;
+    }
+  | {
+      type: "divider";
+    }
+  | {
+      type: "context";
+      elements: Array<{
+        type: "mrkdwn";
+        text: string;
+      }>;
+    };
+
 export interface BalanceInconsistencyAlert {
   customerId: string;
   customerRut: string;
@@ -144,7 +176,7 @@ export async function sendDailyInconsistencyReportSlack(
       )
       .join("\n");
 
-    const blocks: any[] = [
+    const blocks: SlackBlock[] = [
       {
         type: "header",
         text: {

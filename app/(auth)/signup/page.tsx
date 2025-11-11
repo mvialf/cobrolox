@@ -66,7 +66,12 @@ function SignupForm() {
         email,
         password,
         invitationToken, // Token de invitación (campo personalizado)
-      } as any);
+      } as {
+        name: string;
+        email: string;
+        password: string;
+        invitationToken?: string;
+      });
 
       if (error) {
         setError(error.message || "Error al crear la cuenta");

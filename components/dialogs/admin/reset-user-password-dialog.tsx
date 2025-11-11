@@ -128,7 +128,7 @@ export function ResetUserPasswordDialog() {
 
       // Resetear icono después de 2 segundos
       setTimeout(() => setCopied(false), 2000);
-    } catch (error) {
+    } catch (_error) {
       toast.error("Error al copiar contraseña");
     }
   };

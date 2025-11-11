@@ -231,11 +231,11 @@ export function markAsPaid(
 /**
  * Helper para marcar una cuota como vencida
  *
- * @param installment - La cuota a marcar como vencida
+ * @param _installment - La cuota a marcar como vencida
  * @returns Payload para actualizar la cuota
  */
 export function markAsOverdue(
-  installment: Installment,
+  _installment: Installment,
 ): UpdateInstallmentPayload {
   return {
     status: INSTALLMENT_STATUS.OVERDUE,

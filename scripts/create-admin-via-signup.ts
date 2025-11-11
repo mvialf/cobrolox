@@ -7,9 +7,9 @@
 async function main() {
   console.log("🔐 Creando admin via signup API...");
 
-  const adminEmail = "mvial@cristaluxspa.cl";
-  const adminPassword = "Pirula4180";
-  const baseUrl = "http://localhost:3000";
+  const _adminEmail = "mvial@cristaluxspa.cl";
+  const _adminPassword = "Pirula4180";
+  const _baseUrl = "http://localhost:3000";
 
   try {
     // Paso 1: Crear invitación temporal para el admin

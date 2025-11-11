@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import { PhoneInput } from "@/components/ui/phone-input";
 
 interface ContactFieldsProps {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   control: Control<any>;
 }
 

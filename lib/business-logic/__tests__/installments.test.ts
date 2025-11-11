@@ -166,7 +166,7 @@ describe("getTotalPendingInstallments", () => {
   });
 
   it("debe manejar array vacío", () => {
-    const installments: any[] = [];
+    const installments: Array<{ amount: number; status: string }> = [];
 
     const totalPending = getTotalPendingInstallments(installments);
 

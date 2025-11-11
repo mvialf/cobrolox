@@ -109,6 +109,8 @@ export function useInvoices(params: InvoicesQueryParams = {}) {
 
       return data;
     },
+    staleTime: 5 * 60 * 1000, // 5 minutos
+    gcTime: 10 * 60 * 1000, // 10 minutos
   });
 }
 
@@ -262,7 +264,7 @@ export function useUpdateInvoice() {
 
       return response.json();
     },
-    onSuccess: (updatedInvoice) => {
+    onSuccess: (_updatedInvoice) => {
       // Invalidar queries relacionadas
       queryClient.invalidateQueries({
         predicate: (query) => {
