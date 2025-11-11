@@ -79,15 +79,17 @@ model Verification {
 }
 
 model Invitation {
-  id         String    @id @default(uuid())
-  email      String    // Email del usuario invitado
-  token      String    @unique // Token único para la URL de invitación
-  usedAt     DateTime? // NULL si no se ha usado, fecha cuando se usó
-  expiresAt  DateTime  // Fecha de expiración (default: 7 días)
-  invitedBy  String    // ID del usuario admin que generó la invitación
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
-  inviter    User      @relation(fields: [invitedBy], references: [id], onDelete: Cascade)
+  id          String    @id @default(uuid())
+  email       String    // Email del usuario invitado
+  token       String    @unique // Token único para la URL de invitación
+  role        String    @default("user") // Rol asignado al usuario invitado
+  usedAt      DateTime? // NULL si no se ha usado, fecha cuando se usó
+  cancelledAt DateTime? // NULL si no fue cancelada, fecha cuando se canceló
+  expiresAt   DateTime  // Fecha de expiración (default: 7 días)
+  invitedBy   String    // ID del usuario admin que generó la invitación
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  inviter     User      @relation(fields: [invitedBy], references: [id], onDelete: Cascade)
 
   @@index([token])
   @@index([email])
