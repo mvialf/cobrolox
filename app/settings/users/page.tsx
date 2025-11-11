@@ -1,6 +1,7 @@
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { redirect } from "next/navigation";
+import { headers } from "next/headers";
 import { AppLayout } from "@/components/layout/app-layout";
 import { DataTable } from "@/components/data-table/data-table";
 import { columns, UserRow } from "./columns";
@@ -13,7 +14,7 @@ import { ResetUserPasswordDialog } from "@/components/dialogs/admin/reset-user-p
 export default async function UsersPage() {
   // Verificar autenticación
   const session = await auth.api.getSession({
-    headers: await Promise.resolve(new Headers()),
+    headers: await headers(),
   });
 
   if (!session?.user) {
