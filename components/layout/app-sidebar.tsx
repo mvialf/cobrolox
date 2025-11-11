@@ -22,6 +22,7 @@ import {
   PanelRightClose,
   Upload,
   LogOut,
+  UserPlus,
 } from "lucide-react";
 import { authClient, useSession } from "@/lib/auth-client";
 
@@ -83,11 +84,6 @@ const navigationItems: NavigationItem[] = [
     icon: Wallet,
     items: [
       {
-        title: "Todos los Pagos",
-        url: "/payments",
-        icon: Wallet,
-      },
-      {
         title: "Cuotas Comercio",
         url: "/payments/installments",
         icon: BadgeCheck,
@@ -140,11 +136,6 @@ const settingsItems: NavigationItem[] = [
     icon: Settings,
     items: [
       {
-        title: "General",
-        url: "/settings",
-        icon: Settings,
-      },
-      {
         title: "Estados de Proyecto",
         url: "/settings/project-status",
         icon: BadgeCheck,
@@ -153,6 +144,16 @@ const settingsItems: NavigationItem[] = [
         title: "Métodos de Pago",
         url: "/settings/payments",
         icon: Wallet,
+      },
+      {
+        title: "Usuarios",
+        url: "/settings/users",
+        icon: User2,
+      },
+      {
+        title: "Invitaciones",
+        url: "/settings/invitations",
+        icon: UserPlus,
       },
     ],
   },
@@ -240,13 +241,34 @@ export function AppSidebar() {
                       className="group/collapsible"
                     >
                       <SidebarMenuItem>
-                        <CollapsibleTrigger asChild>
-                          <SidebarMenuButton isActive={isItemActive(item)}>
-                            <item.icon />
-                            <span>{item.title}</span>
-                            <ChevronDown className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-180" />
+                        <div className="relative flex items-center">
+                          {/* Área principal: navegable */}
+                          <SidebarMenuButton
+                            asChild
+                            isActive={isItemActive(item)}
+                            className="w-full pr-8"
+                          >
+                            <Link href={item.url}>
+                              <item.icon />
+                              <span>{item.title}</span>
+                            </Link>
                           </SidebarMenuButton>
-                        </CollapsibleTrigger>
+
+                          {/* Chevron separado: controla expand/collapse */}
+                          <CollapsibleTrigger asChild>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="absolute right-1 h-8 w-8 p-0 hover:bg-transparent"
+                            >
+                              <ChevronDown className="h-4 w-4 transition-transform duration-200 group-data-[state=open]/collapsible:rotate-180" />
+                              <span className="sr-only">
+                                Expandir {item.title}
+                              </span>
+                            </Button>
+                          </CollapsibleTrigger>
+                        </div>
+
                         <CollapsibleContent>
                           <SidebarMenuSub>
                             {item.items.map((subItem) => (
