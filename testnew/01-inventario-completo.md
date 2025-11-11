@@ -42,7 +42,7 @@
 | #   | Archivo                                      | Prioridad | Tests | Horas | Estado | Deps              | Notas                            |
 | --- | -------------------------------------------- | --------- | ----- | ----- | ------ | ----------------- | -------------------------------- |
 | 1   | `lib/rut-validations.ts`                     | 🔴        | 49    | 10    | ✅     | -                 | Validación RUT Chile (rut.js)    |
-| 2   | `lib/validations/invoice-validations.ts`     | 🔴        | 25    | 6.25  | ❌     | totals            | Schemas Zod, cálculo IVA         |
+| 2   | `lib/validations/invoice-validations.ts`     | 🔴        | 27    | 6.25  | ✅     | -                 | Schemas Zod, validación fechas   |
 | 3   | `lib/validations/customer-validations.ts`    | 🟠        | 20    | 5     | ❌     | rut-validations   | Schemas Zod, RUT                 |
 | 4   | `lib/validations/payment-validations.ts`     | 🟠        | 10    | 2.5   | 🟡     | invoice, customer | Ya parcial en use-payments       |
 | 5   | `lib/invoice-status.ts`                      | 🟠        | 12    | 3     | ❌     | invoice schema    | Estados de factura (matriz 3×3)  |
@@ -243,7 +243,7 @@ Utilidades:             [░░░░░░░░░░] 0/20 (0%)
 ### Esta Semana (Fase 1)
 
 - [x] lib/rut-validations.ts (49 tests, 10 hrs) ✅ **COMPLETADO 2025-11-11**
-- [ ] lib/validations/invoice-validations.ts (25 tests, 6.25 hrs)
+- [x] lib/validations/invoice-validations.ts (27 tests, 6.25 hrs) ✅ **COMPLETADO 2025-11-11**
 - [ ] lib/business-logic/installments.ts expansión (20 tests, 6.7 hrs)
 
 ### Próxima Semana (Fase 2)

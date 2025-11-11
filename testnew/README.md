@@ -5,12 +5,12 @@
 ## 🎯 Resumen Ejecutivo
 
 - **Tests Existentes:** 14 archivos (~2,350 líneas)
-- **Tests Implementados:** 49 test cases nuevos ✅
-- **Tests Pendientes:** ~381 test cases
-- **Archivos Sin Tests:** 23 archivos
+- **Tests Implementados:** 76 test cases nuevos ✅
+- **Tests Pendientes:** ~354 test cases
+- **Archivos Sin Tests:** 22 archivos
 - **Archivos Parciales:** 5 archivos
 - **Esfuerzo Total:** 205 horas (~5 semanas)
-- **Cobertura Actual:** ~34%
+- **Cobertura Actual:** ~40%
 - **Cobertura Objetivo:** 90%+
 - **Última actualización:** 2025-11-11
 
@@ -120,10 +120,10 @@ npm run test:e2e
 
 | Prioridad     | Archivos | Tests Pendientes | Tests Completados | Horas   | % Completado |
 | ------------- | -------- | ---------------- | ----------------- | ------- | ------------ |
-| 🔴 Crítico    | 6        | 96               | 49                | 62      | 34%          |
+| 🔴 Crítico    | 6        | 69               | 76                | 62      | 52%          |
 | 🟠 Importante | 11       | 184              | 15                | 107     | 8%           |
 | 🟡 Deseable   | 7        | 83               | 0                 | 36      | 0%           |
-| **TOTAL**     | **24**   | **363**          | **64**            | **205** | **15%**      |
+| **TOTAL**     | **24**   | **336**          | **91**            | **205** | **21%**      |
 
 ### Por Categoría
 

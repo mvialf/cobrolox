@@ -8,8 +8,8 @@
 
 ## Índice
 
-1. [lib/rut-validations.ts](#1-librut-validationsts) - 30 tests, 10 hrs
-2. [lib/validations/invoice-validations.ts](#2-libvalidationsinvoice-validationsts) - 25 tests, 6.25 hrs
+1. [lib/rut-validations.ts](#1-librut-validationsts) - 49 tests, 10 hrs ✅ **COMPLETADO**
+2. [lib/validations/invoice-validations.ts](#2-libvalidationsinvoice-validationsts) - 27 tests, 6.25 hrs ✅ **COMPLETADO**
 3. [lib/business-logic/installments.ts](#3-libbusiness-logicinstallmentsts) - 20 tests, 6.7 hrs
 4. [lib/import/invoice-import.ts](#4-libimportinvoice-importts) - 25 tests, 10.4 hrs
 5. [components/forms/payment-to-customer-form.tsx](#5-componentsformspayment-to-customer-formtsx) - 25 tests, 18.75 hrs
@@ -223,9 +223,9 @@ describe("calculateDV", () => {
 ## 2. lib/validations/invoice-validations.ts
 
 **📍 Ubicación:** `lib/validations/invoice-validations.ts`
-**⏱️ Estimación:** 25 test cases - 6.25 horas
-**📦 Dependencias:** `lib/business-logic/totals.ts`
-**📊 Estado actual:** ❌ SIN TESTS
+**⏱️ Estimación:** 27 test cases - 6.25 horas
+**📦 Dependencias:** Ninguna (schemas independientes)
+**📊 Estado actual:** ✅ COMPLETADO (2025-11-11)
 
 ### Por qué es crítico
 
@@ -1418,10 +1418,11 @@ describe("useRutInput", () => {
   - [x] rutHelpers.getCheckDigit() (6 tests)
   - [x] Integración (3 tests)
 
-- [ ] lib/validations/invoice-validations.ts (25 tests)
-  - [ ] invoiceSchema (15 tests)
-  - [ ] parseInvoicesWithBalance (5 tests)
-  - [ ] Edge cases financieros (5 tests)
+- [x] lib/validations/invoice-validations.ts (27 tests) ✅ **COMPLETADO 2025-11-11**
+  - [x] invoiceSchema (15 tests)
+  - [x] updateInvoiceSchema (5 tests)
+  - [x] Edge cases financieros (5 tests)
+  - [x] Inferencia de tipos (2 tests)
 
 - [ ] lib/business-logic/installments.ts (20 tests)
   - [ ] Absorción de centavos (4 tests)
