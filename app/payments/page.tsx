@@ -19,8 +19,16 @@ import { usePayments, useDeletePayment } from "@/hooks/queries/use-payments";
 import type { Payment as APIPayment } from "@/lib/validations/payment-validations";
 
 export default function PaymentsPage() {
-  // ✅ React Query hooks reemplazan state management manual
-  const { data, isLoading, refetch } = usePayments({ limit: 1000 });
+  const [pagination, setPagination] = useState({
+    pageIndex: 0,
+    pageSize: 50,
+  });
+
+  // ✅ React Query con paginación real
+  const { data, isLoading, refetch } = usePayments({
+    page: pagination.pageIndex + 1,
+    limit: pagination.pageSize,
+  });
   const deleteMutation = useDeletePayment();
 
   // Extraer data del hook (con fallbacks) y cast a tipo local
@@ -119,6 +127,10 @@ export default function PaymentsPage() {
                 options: uniquePaymentMethods,
               },
             ]}
+            manualPagination
+            pageCount={data?.pagination.totalPages ?? 0}
+            pagination={pagination}
+            onPaginationChange={setPagination}
             meta={{
               handleDelete,
               deletingPaymentId: deleteMutation.variables || null,

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { AppLayout } from "@/components/layout/app-layout";
 import {
   Card,
@@ -17,9 +17,16 @@ import { useInstallments } from "@/hooks/queries/use-installments";
 
 export default function InstallmentsPage() {
   const { configuration } = useConfiguration();
+  const [pagination, setPagination] = useState({
+    pageIndex: 0,
+    pageSize: 50,
+  });
 
-  // ✅ React Query hook reemplaza state management manual
-  const { data, isLoading } = useInstallments({ limit: 1000 });
+  // ✅ React Query con paginación real
+  const { data, isLoading } = useInstallments({
+    page: pagination.pageIndex + 1,
+    limit: pagination.pageSize,
+  });
 
   const installments = useMemo(
     () => (data?.installments || []) as Installment[],
@@ -190,6 +197,10 @@ export default function InstallmentsPage() {
                   options: statusOptions,
                 },
               ]}
+              manualPagination
+              pageCount={data?.pagination?.totalPages ?? 0}
+              pagination={pagination}
+              onPaginationChange={setPagination}
             />
           )}
         </CardContent>

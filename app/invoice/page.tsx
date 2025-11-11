@@ -9,12 +9,17 @@ import { useInvoices } from "@/hooks/queries/use-invoices";
 
 export default function InvoicesPage() {
   const [showCompleted, setShowCompleted] = useState(false);
+  const [pagination, setPagination] = useState({
+    pageIndex: 0,
+    pageSize: 50,
+  });
 
-  // ✅ React Query hook reemplaza state management manual
+  // ✅ React Query con paginación real
   const { data, isLoading } = useInvoices({
+    page: pagination.pageIndex + 1,
+    limit: pagination.pageSize,
     withBalance: true,
     includeCompleted: showCompleted,
-    limit: 1000,
   });
 
   // El tipo devuelto por la API coincide con el tipo Invoice del DataTable
@@ -102,6 +107,10 @@ export default function InvoicesPage() {
             showCompleted={showCompleted}
             onToggleCompleted={setShowCompleted}
             initialColumnVisibility={{ pago: false }}
+            manualPagination
+            pageCount={data?.pagination.totalPages ?? 0}
+            pagination={pagination}
+            onPaginationChange={setPagination}
           />
         )}
       </div>

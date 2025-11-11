@@ -124,6 +124,8 @@ export function usePayments(params: PaymentsQueryParams = {}) {
 
       return response.json();
     },
+    staleTime: 5 * 60 * 1000, // 5 minutos
+    gcTime: 10 * 60 * 1000, // 10 minutos
   });
 }
 
