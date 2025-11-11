@@ -32,12 +32,15 @@
 - **Fecha:** 2025-11-11
 - **Hallazgos:** Usa biblioteca rut.js, requiere RUTs chilenos válidos reales
 
-#### Día 3-4 (6.25 horas) - Invoice Validations
-- [ ] `lib/validations/invoice-validations.ts` (25 tests)
+#### Día 3-4 (6.25 horas) - Invoice Validations ✅ COMPLETADO
+- [x] `lib/validations/invoice-validations.ts` (27 tests)
   - invoiceSchema Zod (15 tests)
-  - parseInvoicesWithBalance (5 tests)
+  - updateInvoiceSchema (5 tests)
   - Edge cases financieros (5 tests)
-- **Checkpoint:** Validación financiera robusta
+  - Inferencia de tipos (2 tests)
+- **Checkpoint:** ✅ Validación financiera robusta
+- **Fecha:** 2025-11-11
+- **Hallazgos:** Schemas Zod con refine() para validaciones complejas, tolerancia de 0.01 para redondeos financieros
 
 #### Día 4-5 (6.7 horas) - Installments Expansion
 - [ ] `lib/business-logic/installments.ts` (20 tests adicionales)
@@ -326,7 +329,7 @@ Marcar ✅ conforme se completan:
 
 **Fase 1 (Crítico):**
 - [x] lib/rut-validations.ts ✅ 2025-11-11
-- [ ] lib/validations/invoice-validations.ts
+- [x] lib/validations/invoice-validations.ts ✅ 2025-11-11
 - [ ] lib/business-logic/installments.ts
 - [ ] lib/import/invoice-import.ts
 - [ ] hooks/use-rut-input.ts
