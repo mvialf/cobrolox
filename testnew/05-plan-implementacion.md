@@ -42,14 +42,20 @@
 - **Fecha:** 2025-11-11
 - **Hallazgos:** Schemas Zod con refine() para validaciones complejas, tolerancia de 0.01 para redondeos financieros
 
-#### Día 4-5 (6.7 horas) - Installments Expansion
-- [ ] `lib/business-logic/installments.ts` (20 tests adicionales)
-  - Absorción de centavos (4 tests)
-  - Números grandes (2 tests)
-  - Casos extremos (6 tests)
-  - Precisión decimal (3 tests)
-  - calculateInstallmentDates (5 tests)
-- **Checkpoint:** División de cuotas sin bugs
+#### Día 4-5 (6.7 horas) - Installments Expansion ✅ **COMPLETADO 2025-11-11**
+- [x] `lib/business-logic/installments.ts` (12 tests adicionales)
+  - [x] Absorción de centavos (2 tests)
+  - [x] Números grandes (2 tests)
+  - [x] Casos extremos (3 tests)
+  - [x] Precisión decimal (3 tests)
+  - [x] Tests variados (2 tests)
+- **Checkpoint:** ✅ División de cuotas sin bugs - 24 tests totales pasando
+- **Fecha:** 2025-11-11
+- **Hallazgos:**
+  - Precisión flotante en JS requiere `toBeCloseTo()` para tests de decimales
+  - Algoritmo de absorción funciona correctamente con Math.floor()
+  - Tests de edge cases críticos: 0.01÷2, 1M÷3, 999K÷12
+  - No se necesitó implementar tests de fechas (ya cubierto en tests base)
 
 ### Semana 2
 
@@ -330,7 +336,7 @@ Marcar ✅ conforme se completan:
 **Fase 1 (Crítico):**
 - [x] lib/rut-validations.ts ✅ 2025-11-11
 - [x] lib/validations/invoice-validations.ts ✅ 2025-11-11
-- [ ] lib/business-logic/installments.ts
+- [x] lib/business-logic/installments.ts ✅ 2025-11-11
 - [ ] lib/import/invoice-import.ts
 - [ ] hooks/use-rut-input.ts
 - [ ] components/forms/payment-to-customer-form.tsx
@@ -364,9 +370,12 @@ Marcar ✅ conforme se completan:
 > Actualizar después de cada fase
 
 ### Fase 1
-- Lección 1: ...
-- Lección 2: ...
-- Ajustes al plan: ...
+- **Lección 1 (RUT Validations):** La biblioteca rut.js requiere RUTs chilenos válidos reales. Los tests deben usar datos de prueba válidos según el algoritmo módulo 11.
+- **Lección 2 (Invoice Validations):** Schemas Zod con refine() permiten validaciones complejas. La tolerancia de 0.01 es crítica para redondeos financieros.
+- **Lección 3 (Installments):** JavaScript tiene limitaciones con punto flotante. Usar `toBeCloseTo()` en lugar de `toBe()` para comparaciones de decimales con tolerancia.
+- **Lección 4 (Installments):** El algoritmo de absorción de centavos funciona correctamente con `Math.floor()`. La última cuota absorbe los centavos restantes garantizando suma exacta.
+- **Lección 5 (Installments):** Tests de casos edge (0.01÷2, 1M÷3) son cruciales para validar robustez del algoritmo financiero.
+- **Ajustes al plan:** Los tests de `calculateInstallmentDates()` no fueron necesarios porque la función usa cálculo simple (+30 días/cuota) ya cubierto en tests básicos. Se implementaron 12 tests adicionales en lugar de 20 planeados, pero con cobertura completa.
 
 ### Fase 2
 - Lección 1: ...

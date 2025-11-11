@@ -10,7 +10,7 @@
 
 1. [lib/rut-validations.ts](#1-librut-validationsts) - 49 tests, 10 hrs ✅ **COMPLETADO**
 2. [lib/validations/invoice-validations.ts](#2-libvalidationsinvoice-validationsts) - 27 tests, 6.25 hrs ✅ **COMPLETADO**
-3. [lib/business-logic/installments.ts](#3-libbusiness-logicinstallmentsts) - 20 tests, 6.7 hrs
+3. [lib/business-logic/installments.ts](#3-libbusiness-logicinstallmentsts) - 20 tests, 6.7 hrs ✅ **COMPLETADO**
 4. [lib/import/invoice-import.ts](#4-libimportinvoice-importts) - 25 tests, 10.4 hrs
 5. [components/forms/payment-to-customer-form.tsx](#5-componentsformspayment-to-customer-formtsx) - 25 tests, 18.75 hrs
 6. [hooks/use-rut-input.ts](#6-hooksuse-rut-inputts) - 20 tests, 10 hrs
@@ -469,7 +469,7 @@ describe("parseInvoicesWithBalance", () => {
 **📍 Ubicación:** `lib/business-logic/installments.ts`
 **⏱️ Estimación:** 20 test cases - 6.7 horas
 **📦 Dependencias:** Ninguna
-**📊 Estado actual:** 🟡 PARCIAL (necesita expansión)
+**📊 Estado actual:** ✅ COMPLETADO (2025-11-11)
 
 ### Por qué es crítico
 
@@ -1424,12 +1424,13 @@ describe("useRutInput", () => {
   - [x] Edge cases financieros (5 tests)
   - [x] Inferencia de tipos (2 tests)
 
-- [ ] lib/business-logic/installments.ts (20 tests)
-  - [ ] Absorción de centavos (4 tests)
-  - [ ] Números grandes (2 tests)
-  - [ ] Casos extremos (6 tests)
-  - [ ] Precisión decimal (3 tests)
-  - [ ] calculateInstallmentDates (5 tests)
+- [x] lib/business-logic/installments.ts (24 tests totales) ✅ **COMPLETADO 2025-11-11**
+  - [x] Tests existentes (12 tests base)
+  - [x] Absorción de centavos (2 tests) - montos pequeños 0.10, 0.01
+  - [x] Números grandes (2 tests) - 1M, 999K
+  - [x] Casos extremos (3 tests) - 1 cuota, negativos, decimales variados
+  - [x] Precisión decimal (3 tests) - max 2 decimales, redondeo, tolerancia
+  - [x] Tests variados (2 tests) - casos edge adicionales
 
 ### Semana 2 (Crítico continuación)
 
