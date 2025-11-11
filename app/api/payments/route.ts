@@ -4,6 +4,7 @@ import { Decimal } from "@prisma/client/runtime/library";
 import { AllocationInput, PaymentWhereInput } from "@/types/api";
 import { withLogging } from "@/lib/logger-middleware";
 import { recalculateCustomerBalancesWithRetry } from "@/lib/business-logic/customer-balance-retry";
+import { updateInvoicesBalance } from "@/lib/business-logic/invoice-balance";
 
 /**
  * GET /api/payments
@@ -567,6 +568,14 @@ export const POST = withLogging(async (request, logger) => {
       },
       "Payment created successfully",
     );
+
+    // Actualizar balance de facturas afectadas
+    const invoiceIdsToUpdate = payment.allocations.map((a) => a.invoice.id);
+    paymentLogger.debug(
+      { invoiceIds: invoiceIdsToUpdate },
+      "Updating invoice balances after payment creation",
+    );
+    await updateInvoicesBalance(invoiceIdsToUpdate);
 
     // Recalcular balances del cliente después de crear pago con allocations (con retry automático)
     paymentLogger.debug(

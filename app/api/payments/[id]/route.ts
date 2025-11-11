@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
+import { updateInvoicesBalance } from "@/lib/business-logic/invoice-balance";
 
 /**
  * PUT /api/payments/[id]
@@ -133,12 +134,17 @@ export async function DELETE(
   try {
     const { id } = await params;
 
-    // Verificar que el pago existe
+    // Verificar que el pago existe y obtener allocations
     const existingPayment = await prisma.payment.findUnique({
       where: { id },
       select: {
         id: true,
         selectedInstallments: true,
+        allocations: {
+          select: {
+            invoiceId: true,
+          },
+        },
       },
     });
 
@@ -149,10 +155,18 @@ export async function DELETE(
       );
     }
 
+    // Guardar invoiceIds antes de eliminar (para actualizar balance después)
+    const invoiceIds = existingPayment.allocations.map((a) => a.invoiceId);
+
     // Eliminar el pago (cascade delete elimina installments y allocations automáticamente)
     await prisma.payment.delete({
       where: { id },
     });
+
+    // Actualizar balance de facturas afectadas
+    if (invoiceIds.length > 0) {
+      await updateInvoicesBalance(invoiceIds);
+    }
 
     return NextResponse.json(
       {

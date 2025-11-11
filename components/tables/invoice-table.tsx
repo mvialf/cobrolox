@@ -2,6 +2,7 @@
 
 import { StatusBadge } from "@/components/ui/status-badge";
 import { INVOICE_STATUS_LABELS } from "@/lib/constants/invoice-status-constants";
+import { InvoiceDueDateCell } from "@/components/cells/invoice-due-date-cell";
 
 // Tipo para la factura en la tabla
 export interface InvoiceTableData {
@@ -30,21 +31,12 @@ interface InvoiceTableProps {
   invoices: InvoiceTableData[];
 }
 
-// Funci�n helper para formatear moneda chilena
+// Función helper para formatear moneda chilena
 function formatCurrency(amount: number): string {
   return new Intl.NumberFormat("es-CL", {
     style: "currency",
     currency: "CLP",
   }).format(amount);
-}
-
-// Funci�n helper para formatear fechas en formato dd/mm/yyyy
-function formatDate(date: string | Date): string {
-  const dateObj = typeof date === "string" ? new Date(date) : date;
-  const year = dateObj.getFullYear();
-  const month = String(dateObj.getMonth() + 1).padStart(2, "0");
-  const day = String(dateObj.getDate()).padStart(2, "0");
-  return `${day}/${month}/${year}`;
 }
 
 export function InvoiceTable({ invoices }: InvoiceTableProps) {
@@ -111,8 +103,11 @@ export function InvoiceTable({ invoices }: InvoiceTableProps) {
                   </td>
 
                   {/* Vencimiento */}
-                  <td className="py-3 px-2 text-end text-md">
-                    {formatDate(invoice.dueDate)}
+                  <td className="py-3 px-3 text-start text-md">
+                    <InvoiceDueDateCell
+                      dueDate={invoice.dueDate}
+                      isPaid={invoice.balance === 0}
+                    />
                   </td>
 
                   {/* Estado */}
