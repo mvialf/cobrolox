@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# Prevenir commit de archivos .env (excepto .env.example)
+ENV_FILES=$(git diff --cached --name-only | grep -E "^\.env" | grep -v "\.env\.example$")
+
+if [ ! -z "$ENV_FILES" ]; then
+  echo ""
+  echo "❌ BLOQUEADO: Intentaste commitear archivos de variables de entorno"
+  echo ""
+  echo "Archivos detectados:"
+  echo "$ENV_FILES" | sed 's/^/  - /'
+  echo ""
+  echo "💡 Estos archivos contienen secretos y NO deben commitearse."
+  echo "   Usa .env.example para templates sin credenciales."
+  echo ""
+  exit 1
+fi
+
+# Si pasa la validación, permitir el commit
+exit 0
