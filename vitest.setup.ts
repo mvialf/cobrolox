@@ -1,6 +1,11 @@
 import "@testing-library/jest-dom";
 import { cleanup } from "@testing-library/react";
 import { afterEach, vi } from "vitest";
+import { config } from "dotenv";
+import { resolve } from "path";
+
+// Cargar variables de entorno desde .env.local para tests
+config({ path: resolve(process.cwd(), ".env.local") });
 
 // Cleanup después de cada test
 afterEach(() => {
