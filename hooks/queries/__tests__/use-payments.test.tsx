@@ -323,16 +323,16 @@ describe("useCustomerProjects", () => {
 
 describe("useCreatePayment", () => {
   // ========================================================================
-  // VALIDACIÓN 1: Type "Project" debe tener exactamente 1 allocation
+  // VALIDACIÓN 1: Type "Invoice" debe tener exactamente 1 allocation
   // ========================================================================
 
-  it("debe RECHAZAR pago Project con 0 allocations", async () => {
+  it("debe RECHAZAR pago Invoice con 0 allocations", async () => {
     const { result } = renderHook(() => useCreatePayment(), {
       wrapper: createWrapper(),
     });
 
     const invalidData: CreatePaymentPayload = {
-      type: "Project",
+      type: "Invoice",
       customerId: "cust-1",
       amount: 500000,
       currency: "CLP",
@@ -344,17 +344,17 @@ describe("useCreatePayment", () => {
     };
 
     await expect(result.current.mutateAsync(invalidData)).rejects.toThrow(
-      "Pago tipo Project debe tener exactamente 1 asignación",
+      "Pago tipo Invoice debe tener exactamente 1 asignación",
     );
   });
 
-  it("debe RECHAZAR pago Project con 2+ allocations", async () => {
+  it("debe RECHAZAR pago Invoice con 2+ allocations", async () => {
     const { result } = renderHook(() => useCreatePayment(), {
       wrapper: createWrapper(),
     });
 
     const invalidData: CreatePaymentPayload = {
-      type: "Project",
+      type: "Invoice",
       customerId: "cust-1",
       amount: 500000,
       currency: "CLP",
@@ -363,17 +363,17 @@ describe("useCreatePayment", () => {
       reference: null,
       notes: null,
       allocations: [
-        { projectId: "proj-1", allocatedAmount: 300000 },
-        { projectId: "proj-2", allocatedAmount: 200000 }, // ❌ INVÁLIDO: 2 allocations
+        { invoiceId: "inv-1", allocatedAmount: 300000 },
+        { invoiceId: "inv-2", allocatedAmount: 200000 }, // ❌ INVÁLIDO: 2 allocations
       ],
     };
 
     await expect(result.current.mutateAsync(invalidData)).rejects.toThrow(
-      "Pago tipo Project debe tener exactamente 1 asignación",
+      "Pago tipo Invoice debe tener exactamente 1 asignación",
     );
   });
 
-  it("debe ACEPTAR pago Project con 1 allocation", async () => {
+  it("debe ACEPTAR pago Invoice con 1 allocation", async () => {
     const mockPayment = {
       id: "pay-1",
       amount: 500000,
@@ -381,12 +381,12 @@ describe("useCreatePayment", () => {
       date: new Date().toISOString(),
       reference: null,
       notes: null,
-      type: "Project",
+      type: "Invoice",
       selectedInstallments: null,
       customerId: "cust-1",
       paymentMethodId: "pm-1",
       allocations: [
-        { id: "alloc-1", projectId: "proj-1", allocatedAmount: 500000 },
+        { id: "alloc-1", invoiceId: "inv-1", allocatedAmount: 500000 },
       ],
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
@@ -402,7 +402,7 @@ describe("useCreatePayment", () => {
     });
 
     const validData: CreatePaymentPayload = {
-      type: "Project",
+      type: "Invoice",
       customerId: "cust-1",
       amount: 500000,
       currency: "CLP",
@@ -410,7 +410,7 @@ describe("useCreatePayment", () => {
       paymentMethodId: "pm-1",
       reference: null,
       notes: null,
-      allocations: [{ projectId: "proj-1", allocatedAmount: 500000 }], // ✅ VÁLIDO
+      allocations: [{ invoiceId: "inv-1", allocatedAmount: 500000 }], // ✅ VÁLIDO
     };
 
     const createdPayment = await result.current.mutateAsync(validData);
@@ -464,7 +464,7 @@ describe("useCreatePayment", () => {
       customerId: "cust-1",
       paymentMethodId: "pm-1",
       allocations: [
-        { id: "alloc-1", projectId: "proj-1", allocatedAmount: 300000 },
+        { id: "alloc-1", invoiceId: "inv-1", allocatedAmount: 300000 },
       ],
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
@@ -488,7 +488,7 @@ describe("useCreatePayment", () => {
       paymentMethodId: "pm-1",
       reference: null,
       notes: null,
-      allocations: [{ projectId: "proj-1", allocatedAmount: 300000 }], // ✅ VÁLIDO
+      allocations: [{ invoiceId: "inv-1", allocatedAmount: 300000 }], // ✅ VÁLIDO
     };
 
     const createdPayment = await result.current.mutateAsync(validData);
@@ -508,8 +508,8 @@ describe("useCreatePayment", () => {
       customerId: "cust-1",
       paymentMethodId: "pm-1",
       allocations: [
-        { id: "alloc-1", projectId: "proj-1", allocatedAmount: 400000 },
-        { id: "alloc-2", projectId: "proj-2", allocatedAmount: 300000 },
+        { id: "alloc-1", invoiceId: "inv-1", allocatedAmount: 400000 },
+        { id: "alloc-2", invoiceId: "inv-2", allocatedAmount: 300000 },
       ],
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
@@ -534,8 +534,8 @@ describe("useCreatePayment", () => {
       reference: null,
       notes: null,
       allocations: [
-        { projectId: "proj-1", allocatedAmount: 400000 },
-        { projectId: "proj-2", allocatedAmount: 300000 },
+        { invoiceId: "inv-1", allocatedAmount: 400000 },
+        { invoiceId: "inv-2", allocatedAmount: 300000 },
       ], // ✅ VÁLIDO
     };
 
@@ -562,8 +562,8 @@ describe("useCreatePayment", () => {
       reference: null,
       notes: null,
       allocations: [
-        { projectId: "proj-1", allocatedAmount: 400000 },
-        { projectId: "proj-2", allocatedAmount: 250000 }, // Suma = 650,000 (diferencia: 50,000 > 0.01)
+        { invoiceId: "inv-1", allocatedAmount: 400000 },
+        { invoiceId: "inv-2", allocatedAmount: 250000 }, // Suma = 650,000 (diferencia: 50,000 > 0.01)
       ],
     };
 
@@ -585,8 +585,8 @@ describe("useCreatePayment", () => {
       customerId: "cust-1",
       paymentMethodId: "pm-1",
       allocations: [
-        { id: "alloc-1", projectId: "proj-1", allocatedAmount: 600 },
-        { id: "alloc-2", projectId: "proj-2", allocatedAmount: 400 },
+        { id: "alloc-1", invoiceId: "inv-1", allocatedAmount: 600 },
+        { id: "alloc-2", invoiceId: "inv-2", allocatedAmount: 400 },
       ],
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
@@ -611,8 +611,8 @@ describe("useCreatePayment", () => {
       reference: null,
       notes: null,
       allocations: [
-        { projectId: "proj-1", allocatedAmount: 600 },
-        { projectId: "proj-2", allocatedAmount: 400 }, // Suma = 1000 ✅
+        { invoiceId: "inv-1", allocatedAmount: 600 },
+        { invoiceId: "inv-2", allocatedAmount: 400 }, // Suma = 1000 ✅
       ],
     };
 
@@ -633,8 +633,8 @@ describe("useCreatePayment", () => {
       customerId: "cust-1",
       paymentMethodId: "pm-1",
       allocations: [
-        { id: "alloc-1", projectId: "proj-1", allocatedAmount: 600.005 },
-        { id: "alloc-2", projectId: "proj-2", allocatedAmount: 399.995 },
+        { id: "alloc-1", invoiceId: "inv-1", allocatedAmount: 600.005 },
+        { id: "alloc-2", invoiceId: "inv-2", allocatedAmount: 399.995 },
       ],
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
@@ -659,8 +659,8 @@ describe("useCreatePayment", () => {
       reference: null,
       notes: null,
       allocations: [
-        { projectId: "proj-1", allocatedAmount: 600.005 },
-        { projectId: "proj-2", allocatedAmount: 399.995 }, // Suma = 1000.00 (diferencia: 0)
+        { invoiceId: "inv-1", allocatedAmount: 600.005 },
+        { invoiceId: "inv-2", allocatedAmount: 399.995 }, // Suma = 1000.00 (diferencia: 0)
       ],
     };
 
@@ -669,10 +669,10 @@ describe("useCreatePayment", () => {
   });
 
   // ========================================================================
-  // VALIDACIÓN 4: No projectIds duplicados
+  // VALIDACIÓN 4: No invoiceIds duplicados
   // ========================================================================
 
-  it("debe RECHAZAR si hay projectIds duplicados", async () => {
+  it("debe RECHAZAR si hay invoiceIds duplicados", async () => {
     const { result } = renderHook(() => useCreatePayment(), {
       wrapper: createWrapper(),
     });
@@ -687,17 +687,17 @@ describe("useCreatePayment", () => {
       reference: null,
       notes: null,
       allocations: [
-        { projectId: "proj-1", allocatedAmount: 600000 },
-        { projectId: "proj-1", allocatedAmount: 400000 }, // ❌ DUPLICADO
+        { invoiceId: "inv-1", allocatedAmount: 600000 },
+        { invoiceId: "inv-1", allocatedAmount: 400000 }, // ❌ DUPLICADO
       ],
     };
 
     await expect(result.current.mutateAsync(invalidData)).rejects.toThrow(
-      "No puede asignar el mismo proyecto múltiples veces",
+      "No puede asignar el mismo factura múltiples veces",
     );
   });
 
-  it("debe ACEPTAR si todos los projectIds son únicos", async () => {
+  it("debe ACEPTAR si todos los invoiceIds son únicos", async () => {
     const mockPayment = {
       id: "pay-6",
       amount: 1000000,
@@ -710,9 +710,9 @@ describe("useCreatePayment", () => {
       customerId: "cust-1",
       paymentMethodId: "pm-1",
       allocations: [
-        { id: "alloc-1", projectId: "proj-1", allocatedAmount: 400000 },
-        { id: "alloc-2", projectId: "proj-2", allocatedAmount: 300000 },
-        { id: "alloc-3", projectId: "proj-3", allocatedAmount: 300000 },
+        { id: "alloc-1", invoiceId: "inv-1", allocatedAmount: 400000 },
+        { id: "alloc-2", invoiceId: "inv-2", allocatedAmount: 300000 },
+        { id: "alloc-3", invoiceId: "inv-3", allocatedAmount: 300000 },
       ],
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
@@ -737,9 +737,9 @@ describe("useCreatePayment", () => {
       reference: null,
       notes: null,
       allocations: [
-        { projectId: "proj-1", allocatedAmount: 400000 },
-        { projectId: "proj-2", allocatedAmount: 300000 },
-        { projectId: "proj-3", allocatedAmount: 300000 }, // ✅ Todos únicos
+        { invoiceId: "inv-1", allocatedAmount: 400000 },
+        { invoiceId: "inv-2", allocatedAmount: 300000 },
+        { invoiceId: "inv-3", allocatedAmount: 300000 }, // ✅ Todos únicos
       ],
     };
 
