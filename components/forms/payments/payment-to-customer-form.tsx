@@ -12,7 +12,7 @@ import {
   parseInvoicesWithBalance,
 } from "@/lib/validations/payment-validations";
 import { calculateFIFO } from "@/lib/business-logic/payment-fifo";
-import { formatCurrency } from "@/lib/format";
+import { formatCurrency, formatDate } from "@/lib/format";
 import { cn } from "@/lib/utils";
 
 import { Button } from "@/components/ui/button";
@@ -459,10 +459,7 @@ export function PaymentToCustomerForm({
                                 {invoice.invoiceNumber}
                               </div>
                               <div className="text-sm text-muted-foreground">
-                                Vence:{" "}
-                                {new Date(invoice.dueDate).toLocaleDateString(
-                                  "es-CL",
-                                )}
+                                Vence: {formatDate(invoice.dueDate, "short")}
                               </div>
                             </div>
                           </TableCell>

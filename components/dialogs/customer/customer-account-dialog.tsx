@@ -65,6 +65,11 @@ export function CustomerAccountDialog({
   const [selectedStatuses, setSelectedStatuses] = useState<Set<string>>(
     new Set(),
   );
+  const [calculatedBalances, setCalculatedBalances] = useState({
+    balanceTotal: customer?.balanceTotal ?? 0,
+    balanceVigente: customer?.balanceVigente ?? 0,
+    balanceVencido: customer?.balanceVencido ?? 0,
+  });
 
   // Opciones de filtro disponibles
   const filterOptions = [
@@ -111,9 +116,9 @@ export function CustomerAccountDialog({
       customer.tradeName ? `Nombre Comercial: ${customer.tradeName}` : "",
       "",
       "RESUMEN FINANCIERO",
-      `Crédito Total: ${formatCurrency(customer.balanceTotal)}`,
-      `Balance Vigente: ${formatCurrency(customer.balanceVigente)}`,
-      `Balance Vencido: ${formatCurrency(customer.balanceVencido)}`,
+      `Crédito Total: ${formatCurrency(calculatedBalances.balanceTotal)}`,
+      `Balance Vigente: ${formatCurrency(calculatedBalances.balanceVigente)}`,
+      `Balance Vencido: ${formatCurrency(calculatedBalances.balanceVencido)}`,
       "",
       `FACTURAS (${filteredInvoices.length} de ${invoices.length})`,
       ...filteredInvoices.map(
@@ -168,6 +173,36 @@ export function CustomerAccountDialog({
       setGeneratedDate(new Date());
     }
   }, [open, customer]);
+
+  // Calcular balances dinámicamente desde las facturas cargadas
+  // Esto garantiza que los balances siempre reflejen el estado actual
+  // (vigente vs vencido) incluso si las columnas de Customer están desactualizadas
+  useEffect(() => {
+    if (!invoices || invoices.length === 0) {
+      // Si no hay facturas, resetear a los valores del customer prop
+      setCalculatedBalances({
+        balanceTotal: customer?.balanceTotal ?? 0,
+        balanceVigente: customer?.balanceVigente ?? 0,
+        balanceVencido: customer?.balanceVencido ?? 0,
+      });
+      return;
+    }
+
+    // Calcular balances desde las facturas (que tienen estados dinámicos correctos)
+    const balanceTotal = invoices.reduce((sum, inv) => sum + inv.balance, 0);
+    const balanceVencido = invoices
+      .filter((inv) => inv.invoiceStatus.name === "overdue")
+      .reduce((sum, inv) => sum + inv.balance, 0);
+    const balanceVigente = invoices
+      .filter((inv) => inv.invoiceStatus.name === "current")
+      .reduce((sum, inv) => sum + inv.balance, 0);
+
+    setCalculatedBalances({
+      balanceTotal,
+      balanceVigente,
+      balanceVencido,
+    });
+  }, [invoices, customer]);
 
   if (!customer) return null;
 
@@ -325,9 +360,9 @@ export function CustomerAccountDialog({
 
           {/* Resumen Financiero */}
           <CustomerInvoiceInfo
-            balanceTotal={customer.balanceTotal}
-            balanceVigente={customer.balanceVigente}
-            balanceVencido={customer.balanceVencido}
+            balanceTotal={calculatedBalances.balanceTotal}
+            balanceVigente={calculatedBalances.balanceVigente}
+            balanceVencido={calculatedBalances.balanceVencido}
           />
 
           {/* Tabla de Facturas */}

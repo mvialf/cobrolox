@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { type ColumnDef } from "@tanstack/react-table";
 import {
   DataTableDropdown,
@@ -10,6 +11,16 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { CustomerNameInfo } from "@/components/summarys/customer/customer-name-info";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { Pencil, Trash2, Eye } from "lucide-react";
@@ -18,6 +29,10 @@ import {
   INVOICE_STATUS_LABELS,
   PAYMENT_STATUS_LABELS,
 } from "@/lib/constants/invoice-status-constants";
+import { InvoiceDetailDialog } from "@/components/dialogs/invoice/invoice-detail-dialog";
+import { EditInvoiceDialog } from "@/components/dialogs/invoice/edit-invoice-dialog";
+import { useDeleteInvoice } from "@/hooks/queries/use-invoices";
+import { formatDate, formatCurrency } from "@/lib/format";
 
 // Tipo para la factura en el DataTable
 export interface Invoice {
@@ -55,54 +70,110 @@ export interface Invoice {
 }
 
 // Componente para las acciones de cada factura
-function InvoiceActionsCell({ invoice }: { invoice: Invoice }) {
+function InvoiceActionsCell({
+  invoice,
+  onInvoiceUpdated,
+}: {
+  invoice: Invoice;
+  onInvoiceUpdated?: () => void;
+}) {
+  const [showDetailDialog, setShowDetailDialog] = useState(false);
+  const [showEditDialog, setShowEditDialog] = useState(false);
+  const [showDeleteAlert, setShowDeleteAlert] = useState(false);
+
+  const deleteInvoice = useDeleteInvoice();
+
+  const handleDelete = () => {
+    deleteInvoice.mutate(invoice.id, {
+      onSuccess: () => {
+        setShowDeleteAlert(false);
+        onInvoiceUpdated?.();
+      },
+    });
+  };
+
   return (
-    <DataTableDropdown>
-      <DropdownMenuLabel>Acciones</DropdownMenuLabel>
-      <DropdownMenuItem
-        onClick={() => navigator.clipboard.writeText(invoice.invoiceNumber)}
-      >
-        Copiar número de factura
-      </DropdownMenuItem>
+    <>
+      <DataTableDropdown>
+        <DropdownMenuLabel>Acciones</DropdownMenuLabel>
+        <DropdownMenuItem
+          onClick={() => navigator.clipboard.writeText(invoice.invoiceNumber)}
+        >
+          Copiar número de factura
+        </DropdownMenuItem>
 
-      <DropdownMenuSeparator />
+        <DropdownMenuSeparator />
 
-      {/* Ver detalle */}
-      <DropdownMenuItem>
-        <Eye className="mr-2 h-4 w-4" />
-        Ver detalle
-      </DropdownMenuItem>
+        {/* Ver detalle */}
+        <DropdownMenuItem onClick={() => setShowDetailDialog(true)}>
+          <Eye className="mr-2 h-4 w-4" />
+          Ver detalle
+        </DropdownMenuItem>
 
-      {/* Editar */}
-      <DropdownMenuItem>
-        <Pencil className="mr-2 h-4 w-4" />
-        Editar
-      </DropdownMenuItem>
+        {/* Editar */}
+        <DropdownMenuItem onClick={() => setShowEditDialog(true)}>
+          <Pencil className="mr-2 h-4 w-4" />
+          Editar
+        </DropdownMenuItem>
 
-      {/* Eliminar */}
-      <DropdownMenuItem className="text-destructive">
-        <Trash2 className="mr-2 h-4 w-4" />
-        Eliminar
-      </DropdownMenuItem>
-    </DataTableDropdown>
+        {/* Eliminar */}
+        <DropdownMenuItem
+          className="text-destructive"
+          onClick={() => setShowDeleteAlert(true)}
+        >
+          <Trash2 className="mr-2 h-4 w-4" />
+          Eliminar
+        </DropdownMenuItem>
+      </DataTableDropdown>
+
+      {/* Dialog para ver detalles */}
+      <InvoiceDetailDialog
+        invoiceId={invoice.id}
+        open={showDetailDialog}
+        onOpenChange={setShowDetailDialog}
+      />
+
+      {/* Dialog para editar */}
+      <EditInvoiceDialog
+        invoiceId={invoice.id}
+        open={showEditDialog}
+        onOpenChange={setShowEditDialog}
+        onInvoiceUpdated={() => {
+          setShowEditDialog(false);
+          onInvoiceUpdated?.();
+        }}
+      />
+
+      {/* Alert Dialog para confirmar eliminación */}
+      <AlertDialog open={showDeleteAlert} onOpenChange={setShowDeleteAlert}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>¿Eliminar factura?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Esta acción no se puede deshacer. Se eliminará permanentemente la
+              factura{" "}
+              <span className="font-semibold">{invoice.invoiceNumber}</span>.
+              {invoice.balance === 0 && (
+                <span className="block mt-2 text-amber-600 dark:text-amber-400">
+                  Nota: Esta factura está completamente pagada.
+                </span>
+              )}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDelete}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              disabled={deleteInvoice.isPending}
+            >
+              {deleteInvoice.isPending ? "Eliminando..." : "Eliminar"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   );
-}
-
-// Función helper para formatear moneda chilena
-function formatCurrency(amount: number): string {
-  return new Intl.NumberFormat("es-CL", {
-    style: "currency",
-    currency: "CLP",
-  }).format(amount);
-}
-
-// Función helper para formatear fechas en formato dd/mm/yyyy
-function formatDate(date: string | Date): string {
-  const dateObj = typeof date === "string" ? new Date(date) : date;
-  const year = dateObj.getFullYear();
-  const month = String(dateObj.getMonth() + 1).padStart(2, "0");
-  const day = String(dateObj.getDate()).padStart(2, "0");
-  return `${day}/${month}/${year}`;
 }
 
 export const columns: ColumnDef<Invoice>[] = [

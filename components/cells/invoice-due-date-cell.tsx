@@ -3,18 +3,11 @@
 import { differenceInCalendarDays, startOfDay } from "date-fns";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { formatDate } from "@/lib/format";
 
 interface InvoiceDueDateCellProps {
   dueDate: string | Date;
   isPaid?: boolean;
-}
-
-// Función helper para formatear fechas en formato dd/mm/yyyy
-function formatDate(date: Date): string {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  return `${day}/${month}/${year}`;
 }
 
 export function InvoiceDueDateCell({
@@ -22,7 +15,7 @@ export function InvoiceDueDateCell({
   isPaid = false,
 }: InvoiceDueDateCellProps) {
   const dateObj = typeof dueDate === "string" ? new Date(dueDate) : dueDate;
-  const formattedDate = formatDate(dateObj);
+  const formattedDate = formatDate(dateObj, "short");
 
   const today = startOfDay(new Date());
   const dueDateStart = startOfDay(dateObj);
