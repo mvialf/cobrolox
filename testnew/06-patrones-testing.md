@@ -21,30 +21,25 @@
 ### vitest.config.mts
 
 ```typescript
-import { defineConfig } from 'vitest/config';
-import react from '@vitejs/plugin-react';
-import path from 'path';
+import { defineConfig } from "vitest/config";
+import react from "@vitejs/plugin-react";
+import path from "path";
 
 export default defineConfig({
   plugins: [react()],
   test: {
-    environment: 'jsdom',
-    setupFiles: ['./vitest.setup.ts'],
+    environment: "jsdom",
+    setupFiles: ["./vitest.setup.ts"],
     globals: true,
     coverage: {
-      provider: 'v8',
-      reporter: ['text', 'json', 'html'],
-      exclude: [
-        'node_modules/**',
-        '.next/**',
-        '**/*.config.ts',
-        '**/*.d.ts',
-      ]
-    }
+      provider: "v8",
+      reporter: ["text", "json", "html"],
+      exclude: ["node_modules/**", ".next/**", "**/*.config.ts", "**/*.d.ts"],
+    },
   },
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './'),
+      "@": path.resolve(__dirname, "./"),
     },
   },
 });
@@ -53,9 +48,9 @@ export default defineConfig({
 ### vitest.setup.ts
 
 ```typescript
-import '@testing-library/jest-dom';
-import { cleanup } from '@testing-library/react';
-import { afterEach } from 'vitest';
+import "@testing-library/jest-dom";
+import { cleanup } from "@testing-library/react";
+import { afterEach } from "vitest";
 
 // Cleanup después de cada test
 afterEach(() => {
@@ -75,9 +70,9 @@ global.IntersectionObserver = vi.fn().mockImplementation(() => ({
   disconnect: vi.fn(),
 }));
 
-Object.defineProperty(window, 'matchMedia', {
+Object.defineProperty(window, "matchMedia", {
   writable: true,
-  value: vi.fn().mockImplementation(query => ({
+  value: vi.fn().mockImplementation((query) => ({
     matches: false,
     media: query,
     onchange: null,
@@ -97,19 +92,19 @@ Object.defineProperty(window, 'matchMedia', {
 ### Patrón: Validación de Schemas
 
 ```typescript
-import { describe, it, expect } from 'vitest';
-import { invoiceSchema } from '@/lib/validations/invoice-validations';
+import { describe, it, expect } from "vitest";
+import { invoiceSchema } from "@/lib/validations/invoice-validations";
 
-describe('invoiceSchema', () => {
+describe("invoiceSchema", () => {
   const validData = {
-    customerId: '123',
-    number: 'F-001',
+    customerId: "123",
+    number: "F-001",
     subtotal: 1000,
     IVA: 190,
     total: 1190,
   };
 
-  it('debe validar datos correctos', () => {
+  it("debe validar datos correctos", () => {
     // Usar parse (lanza error si falla)
     expect(() => invoiceSchema.parse(validData)).not.toThrow();
 
@@ -118,7 +113,7 @@ describe('invoiceSchema', () => {
     expect(result.success).toBe(true);
   });
 
-  it('debe rechazar datos inválidos', () => {
+  it("debe rechazar datos inválidos", () => {
     const invalid = { ...validData, total: 1000 }; // Total incorrecto
 
     expect(() => invoiceSchema.parse(invalid)).toThrow();
@@ -126,14 +121,14 @@ describe('invoiceSchema', () => {
     const result = invoiceSchema.safeParse(invalid);
     expect(result.success).toBe(false);
     if (!result.success) {
-      expect(result.error.issues[0].message).toContain('total');
+      expect(result.error.issues[0].message).toContain("total");
     }
   });
 
-  it('debe transformar datos', () => {
+  it("debe transformar datos", () => {
     const withTransform = invoiceSchema.parse(validData);
     // Verificar transformaciones aplicadas
-    expect(withTransform.number).toBe('F-001');
+    expect(withTransform.number).toBe("F-001");
   });
 });
 ```
@@ -234,22 +229,20 @@ export function createQueryWrapper() {
 ### Patrón: Testing Query
 
 ```typescript
-import { renderHook, waitFor } from '@testing-library/react';
-import { useInvoices } from '@/hooks/queries/use-invoices';
-import { createQueryWrapper } from './test-utils';
+import { renderHook, waitFor } from "@testing-library/react";
+import { useInvoices } from "@/hooks/queries/use-invoices";
+import { createQueryWrapper } from "./test-utils";
 
-describe('useInvoices', () => {
-  it('debe fetchear invoices', async () => {
+describe("useInvoices", () => {
+  it("debe fetchear invoices", async () => {
     // Mock fetch
     global.fetch = vi.fn().mockResolvedValue({
       ok: true,
-      json: async () => [
-        { id: '1', number: 'F-001', total: 1000 }
-      ]
+      json: async () => [{ id: "1", number: "F-001", total: 1000 }],
     });
 
     const { result } = renderHook(() => useInvoices(), {
-      wrapper: createQueryWrapper()
+      wrapper: createQueryWrapper(),
     });
 
     // Inicial: loading
@@ -260,17 +253,17 @@ describe('useInvoices', () => {
 
     // Verificar datos
     expect(result.current.data).toHaveLength(1);
-    expect(result.current.data[0].number).toBe('F-001');
+    expect(result.current.data[0].number).toBe("F-001");
   });
 
-  it('debe manejar errores', async () => {
+  it("debe manejar errores", async () => {
     global.fetch = vi.fn().mockResolvedValue({
       ok: false,
-      status: 404
+      status: 404,
     });
 
     const { result } = renderHook(() => useInvoices(), {
-      wrapper: createQueryWrapper()
+      wrapper: createQueryWrapper(),
     });
 
     await waitFor(() => expect(result.current.isError).toBe(true));
@@ -349,33 +342,33 @@ describe('useUpdateInvoice', () => {
 ### Patrón: Hook Simple
 
 ```typescript
-import { renderHook, act } from '@testing-library/react';
-import { useRutInput } from '@/hooks/use-rut-input';
+import { renderHook, act } from "@testing-library/react";
+import { useRutInput } from "@/hooks/use-rut-input";
 
-describe('useRutInput', () => {
-  it('debe formatear RUT automáticamente', () => {
+describe("useRutInput", () => {
+  it("debe formatear RUT automáticamente", () => {
     const { result } = renderHook(() => useRutInput());
 
     act(() => {
-      result.current.setValue('123456789');
+      result.current.setValue("123456789");
     });
 
-    expect(result.current.formattedValue).toBe('12.345.678-9');
-    expect(result.current.cleanValue).toBe('123456789');
+    expect(result.current.formattedValue).toBe("12.345.678-9");
+    expect(result.current.cleanValue).toBe("123456789");
   });
 
-  it('debe validar RUT', () => {
+  it("debe validar RUT", () => {
     const { result } = renderHook(() => useRutInput());
 
     // RUT válido
     act(() => {
-      result.current.setValue('12.345.678-9');
+      result.current.setValue("12.345.678-9");
     });
     expect(result.current.isValid).toBe(true);
 
     // RUT inválido
     act(() => {
-      result.current.setValue('12.345.678-0');
+      result.current.setValue("12.345.678-0");
     });
     expect(result.current.isValid).toBe(false);
   });
@@ -385,11 +378,11 @@ describe('useRutInput', () => {
 ### Patrón: Hook con Timers
 
 ```typescript
-import { renderHook, act } from '@testing-library/react';
-import { useDebounce } from '@/hooks/use-debounce';
-import { vi } from 'vitest';
+import { renderHook, act } from "@testing-library/react";
+import { useDebounce } from "@/hooks/use-debounce";
+import { vi } from "vitest";
 
-describe('useDebounce', () => {
+describe("useDebounce", () => {
   beforeEach(() => {
     vi.useFakeTimers();
   });
@@ -398,19 +391,19 @@ describe('useDebounce', () => {
     vi.restoreAllMocks();
   });
 
-  it('debe debouncer valor', () => {
+  it("debe debouncer valor", () => {
     const { result, rerender } = renderHook(
       ({ value, delay }) => useDebounce(value, delay),
-      { initialProps: { value: 'initial', delay: 500 } }
+      { initialProps: { value: "initial", delay: 500 } },
     );
 
-    expect(result.current).toBe('initial');
+    expect(result.current).toBe("initial");
 
     // Cambiar valor
-    rerender({ value: 'updated', delay: 500 });
+    rerender({ value: "updated", delay: 500 });
 
     // Aún no actualizado
-    expect(result.current).toBe('initial');
+    expect(result.current).toBe("initial");
 
     // Avanzar tiempo
     act(() => {
@@ -418,7 +411,7 @@ describe('useDebounce', () => {
     });
 
     // Ahora sí actualizado
-    expect(result.current).toBe('updated');
+    expect(result.current).toBe("updated");
   });
 });
 ```
@@ -526,14 +519,14 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-it('debe fetchear datos', async () => {
+it("debe fetchear datos", async () => {
   global.fetch = vi.fn().mockResolvedValue({
     ok: true,
-    json: async () => ({ data: 'test' })
+    json: async () => ({ data: "test" }),
   });
 
   const result = await fetchData();
-  expect(result).toEqual({ data: 'test' });
+  expect(result).toEqual({ data: "test" });
 });
 ```
 
@@ -541,17 +534,17 @@ it('debe fetchear datos', async () => {
 
 ```typescript
 // Mock completo
-vi.mock('@/lib/rut-validations', () => ({
+vi.mock("@/lib/rut-validations", () => ({
   validateRUT: vi.fn(() => true),
   cleanRUT: vi.fn((rut) => rut),
 }));
 
 // Mock parcial
-vi.mock('@/lib/utils', async () => {
-  const actual = await vi.importActual('@/lib/utils');
+vi.mock("@/lib/utils", async () => {
+  const actual = await vi.importActual("@/lib/utils");
   return {
     ...actual,
-    cn: vi.fn((...args) => args.join(' ')),
+    cn: vi.fn((...args) => args.join(" ")),
   };
 });
 ```
@@ -561,15 +554,15 @@ vi.mock('@/lib/utils', async () => {
 ```typescript
 beforeEach(() => {
   vi.useFakeTimers();
-  vi.setSystemTime(new Date('2025-01-01'));
+  vi.setSystemTime(new Date("2025-01-01"));
 });
 
 afterEach(() => {
   vi.useRealTimers();
 });
 
-it('debe usar fecha mockeada', () => {
-  expect(new Date()).toEqual(new Date('2025-01-01'));
+it("debe usar fecha mockeada", () => {
+  expect(new Date()).toEqual(new Date("2025-01-01"));
 });
 ```
 

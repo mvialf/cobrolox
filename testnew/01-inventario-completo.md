@@ -39,14 +39,14 @@
 
 **6 archivos - 95 tests - 38 horas**
 
-| #   | Archivo                                      | Prioridad | Tests | Horas | Estado | Deps              | Notas                            |
-| --- | -------------------------------------------- | --------- | ----- | ----- | ------ | ----------------- | -------------------------------- |
-| 1   | `lib/rut-validations.ts`                     | 🔴        | 49    | 10    | ✅     | -                 | Validación RUT Chile (rut.js)    |
-| 2   | `lib/validations/invoice-validations.ts`     | 🔴        | 27    | 6.25  | ✅     | -                 | Schemas Zod, validación fechas   |
-| 3   | `lib/validations/customer-validations.ts`    | 🟠        | 20    | 5     | ❌     | rut-validations   | Schemas Zod, RUT                 |
-| 4   | `lib/validations/payment-validations.ts`     | 🟠        | 10    | 2.5   | 🟡     | invoice, customer | Ya parcial en use-payments       |
-| 5   | `lib/invoice-status.ts`                      | 🟠        | 12    | 3     | ❌     | invoice schema    | Estados de factura (matriz 3×3)  |
-| 6   | `lib/validations/installment-validations.ts` | 🟡        | 8     | 2     | ❌     | -                 | Validación de cuotas             |
+| #   | Archivo                                      | Prioridad | Tests | Horas | Estado | Deps              | Notas                           |
+| --- | -------------------------------------------- | --------- | ----- | ----- | ------ | ----------------- | ------------------------------- |
+| 1   | `lib/rut-validations.ts`                     | 🔴        | 49    | 10    | ✅     | -                 | Validación RUT Chile (rut.js)   |
+| 2   | `lib/validations/invoice-validations.ts`     | 🔴        | 27    | 6.25  | ✅     | -                 | Schemas Zod, validación fechas  |
+| 3   | `lib/validations/customer-validations.ts`    | 🟠        | 20    | 5     | ❌     | rut-validations   | Schemas Zod, RUT                |
+| 4   | `lib/validations/payment-validations.ts`     | 🟠        | 10    | 2.5   | 🟡     | invoice, customer | Ya parcial en use-payments      |
+| 5   | `lib/invoice-status.ts`                      | 🟠        | 12    | 3     | ❌     | invoice schema    | Estados de factura (matriz 3×3) |
+| 6   | `lib/validations/installment-validations.ts` | 🟡        | 8     | 2     | ❌     | -                 | Validación de cuotas            |
 
 **Progreso:** 49/95 (52%)
 

@@ -24,28 +24,28 @@
 ```typescript
 export const VALID_RUTS = {
   // RUTs reales válidos para testing
-  standard: '12.345.678-9',
-  withK: '11.111.111-K',
-  withZero: '14.324.672-0',
-  short: '1.234.567-K',
-  
+  standard: "12.345.678-9",
+  withK: "11.111.111-K",
+  withZero: "14.324.672-0",
+  short: "1.234.567-K",
+
   // Sin formato
-  cleanStandard: '123456789',
-  cleanWithK: '11111111K',
-  
+  cleanStandard: "123456789",
+  cleanWithK: "11111111K",
+
   // Variantes de formato
-  noPoints: '12345678-9',
-  noDash: '123456789',
-  withSpaces: '12 345 678-9',
+  noPoints: "12345678-9",
+  noDash: "123456789",
+  withSpaces: "12 345 678-9",
 };
 
 // Array para tests de batch
 export const VALID_RUTS_ARRAY = [
-  '12.345.678-9',
-  '11.111.111-K',
-  '14.324.672-0',
-  '7.654.321-6',
-  '18.765.432-1',
+  "12.345.678-9",
+  "11.111.111-K",
+  "14.324.672-0",
+  "7.654.321-6",
+  "18.765.432-1",
 ];
 ```
 
@@ -53,14 +53,14 @@ export const VALID_RUTS_ARRAY = [
 
 ```typescript
 export const INVALID_RUTS = {
-  wrongDV: '12.345.678-0', // DV debería ser 9
-  letters: 'ABC.DEF.GHI-J',
-  tooShort: '123-4',
-  empty: '',
+  wrongDV: "12.345.678-0", // DV debería ser 9
+  letters: "ABC.DEF.GHI-J",
+  tooShort: "123-4",
+  empty: "",
   null: null,
   undefined: undefined,
-  onlyNumbers: '123456789012', // Muy largo
-  specialChars: '12@345#678-9',
+  onlyNumbers: "123456789012", // Muy largo
+  specialChars: "12@345#678-9",
 };
 ```
 
@@ -72,13 +72,13 @@ export const INVALID_RUTS = {
 
 ```typescript
 export const MOCK_CUSTOMER_BASIC = {
-  id: 'customer-1',
-  rut: '12.345.678-9',
-  name: 'Juan Pérez',
-  email: 'juan.perez@example.com',
-  phone: '+56912345678',
-  createdAt: new Date('2025-01-01'),
-  updatedAt: new Date('2025-01-01'),
+  id: "customer-1",
+  rut: "12.345.678-9",
+  name: "Juan Pérez",
+  email: "juan.perez@example.com",
+  phone: "+56912345678",
+  createdAt: new Date("2025-01-01"),
+  updatedAt: new Date("2025-01-01"),
 };
 ```
 
@@ -91,7 +91,7 @@ export const MOCK_CUSTOMER_FULL = {
   name: 'María González',
   email: 'maria.gonzalez@example.com',
   phone: '+56987654321',
-  
+
   // Dirección
   street: 'Av. Libertador Bernardo O'Higgins',
   streetNumber: '1234',
@@ -99,7 +99,7 @@ export const MOCK_CUSTOMER_FULL = {
   regionId: '13', // Región Metropolitana
   comunaId: '13101', // Santiago
   postalCode: '8320000',
-  
+
   createdAt: new Date('2024-12-01'),
   updatedAt: new Date('2025-01-15'),
 };
@@ -112,11 +112,11 @@ export const MOCK_CUSTOMERS = [
   MOCK_CUSTOMER_BASIC,
   MOCK_CUSTOMER_FULL,
   {
-    id: 'customer-3',
-    rut: '18.765.432-1',
-    name: 'Pedro Silva',
-    email: 'pedro.silva@example.com',
-    phone: '+56945678901',
+    id: "customer-3",
+    rut: "18.765.432-1",
+    name: "Pedro Silva",
+    email: "pedro.silva@example.com",
+    phone: "+56945678901",
   },
 ];
 ```
@@ -129,30 +129,30 @@ export const MOCK_CUSTOMERS = [
 
 ```typescript
 export const MOCK_INVOICE_STANDARD = {
-  id: 'invoice-1',
-  customerId: 'customer-1',
-  number: 'F-001',
-  
+  id: "invoice-1",
+  customerId: "customer-1",
+  number: "F-001",
+
   // Fechas
-  issueDate: new Date('2025-01-01'),
-  dueDate: new Date('2025-01-31'),
+  issueDate: new Date("2025-01-01"),
+  dueDate: new Date("2025-01-31"),
   termsDay: 30,
-  
+
   // Montos
   subtotal: 1000,
   IVA: 190,
   total: 1190,
   paid: 0,
   balance: 1190,
-  
+
   // Metadata
-  currency: 'CLP',
+  currency: "CLP",
   isExemptFromTax: false,
-  status: 'current',
-  paymentStatus: 'pending',
-  
-  createdAt: new Date('2025-01-01'),
-  updatedAt: new Date('2025-01-01'),
+  status: "current",
+  paymentStatus: "pending",
+
+  createdAt: new Date("2025-01-01"),
+  updatedAt: new Date("2025-01-01"),
 };
 ```
 
@@ -160,24 +160,24 @@ export const MOCK_INVOICE_STANDARD = {
 
 ```typescript
 export const MOCK_INVOICE_EXEMPT = {
-  id: 'invoice-2',
-  customerId: 'customer-1',
-  number: 'F-002',
-  
-  issueDate: new Date('2025-01-15'),
-  dueDate: new Date('2025-02-15'),
+  id: "invoice-2",
+  customerId: "customer-1",
+  number: "F-002",
+
+  issueDate: new Date("2025-01-15"),
+  dueDate: new Date("2025-02-15"),
   termsDay: 30,
-  
+
   subtotal: 500,
   IVA: 0,
   total: 500,
   paid: 0,
   balance: 500,
-  
-  currency: 'CLP',
+
+  currency: "CLP",
   isExemptFromTax: true,
-  status: 'current',
-  paymentStatus: 'pending',
+  status: "current",
+  paymentStatus: "pending",
 };
 ```
 
@@ -185,24 +185,24 @@ export const MOCK_INVOICE_EXEMPT = {
 
 ```typescript
 export const MOCK_INVOICE_OVERDUE = {
-  id: 'invoice-3',
-  customerId: 'customer-2',
-  number: 'F-003',
-  
-  issueDate: new Date('2024-11-01'),
-  dueDate: new Date('2024-12-01'), // Vencida
+  id: "invoice-3",
+  customerId: "customer-2",
+  number: "F-003",
+
+  issueDate: new Date("2024-11-01"),
+  dueDate: new Date("2024-12-01"), // Vencida
   termsDay: 30,
-  
+
   subtotal: 2000,
   IVA: 380,
   total: 2380,
   paid: 1000,
   balance: 1380,
-  
-  currency: 'CLP',
+
+  currency: "CLP",
   isExemptFromTax: false,
-  status: 'overdue',
-  paymentStatus: 'partial',
+  status: "overdue",
+  paymentStatus: "partial",
 };
 ```
 
@@ -210,24 +210,24 @@ export const MOCK_INVOICE_OVERDUE = {
 
 ```typescript
 export const MOCK_INVOICE_PAID = {
-  id: 'invoice-4',
-  customerId: 'customer-1',
-  number: 'F-004',
-  
-  issueDate: new Date('2024-12-01'),
-  dueDate: new Date('2025-01-01'),
+  id: "invoice-4",
+  customerId: "customer-1",
+  number: "F-004",
+
+  issueDate: new Date("2024-12-01"),
+  dueDate: new Date("2025-01-01"),
   termsDay: 30,
-  
+
   subtotal: 1500,
   IVA: 285,
   total: 1785,
   paid: 1785,
   balance: 0,
-  
-  currency: 'CLP',
+
+  currency: "CLP",
   isExemptFromTax: false,
-  status: 'completed',
-  paymentStatus: 'paid',
+  status: "completed",
+  paymentStatus: "paid",
 };
 ```
 
@@ -235,10 +235,10 @@ export const MOCK_INVOICE_PAID = {
 
 ```typescript
 export const MOCK_INVOICES = [
-  MOCK_INVOICE_STANDARD,   // Pendiente
-  MOCK_INVOICE_EXEMPT,     // Exenta
-  MOCK_INVOICE_OVERDUE,    // Vencida parcial
-  MOCK_INVOICE_PAID,       // Pagada completa
+  MOCK_INVOICE_STANDARD, // Pendiente
+  MOCK_INVOICE_EXEMPT, // Exenta
+  MOCK_INVOICE_OVERDUE, // Vencida parcial
+  MOCK_INVOICE_PAID, // Pagada completa
 ];
 ```
 
@@ -250,33 +250,33 @@ export const MOCK_INVOICES = [
 
 ```typescript
 export const MOCK_PAYMENT_SINGLE = {
-  id: 'payment-1',
-  customerId: 'customer-1',
-  
+  id: "payment-1",
+  customerId: "customer-1",
+
   amount: 1190,
-  paymentDate: new Date('2025-01-15'),
-  
+  paymentDate: new Date("2025-01-15"),
+
   // Método
-  paymentMethodId: 'method-1',
+  paymentMethodId: "method-1",
   paymentMethod: {
-    id: 'method-1',
-    name: 'Transferencia',
-    type: 'bank_transfer',
+    id: "method-1",
+    name: "Transferencia",
+    type: "bank_transfer",
   },
-  
+
   // Allocations
   allocations: [
     {
-      id: 'alloc-1',
-      invoiceId: 'invoice-1',
+      id: "alloc-1",
+      invoiceId: "invoice-1",
       amount: 1190,
-    }
+    },
   ],
-  
-  reference: 'TRANS-12345',
-  notes: 'Pago completo de factura F-001',
-  
-  createdAt: new Date('2025-01-15'),
+
+  reference: "TRANS-12345",
+  notes: "Pago completo de factura F-001",
+
+  createdAt: new Date("2025-01-15"),
 };
 ```
 
@@ -284,39 +284,39 @@ export const MOCK_PAYMENT_SINGLE = {
 
 ```typescript
 export const MOCK_PAYMENT_FIFO = {
-  id: 'payment-2',
-  customerId: 'customer-2',
-  
+  id: "payment-2",
+  customerId: "customer-2",
+
   amount: 3000,
-  paymentDate: new Date('2025-01-20'),
-  
-  paymentMethodId: 'method-2',
+  paymentDate: new Date("2025-01-20"),
+
+  paymentMethodId: "method-2",
   paymentMethod: {
-    id: 'method-2',
-    name: 'Efectivo',
-    type: 'cash',
+    id: "method-2",
+    name: "Efectivo",
+    type: "cash",
   },
-  
+
   // FIFO: paga facturas más antiguas primero
   allocations: [
     {
-      id: 'alloc-2',
-      invoiceId: 'invoice-5',
+      id: "alloc-2",
+      invoiceId: "invoice-5",
       amount: 1000, // Factura 1 completa
     },
     {
-      id: 'alloc-3',
-      invoiceId: 'invoice-6',
+      id: "alloc-3",
+      invoiceId: "invoice-6",
       amount: 1500, // Factura 2 completa
     },
     {
-      id: 'alloc-4',
-      invoiceId: 'invoice-7',
+      id: "alloc-4",
+      invoiceId: "invoice-7",
       amount: 500, // Factura 3 parcial
     },
   ],
-  
-  reference: 'CASH-20250120',
+
+  reference: "CASH-20250120",
 };
 ```
 
@@ -329,28 +329,28 @@ export const MOCK_PAYMENT_FIFO = {
 ```typescript
 export const MOCK_INSTALLMENTS = [
   {
-    id: 'inst-1',
-    paymentId: 'payment-3',
+    id: "inst-1",
+    paymentId: "payment-3",
     installmentNumber: 1,
     amount: 333.33,
-    dueDate: new Date('2025-02-01'),
-    status: 'pending',
+    dueDate: new Date("2025-02-01"),
+    status: "pending",
   },
   {
-    id: 'inst-2',
-    paymentId: 'payment-3',
+    id: "inst-2",
+    paymentId: "payment-3",
     installmentNumber: 2,
     amount: 333.33,
-    dueDate: new Date('2025-03-01'),
-    status: 'pending',
+    dueDate: new Date("2025-03-01"),
+    status: "pending",
   },
   {
-    id: 'inst-3',
-    paymentId: 'payment-3',
+    id: "inst-3",
+    paymentId: "payment-3",
     installmentNumber: 3,
     amount: 333.34, // Última absorbe centavos
-    dueDate: new Date('2025-04-01'),
-    status: 'pending',
+    dueDate: new Date("2025-04-01"),
+    status: "pending",
   },
 ];
 ```
@@ -365,35 +365,35 @@ export const MOCK_INSTALLMENTS = [
 export const TEST_DATES = {
   // Fechas pasadas
   past: {
-    year: new Date('2024-01-01'),
-    month: new Date('2024-12-01'),
-    week: new Date('2025-01-04'),
-    yesterday: new Date('2025-01-14'),
+    year: new Date("2024-01-01"),
+    month: new Date("2024-12-01"),
+    week: new Date("2025-01-04"),
+    yesterday: new Date("2025-01-14"),
   },
-  
+
   // Fecha actual (mockeable)
-  now: new Date('2025-01-15'),
-  
+  now: new Date("2025-01-15"),
+
   // Fechas futuras
   future: {
-    tomorrow: new Date('2025-01-16'),
-    week: new Date('2025-01-22'),
-    month: new Date('2025-02-15'),
-    year: new Date('2026-01-15'),
+    tomorrow: new Date("2025-01-16"),
+    week: new Date("2025-01-22"),
+    month: new Date("2025-02-15"),
+    year: new Date("2026-01-15"),
   },
-  
+
   // Fechas especiales (edge cases)
   special: {
-    leapYear: new Date('2024-02-29'), // Año bisiesto
-    endOfMonth: new Date('2025-01-31'),
-    startOfYear: new Date('2025-01-01'),
-    endOfYear: new Date('2025-12-31'),
+    leapYear: new Date("2024-02-29"), // Año bisiesto
+    endOfMonth: new Date("2025-01-31"),
+    startOfYear: new Date("2025-01-01"),
+    endOfYear: new Date("2025-12-31"),
   },
-  
+
   // DST en Chile (cambio de horario)
   dst: {
-    beforeChange: new Date('2025-09-06'), // Antes de DST
-    afterChange: new Date('2025-09-07'),  // Después de DST
+    beforeChange: new Date("2025-09-06"), // Antes de DST
+    afterChange: new Date("2025-09-07"), // Después de DST
   },
 };
 ```
@@ -412,22 +412,22 @@ export const TEST_AMOUNTS = {
     thousand: 1000,
     tenThousand: 10000,
   },
-  
+
   // Montos con decimales
   decimal: {
     twoDecimals: 1234.56,
     oneDecimal: 999.9,
     manyDecimals: 100.123456789,
   },
-  
+
   // Montos que requieren redondeo
   rounding: {
-    oneThird: 1000 / 3,        // 333.333...
-    oneSeventh: 100 / 7,       // 14.285714...
-    roundUp: 1234.567,         // Redondea a 1234.57
-    roundDown: 1234.564,       // Redondea a 1234.56
+    oneThird: 1000 / 3, // 333.333...
+    oneSeventh: 100 / 7, // 14.285714...
+    roundUp: 1234.567, // Redondea a 1234.57
+    roundDown: 1234.564, // Redondea a 1234.56
   },
-  
+
   // Edge cases
   edge: {
     zero: 0,
@@ -436,7 +436,7 @@ export const TEST_AMOUNTS = {
     veryLarge: 999999999.99,
     verySmall: 0.001,
   },
-  
+
   // IVA Chile (19%)
   iva: {
     subtotal1000: 1000,
@@ -457,9 +457,9 @@ export function createMockCustomer(overrides = {}) {
   return {
     id: `customer-${Math.random().toString(36).substr(2, 9)}`,
     rut: VALID_RUTS.standard,
-    name: 'Test Customer',
-    email: 'test@example.com',
-    phone: '+56912345678',
+    name: "Test Customer",
+    email: "test@example.com",
+    phone: "+56912345678",
     createdAt: new Date(),
     updatedAt: new Date(),
     ...overrides,
@@ -467,7 +467,7 @@ export function createMockCustomer(overrides = {}) {
 }
 
 // Uso:
-const customer1 = createMockCustomer({ name: 'Juan Pérez' });
+const customer1 = createMockCustomer({ name: "Juan Pérez" });
 const customer2 = createMockCustomer({ rut: VALID_RUTS.withK });
 ```
 
@@ -479,30 +479,30 @@ export function createMockInvoice(overrides = {}) {
   const isExempt = overrides.isExemptFromTax || false;
   const IVA = isExempt ? 0 : Math.round(subtotal * 0.19 * 100) / 100;
   const total = subtotal + IVA;
-  
+
   return {
     id: `invoice-${Math.random().toString(36).substr(2, 9)}`,
-    customerId: 'customer-1',
-    number: `F-${String(Math.floor(Math.random() * 1000)).padStart(3, '0')}`,
-    
+    customerId: "customer-1",
+    number: `F-${String(Math.floor(Math.random() * 1000)).padStart(3, "0")}`,
+
     issueDate: new Date(),
     dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // +30 días
     termsDay: 30,
-    
+
     subtotal,
     IVA,
     total,
     paid: 0,
     balance: total,
-    
-    currency: 'CLP',
+
+    currency: "CLP",
     isExemptFromTax: isExempt,
-    status: 'current',
-    paymentStatus: 'pending',
-    
+    status: "current",
+    paymentStatus: "pending",
+
     createdAt: new Date(),
     updatedAt: new Date(),
-    
+
     ...overrides,
   };
 }
@@ -518,19 +518,19 @@ const invoice2 = createMockInvoice({ isExemptFromTax: true });
 export function createMockPayment(overrides = {}) {
   return {
     id: `payment-${Math.random().toString(36).substr(2, 9)}`,
-    customerId: 'customer-1',
-    
+    customerId: "customer-1",
+
     amount: 1000,
     paymentDate: new Date(),
-    
-    paymentMethodId: 'method-1',
+
+    paymentMethodId: "method-1",
     allocations: [],
-    
+
     reference: `REF-${Date.now()}`,
-    notes: '',
-    
+    notes: "",
+
     createdAt: new Date(),
-    
+
     ...overrides,
   };
 }
@@ -545,22 +545,22 @@ export function createMockCustomers(count: number, baseOverrides = {}) {
       name: `Customer ${i + 1}`,
       rut: VALID_RUTS_ARRAY[i % VALID_RUTS_ARRAY.length],
       ...baseOverrides,
-    })
+    }),
   );
 }
 
 export function createMockInvoices(count: number, baseOverrides = {}) {
   return Array.from({ length: count }, (_, i) =>
     createMockInvoice({
-      number: `F-${String(i + 1).padStart(3, '0')}`,
+      number: `F-${String(i + 1).padStart(3, "0")}`,
       ...baseOverrides,
-    })
+    }),
   );
 }
 
 // Uso:
 const customers = createMockCustomers(10);
-const invoices = createMockInvoices(50, { currency: 'CLP' });
+const invoices = createMockInvoices(50, { currency: "CLP" });
 ```
 
 ---
@@ -570,33 +570,33 @@ const invoices = createMockInvoices(50, { currency: 'CLP' });
 ### Ejemplo Completo
 
 ```typescript
-import { describe, it, expect } from 'vitest';
-import { VALID_RUTS, createMockInvoice, TEST_AMOUNTS } from './fixtures';
+import { describe, it, expect } from "vitest";
+import { VALID_RUTS, createMockInvoice, TEST_AMOUNTS } from "./fixtures";
 
-describe('Invoice Processing', () => {
-  it('debe calcular IVA correctamente', () => {
+describe("Invoice Processing", () => {
+  it("debe calcular IVA correctamente", () => {
     const invoice = createMockInvoice({
-      subtotal: TEST_AMOUNTS.iva.subtotal1000
+      subtotal: TEST_AMOUNTS.iva.subtotal1000,
     });
-    
+
     expect(invoice.IVA).toBe(TEST_AMOUNTS.iva.ivaExpected);
     expect(invoice.total).toBe(TEST_AMOUNTS.iva.totalExpected);
   });
-  
-  it('debe manejar facturas exentas', () => {
+
+  it("debe manejar facturas exentas", () => {
     const invoice = createMockInvoice({
       subtotal: 1000,
-      isExemptFromTax: true
+      isExemptFromTax: true,
     });
-    
+
     expect(invoice.IVA).toBe(0);
     expect(invoice.total).toBe(1000);
   });
-  
-  it('debe validar RUT de cliente', () => {
+
+  it("debe validar RUT de cliente", () => {
     const validRut = VALID_RUTS.standard;
     const result = validateCustomerRut(validRut);
-    
+
     expect(result.valid).toBe(true);
   });
 });
