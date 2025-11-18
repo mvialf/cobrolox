@@ -82,28 +82,28 @@ export function InvoiceTable({ invoices }: InvoiceTableProps) {
               return (
                 <tr key={invoice.id} className="bg-capture-card">
                   {/* Factura */}
-                  <td className="py-3 px-2 text-end text-md text-capture-foreground">
+                  <td className="py-3 px-2 text-end text-sm text-capture-foreground">
                     {invoice.invoiceNumber}
                   </td>
 
                   {/* Valor */}
-                  <td className="py-3 px-2 text-end text-md text-capture-foreground">
+                  <td className="py-3 px-2 text-end text-sm text-capture-foreground">
                     {formatCurrency(invoice.total)}
                   </td>
 
                   {/* Saldo */}
-                  <td className="py-3 px-2 text-end text-md text-capture-foreground">
+                  <td className="py-3 px-2 text-end text-sm text-capture-foreground">
                     {invoice.balance === 0 ? (
                       <span className="text-muted-foreground">Pagada</span>
                     ) : (
-                      <span className="text-md">
+                      <span className="text-sm">
                         {formatCurrency(invoice.balance)}
                       </span>
                     )}
                   </td>
 
                   {/* Vencimiento */}
-                  <td className="py-3 px-3 text-start text-md">
+                  <td className="py-3 px-3 text-start text-sm">
                     <InvoiceDueDateCell
                       dueDate={invoice.dueDate}
                       isPaid={invoice.balance === 0}
