@@ -78,7 +78,9 @@ export const GET = withLogging(async (request, logger) => {
     }
 
     // Filtrar por balance en SQL (más eficiente que en JS)
-    if (pendingOnly) {
+    // - pendingOnly: solo facturas con balance > 0
+    // - !includeCompleted: excluir completadas (balance <= 0)
+    if (pendingOnly || !includeCompleted) {
       where.balance = { gt: 0 };
     }
 
@@ -143,24 +145,23 @@ export const GET = withLogging(async (request, logger) => {
       };
     });
 
-    // Filtrar por estado completado si no se solicitó incluirlas (default: ocultar completadas)
-    const filteredInvoices = includeCompleted
-      ? invoices
-      : invoices.filter((inv) => inv.invoiceStatus.name !== "completed");
+    // ✅ Filtro de completadas ya aplicado en WHERE clause de Prisma
+    // No es necesario filtrar en JavaScript
 
     logger.info(
       {
-        found: filteredInvoices.length,
+        found: invoices.length,
         total,
         page,
         withBalance,
         pendingOnly,
+        includeCompleted,
       },
       "Invoices fetched successfully",
     );
 
     return NextResponse.json({
-      invoices: filteredInvoices,
+      invoices: invoices,
       pagination: {
         page,
         limit: limit ?? total,
