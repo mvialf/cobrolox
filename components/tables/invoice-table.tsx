@@ -48,10 +48,10 @@ export function InvoiceTable({ invoices }: InvoiceTableProps) {
             <th className="py-2 px-1 text-capture-foreground bg-transparent text-center text-md">
               DTE
             </th>
-            <th className="py-2 px-1 text-capture-foreground bg-transparent text-center text-md">
+            <th className="py-2 pl-2 pr-1 text-capture-foreground bg-transparent text-center text-md">
               Valor
             </th>
-            <th className="py-2 px-1 text-capture-foreground bg-transparent text-center text-md">
+            <th className="py-2 pl-1 pr-2 text-capture-foreground bg-transparent text-center text-md">
               Saldo
             </th>
             <th className="py-2 px-1 text-capture-foreground bg-transparent text-center text-md">
@@ -87,12 +87,12 @@ export function InvoiceTable({ invoices }: InvoiceTableProps) {
                   </td>
 
                   {/* Valor */}
-                  <td className="py-3 px-2 text-end text-sm text-capture-foreground">
+                  <td className="py-3 pl-2 pr-1 text-end text-sm text-capture-foreground">
                     {formatCurrency(invoice.total)}
                   </td>
 
                   {/* Saldo */}
-                  <td className="py-3 px-2 text-end text-sm text-capture-foreground">
+                  <td className="py-3 pl-1 pr-2 text-end text-sm text-capture-foreground">
                     {invoice.balance === 0 ? (
                       <span className="text-muted-foreground">Pagada</span>
                     ) : (
@@ -103,7 +103,7 @@ export function InvoiceTable({ invoices }: InvoiceTableProps) {
                   </td>
 
                   {/* Vencimiento */}
-                  <td className="py-3 px-3 text-start text-sm">
+                  <td className="py-3 px-2 text-start text-sm">
                     <InvoiceDueDateCell
                       dueDate={invoice.dueDate}
                       isPaid={invoice.balance === 0}
@@ -111,7 +111,7 @@ export function InvoiceTable({ invoices }: InvoiceTableProps) {
                   </td>
 
                   {/* Estado */}
-                  <td className="py-3 px-4 text-center">
+                  <td className="py-3 px-2 text-center">
                     <div className="flex justify-center">
                       <StatusBadge
                         bgClass={invoice.invoiceStatus.color.bgClass}
