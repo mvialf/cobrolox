@@ -89,10 +89,7 @@ export const GET = withLogging(async (request, logger) => {
         where,
         skip,
         take: limit, // Si es undefined, trae todos los registros
-        orderBy: [
-          { balance: "desc" }, // Pendientes primero (mayor balance)
-          { dueDate: "asc" }, // Luego por vencimiento (FEFO - vence pronto primero)
-        ],
+        orderBy: { dueDate: "asc" }, // Orden cronológico: vencidas primero, luego vigentes
         include: {
           customer: {
             select: {
