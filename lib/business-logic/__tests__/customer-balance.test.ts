@@ -274,6 +274,50 @@ describe("customer-balance", () => {
     });
   });
 
+  describe("recalculateAllCustomers", () => {
+    it("debe recalcular balances de todos los clientes en el sistema", async () => {
+      // Importar la función
+      const { recalculateAllCustomers } = await import("../customer-balance");
+
+      // Crear un segundo customer de test
+      const customer2 = await prisma.customer.create({
+        data: {
+          rut: `${Date.now()}-8`,
+          razonSocial: "Second Customer",
+          contact: "Contact 2",
+          phone: "987654321",
+          street: "Street 2",
+          region: "Region 2",
+          comuna: "Comuna 2",
+        },
+      });
+
+      // Recalcular todos
+      const count = await recalculateAllCustomers();
+
+      // Debería retornar el número total de customers
+      // (testCustomerId + customer2 + posiblemente otros de otros tests)
+      expect(count).toBeGreaterThanOrEqual(2);
+
+      // Verificar que ambos customers fueron actualizados
+      const customer1After = await prisma.customer.findUnique({
+        where: { id: testCustomerId },
+      });
+      const customer2After = await prisma.customer.findUnique({
+        where: { id: customer2.id },
+      });
+
+      // Customer 1 debería tener balances calculados
+      expect(Number(customer1After!.balanceTotal)).toBe(900000);
+
+      // Customer 2 no tiene facturas, debería tener 0
+      expect(Number(customer2After!.balanceTotal)).toBe(0);
+
+      // Cleanup
+      await prisma.customer.delete({ where: { id: customer2.id } });
+    });
+  });
+
   describe("edge cases", () => {
     it("debe manejar correctamente facturas con balance exacto 0", async () => {
       // La factura 3 tiene balance = 0, no debería sumarse

@@ -1,8 +1,10 @@
 /**
- * Lógica de negocio para distribución FIFO de pagos
+ * Lógica de negocio para distribución automática de pagos
  *
- * Implementa el principio contable First-In-First-Out (FIFO):
- * Las facturas más antiguas se pagan primero (por fecha de emisión).
+ * Implementa el principio First-Expired-First-Out (FEFO):
+ * Las facturas que vencen primero se pagan primero (por fecha de vencimiento).
+ *
+ * Esto optimiza la gestión de cobranza evitando moras automáticamente.
  *
  * @module business-logic/payment-fifo
  */
@@ -22,12 +24,15 @@ export interface FIFOAllocation {
 }
 
 /**
- * Calcula la distribución FIFO de un pago entre facturas con balance pendiente
+ * Calcula la distribución de un pago entre facturas con balance pendiente
  *
- * Implementa el principio contable First-In-First-Out (FIFO):
- * - Ordena facturas por fecha de emisión (más antigua primero)
- * - Distribuye el monto total empezando por la factura más vieja
+ * Implementa el principio First-Expired-First-Out (FEFO):
+ * - Ordena facturas por fecha de vencimiento (vence primero = paga primero)
+ * - Distribuye el monto total empezando por la factura que vence más pronto
  * - Cada factura recibe el mínimo entre su balance y el monto restante
+ *
+ * Nota: Aunque se llama "calculateFIFO", usa dueDate (no issueDate) para
+ * optimizar gestión de cobranza y evitar moras automáticamente.
  *
  * @param totalAmount - Monto total del pago a distribuir
  * @param invoices - Array de facturas con balance ya calculado (del API)
@@ -39,7 +44,7 @@ export interface FIFOAllocation {
  *   {
  *     id: 'INV-3',
  *     invoiceNumber: 'F-003',
- *     issueDate: new Date('2025-03-01'),
+ *     dueDate: new Date('2025-03-15'),  // Vence primero
  *     total: 500000,
  *     paidAmount: 300000,
  *     balance: 200000
@@ -47,7 +52,7 @@ export interface FIFOAllocation {
  *   {
  *     id: 'INV-1',
  *     invoiceNumber: 'F-001',
- *     issueDate: new Date('2025-01-01'),
+ *     dueDate: new Date('2025-04-30'),  // Vence segundo
  *     total: 1000000,
  *     paidAmount: 700000,
  *     balance: 300000
@@ -55,7 +60,7 @@ export interface FIFOAllocation {
  *   {
  *     id: 'INV-2',
  *     invoiceNumber: 'F-002',
- *     issueDate: new Date('2025-02-01'),
+ *     dueDate: new Date('2025-05-15'),  // Vence último
  *     total: 800000,
  *     paidAmount: 400000,
  *     balance: 400000
@@ -65,12 +70,12 @@ export interface FIFOAllocation {
  * // Pago de $500,000 a distribuir
  * const allocations = calculateFIFO(500000, invoices)
  *
- * // Resultado (ordenado por fecha de emisión):
+ * // Resultado (ordenado por fecha de vencimiento):
  * // [
- * //   { invoiceId: 'INV-1', invoiceNumber: 'F-001', balance: 300000, allocatedAmount: 300000, isFullyPaid: true },
- * //   { invoiceId: 'INV-2', invoiceNumber: 'F-002', balance: 400000, allocatedAmount: 200000, isFullyPaid: false }
+ * //   { invoiceId: 'INV-3', invoiceNumber: 'F-003', balance: 200000, allocatedAmount: 200000, isFullyPaid: true },
+ * //   { invoiceId: 'INV-1', invoiceNumber: 'F-001', balance: 300000, allocatedAmount: 300000, isFullyPaid: true }
  * // ]
- * // F-003 no recibe pago porque se acabó el dinero
+ * // F-002 no recibe pago porque se acabó el dinero (pero tiene más tiempo antes de vencer)
  * ```
  *
  * @example Edge cases
@@ -94,9 +99,10 @@ export function calculateFIFO(
   totalAmount: number,
   invoices: InvoiceWithBalance[],
 ): FIFOAllocation[] {
-  // 1. Ordenar facturas por fecha de emisión (más antigua primero)
+  // 1. Ordenar facturas por fecha de vencimiento (vence primero = paga primero)
+  // Nota: Implementa FEFO (First-Expired-First-Out) para evitar moras
   const sorted = [...invoices].sort(
-    (a, b) => a.issueDate.getTime() - b.issueDate.getTime(),
+    (a, b) => a.dueDate.getTime() - b.dueDate.getTime(),
   );
 
   const allocations: FIFOAllocation[] = [];

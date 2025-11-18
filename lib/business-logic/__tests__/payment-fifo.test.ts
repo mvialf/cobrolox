@@ -16,7 +16,7 @@ import {
 import type { InvoiceWithBalance } from "@/lib/validations/payment-validations";
 
 describe("calculateFIFO", () => {
-  it("debe distribuir pago entre facturas ordenados por fecha (FIFO)", () => {
+  it("debe distribuir pago entre facturas ordenados por vencimiento (FEFO)", () => {
     const invoices: InvoiceWithBalance[] = [
       {
         id: "P3",
@@ -92,11 +92,11 @@ describe("calculateFIFO", () => {
     // Pago de $500,000 a distribuir
     const allocations = calculateFIFO(500000, invoices);
 
-    // Resultado esperado (ordenado por fecha):
-    // P1 (más antiguo): balance 300,000 → recibe 300,000 (cierra)
-    // P2: balance 400,000 → recibe 200,000 (abono parcial)
-    // P3: no recibe nada (se acabó el dinero)
-    expect(allocations).toHaveLength(2);
+    // Resultado esperado (ordenado por vencimiento):
+    // P1 (vence 2024-02-01): balance 300,000 → recibe 300,000 (cierra)
+    // P2 (vence 2024-03-01): balance 400,000 → recibe 200,000 (abono parcial)
+    // P3 (vence 2024-04-01): balance 200,000 → recibe $0 (se acabó el dinero)
+    expect(allocations).toHaveLength(3);
     expect(allocations[0]).toEqual({
       invoiceId: "P1",
       invoiceNumber: "2024-001",
@@ -113,6 +113,13 @@ describe("calculateFIFO", () => {
       allocatedAmount: 200000,
       isFullyPaid: false,
     });
+    expect(allocations[2]).toEqual({
+      invoiceId: "P3",
+      invoiceNumber: "2024-003",
+      balance: 200000,
+      allocatedAmount: 0, // No recibe dinero
+      isFullyPaid: false,
+    });
   });
 
   it("debe manejar monto mayor que todos los balances", () => {
@@ -120,11 +127,25 @@ describe("calculateFIFO", () => {
       {
         id: "P1",
         invoiceNumber: "2024-001",
-        // name removed null,
+        customerId: "C1",
+        subtotal: 420168,
+        taxAmount: 79832,
         total: 500000,
         currency: "CLP",
         issueDate: new Date("2024-01-01"),
-        paymentAllocations: [{ allocatedAmount: 300000 }],
+        dueDate: new Date("2024-02-01"),
+        paidAmount: 300000,
+        balance: 200000, // total - paidAmount
+        status: {
+          id: "S1",
+          name: "Pendiente",
+          color: {
+            id: "C1",
+            bgClass: "bg-yellow-500",
+            textClass: "text-white",
+          },
+        },
+        customer: { id: "C1", razonSocial: "Cliente Test" },
       },
     ];
 
@@ -141,20 +162,48 @@ describe("calculateFIFO", () => {
       {
         id: "P1",
         invoiceNumber: "2024-001",
-        // name removed null,
+        customerId: "C1",
+        subtotal: 840336,
+        taxAmount: 159664,
         total: 1000000,
         currency: "CLP",
         issueDate: new Date("2024-01-01"),
-        paymentAllocations: [{ allocatedAmount: 1000000 }], // Balance = 0
+        dueDate: new Date("2024-02-01"),
+        paidAmount: 1000000, // Factura pagada completamente
+        balance: 0, // Balance = 0
+        status: {
+          id: "S1",
+          name: "Completado",
+          color: {
+            id: "C1",
+            bgClass: "bg-green-500",
+            textClass: "text-white",
+          },
+        },
+        customer: { id: "C1", razonSocial: "Cliente Test" },
       },
       {
         id: "P2",
         invoiceNumber: "2024-002",
-        // name removed null,
+        customerId: "C1",
+        subtotal: 420168,
+        taxAmount: 79832,
         total: 500000,
         currency: "CLP",
         issueDate: new Date("2024-02-01"),
-        paymentAllocations: [{ allocatedAmount: 200000 }],
+        dueDate: new Date("2024-03-01"),
+        paidAmount: 200000,
+        balance: 300000, // total - paidAmount
+        status: {
+          id: "S1",
+          name: "Pendiente",
+          color: {
+            id: "C1",
+            bgClass: "bg-yellow-500",
+            textClass: "text-white",
+          },
+        },
+        customer: { id: "C1", razonSocial: "Cliente Test" },
       },
     ];
 
@@ -174,22 +223,39 @@ describe("calculateFIFO", () => {
     expect(allocations).toEqual([]);
   });
 
-  it("debe retornar array vacío si monto es 0", () => {
+  it("debe manejar pago exacto al balance total", () => {
     const invoices: InvoiceWithBalance[] = [
       {
         id: "P1",
         invoiceNumber: "2024-001",
-        // name removed null,
+        customerId: "C1",
+        subtotal: 840336,
+        taxAmount: 159664,
         total: 1000000,
         currency: "CLP",
         issueDate: new Date("2024-01-01"),
-        paymentAllocations: [{ allocatedAmount: 500000 }],
+        dueDate: new Date("2024-02-01"),
+        paidAmount: 500000,
+        balance: 500000, // total - paidAmount
+        status: {
+          id: "S1",
+          name: "Pendiente",
+          color: {
+            id: "C1",
+            bgClass: "bg-yellow-500",
+            textClass: "text-white",
+          },
+        },
+        customer: { id: "C1", razonSocial: "Cliente Test" },
       },
     ];
 
+    // Pago exacto al balance
     const allocations = calculateFIFO(500000, invoices);
 
-    expect(allocations).toEqual([]);
+    expect(allocations).toHaveLength(1);
+    expect(allocations[0].allocatedAmount).toBe(500000);
+    expect(allocations[0].isFullyPaid).toBe(true);
   });
 });
 
@@ -230,29 +296,71 @@ describe("filterInvoicesWithBalance", () => {
       {
         id: "P1",
         invoiceNumber: "2024-001",
-        // name removed null,
+        customerId: "C1",
+        subtotal: 840,
+        taxAmount: 160,
         total: 1000,
         currency: "CLP",
         issueDate: new Date(),
-        paymentAllocations: [{ allocatedAmount: 500 }], // balance: 500
+        dueDate: new Date(),
+        paidAmount: 500,
+        balance: 500, // balance: 500
+        status: {
+          id: "S1",
+          name: "Pendiente",
+          color: {
+            id: "C1",
+            bgClass: "bg-yellow-500",
+            textClass: "text-white",
+          },
+        },
+        customer: { id: "C1", razonSocial: "Cliente Test" },
       },
       {
         id: "P2",
         invoiceNumber: "2024-002",
-        // name removed null,
+        customerId: "C1",
+        subtotal: 672,
+        taxAmount: 128,
         total: 800,
         currency: "CLP",
         issueDate: new Date(),
-        paymentAllocations: [{ allocatedAmount: 800 }], // balance: 0
+        dueDate: new Date(),
+        paidAmount: 800,
+        balance: 0, // balance: 0
+        status: {
+          id: "S1",
+          name: "Completado",
+          color: {
+            id: "C1",
+            bgClass: "bg-green-500",
+            textClass: "text-white",
+          },
+        },
+        customer: { id: "C1", razonSocial: "Cliente Test" },
       },
       {
         id: "P3",
         invoiceNumber: "2024-003",
-        // name removed null,
+        customerId: "C1",
+        subtotal: 1008,
+        taxAmount: 192,
         total: 1200,
         currency: "CLP",
         issueDate: new Date(),
-        paymentAllocations: [], // balance: 1200
+        dueDate: new Date(),
+        paidAmount: 0,
+        balance: 1200, // balance: 1200
+        status: {
+          id: "S1",
+          name: "Pendiente",
+          color: {
+            id: "C1",
+            bgClass: "bg-yellow-500",
+            textClass: "text-white",
+          },
+        },
+        customer: { id: "C1", razonSocial: "Cliente Test" },
       },
     ];
 
@@ -267,11 +375,25 @@ describe("filterInvoicesWithBalance", () => {
       {
         id: "P1",
         invoiceNumber: "2024-001",
-        // name removed null,
+        customerId: "C1",
+        subtotal: 840,
+        taxAmount: 160,
         total: 1000,
         currency: "CLP",
         issueDate: new Date(),
-        paymentAllocations: [{ allocatedAmount: 1000 }],
+        dueDate: new Date(),
+        paidAmount: 1000,
+        balance: 0,
+        status: {
+          id: "S1",
+          name: "Completado",
+          color: {
+            id: "C1",
+            bgClass: "bg-green-500",
+            textClass: "text-white",
+          },
+        },
+        customer: { id: "C1", razonSocial: "Cliente Test" },
       },
     ];
 
