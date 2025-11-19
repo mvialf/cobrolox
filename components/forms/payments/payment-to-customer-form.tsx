@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
@@ -47,6 +47,42 @@ const EMPTY_PAYMENT_METHODS: Array<{
   hasInstallments: boolean;
   maxInstallments: number | null;
 }> = [];
+
+/**
+ * Componente memoizado para input de asignación de monto
+ * Previene re-renders innecesarios que causan pérdida de estado en NumericFormat
+ */
+const MemoizedAllocationInput = React.memo(function AllocationInput({
+  value,
+  currency,
+  disabled,
+  onChangeAllocation,
+  index,
+}: {
+  value: number;
+  currency: string;
+  disabled: boolean;
+  onChangeAllocation: (index: number, amount: number) => void;
+  index: number;
+}) {
+  // Handler memoizado específico para este índice
+  const handleChange = useCallback(
+    (amount: number) => {
+      onChangeAllocation(index, amount);
+    },
+    [index, onChangeAllocation],
+  );
+
+  return (
+    <CurrencyInput
+      value={value}
+      onChange={handleChange}
+      currency={currency}
+      className="text-right"
+      disabled={disabled}
+    />
+  );
+});
 
 interface PaymentToCustomerFormProps {
   onSubmit: (
@@ -467,14 +503,12 @@ export function PaymentToCustomerForm({
                             {formatCurrency(invoice.balance, invoice.currency)}
                           </TableCell>
                           <TableCell className="text-right">
-                            <CurrencyInput
+                            <MemoizedAllocationInput
                               value={field.allocatedAmount}
-                              onChange={(value) =>
-                                handleChangeAllocation(index, value)
-                              }
                               currency={invoice.currency}
-                              className="text-right"
                               disabled={distributionMode === "fifo"}
+                              onChangeAllocation={handleChangeAllocation}
+                              index={index}
                             />
                           </TableCell>
                           <TableCell>
