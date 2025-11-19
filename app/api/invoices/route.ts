@@ -91,7 +91,7 @@ export const GET = withLogging(async (request, logger) => {
         where,
         skip,
         take: limit, // Si es undefined, trae todos los registros
-        orderBy: { dueDate: "asc" }, // Orden cronológico: vencidas primero, luego vigentes
+        orderBy: { issueDate: "desc" }, // Orden cronológico descendente: más recientes primero
         include: {
           customer: {
             select: {

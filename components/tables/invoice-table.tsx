@@ -103,7 +103,7 @@ export function InvoiceTable({ invoices }: InvoiceTableProps) {
                   </td>
 
                   {/* Vencimiento */}
-                  <td className="py-3 px-2 text-start text-sm">
+                  <td className="py-3 px-2 text-end text-sm">
                     <InvoiceDueDateCell
                       dueDate={invoice.dueDate}
                       isPaid={invoice.balance === 0}
@@ -111,7 +111,7 @@ export function InvoiceTable({ invoices }: InvoiceTableProps) {
                   </td>
 
                   {/* Estado */}
-                  <td className="py-3 px-2 text-center">
+                  <td className="py-3 pr-2 text-center">
                     <div className="flex justify-center">
                       <StatusBadge
                         bgClass={invoice.invoiceStatus.color.bgClass}
