@@ -33,6 +33,8 @@ interface CurrencyInputProps {
   onFocus?: React.FocusEventHandler<HTMLInputElement>;
   /** Callback onBlur */
   onBlur?: React.FocusEventHandler<HTMLInputElement>;
+  /** data-testid para testing */
+  "data-testid"?: string;
 }
 
 /**
@@ -77,6 +79,7 @@ function CurrencyInput({
   name,
   onFocus,
   onBlur,
+  "data-testid": dataTestId,
 }: CurrencyInputProps) {
   // Leer configuración global del contexto
   const { configuration } = useConfiguration();
@@ -125,10 +128,39 @@ function CurrencyInput({
     };
   }, [locale, currency]);
 
+  // Ref para acceder al input subyacente
+  const inputRef = React.useRef<HTMLInputElement>(null);
+
   // Handler para seleccionar todo el contenido al hacer doble click
-  const handleDoubleClick = (e: React.MouseEvent<HTMLInputElement>) => {
-    e.currentTarget.select();
-  };
+  const handleDoubleClick = React.useCallback(
+    (e: React.MouseEvent<HTMLInputElement>) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      // Intentar múltiples métodos para asegurar la selección
+      const target = e.currentTarget;
+      if (target) {
+        // Método 1: select() nativo
+        target.select();
+
+        // Método 2: setSelectionRange (más confiable)
+        try {
+          target.setSelectionRange(0, target.value.length);
+        } catch {
+          // En algunos navegadores esto puede fallar, ignorar
+        }
+
+        // Método 3: Focus asegura que el input está activo
+        target.focus();
+      }
+
+      // También intentar con el ref si está disponible
+      if (inputRef.current) {
+        inputRef.current.select();
+      }
+    },
+    [],
+  );
 
   return (
     <NumericFormat
@@ -154,6 +186,7 @@ function CurrencyInput({
       prefix={formatConfig.currencySymbol + " "}
       allowNegative={min === undefined || min < 0}
       // Props del input
+      getInputRef={inputRef}
       id={id}
       name={name}
       disabled={disabled}
@@ -161,6 +194,7 @@ function CurrencyInput({
       onFocus={onFocus}
       onBlur={onBlur}
       onDoubleClick={handleDoubleClick}
+      data-testid={dataTestId}
       className={cn(
         "flex h-9 w-full min-w-0 rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground selection:text-primary-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
         "aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
