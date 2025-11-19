@@ -26,7 +26,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { PaymentMethodFields } from "@/components/forms/fields/payment-method-fields";
 import { PaymentAmountDateFields } from "@/components/forms/fields/payment-amount-date-fields";
-import { InvoiceSearchField } from "@/components/forms/search/invoice-search-field";
+import { CustomerNameInfo } from "@/components/summarys/customer/customer-name-info";
 
 // ✅ Constantes fuera del componente para evitar re-renders infinitos
 const EMPTY_PAYMENT_METHODS: Array<{
@@ -60,6 +60,10 @@ export function PaymentToInvoiceForm({
   isSubmitting = false,
   preselectedInvoiceId,
 }: PaymentToInvoiceFormProps) {
+  // ========================================
+  // 🎣 HOOKS (deben estar ANTES de cualquier early return)
+  // ========================================
+
   // State para factura seleccionada
   const [selectedInvoice, setSelectedInvoice] =
     useState<InvoiceWithBalance | null>(null);
@@ -97,6 +101,45 @@ export function PaymentToInvoiceForm({
     [paymentMethodsData],
   );
 
+  // Fetch factura preseleccionada
+  const {
+    data: invoiceData,
+    isLoading: isLoadingInvoice,
+    error: invoiceError,
+  } = useQuery({
+    queryKey: ["invoice", preselectedInvoiceId],
+    queryFn: async () => {
+      const res = await fetch(`/api/invoices/${preselectedInvoiceId}`);
+      if (!res.ok) throw new Error("Error al cargar la factura");
+      return res.json();
+    },
+    enabled: !!preselectedInvoiceId,
+  });
+
+  // Auto-setear factura cuando carga
+  useEffect(() => {
+    if (invoiceData) {
+      const invoice: InvoiceWithBalance = {
+        id: invoiceData.id,
+        invoiceNumber: invoiceData.invoiceNumber,
+        customerId: invoiceData.customerId,
+        subtotal: invoiceData.subtotal,
+        taxAmount: invoiceData.taxAmount,
+        total: invoiceData.total,
+        currency: invoiceData.currency,
+        issueDate: invoiceData.issueDate,
+        dueDate: invoiceData.dueDate,
+        paidAmount: invoiceData.paidAmount,
+        balance: invoiceData.balance,
+        status: invoiceData.status,
+        customer: invoiceData.customer,
+      };
+      setSelectedInvoice(invoice);
+      // Auto-completar monto con el balance
+      form.setValue("amount", invoice.balance);
+    }
+  }, [invoiceData, form]);
+
   // Auto-seleccionar el primer método de pago activo como default
   const currentPaymentMethodId = form.watch("paymentMethodId");
 
@@ -121,19 +164,6 @@ export function PaymentToInvoiceForm({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Handler: Cuando se selecciona una factura, auto-completar monto
-  const handleInvoiceSelect = useCallback(
-    (invoice: InvoiceWithBalance | null) => {
-      setSelectedInvoice(invoice);
-      if (invoice) {
-        form.setValue("amount", invoice.balance);
-      } else {
-        form.setValue("amount", 0);
-      }
-    },
-    [form],
-  );
-
   // Validación: Monto no puede exceder el balance
   const isAmountExceedingBalance =
     selectedInvoice &&
@@ -142,12 +172,8 @@ export function PaymentToInvoiceForm({
 
   // Submit handler
   const handleSubmit = (values: PaymentToInvoiceFormValues) => {
-    if (!selectedInvoice) {
-      form.setError("invoiceId", {
-        message: "Debe seleccionar una factura",
-      });
-      return;
-    }
+    // ✅ selectedInvoice siempre existe aquí (validado en early returns)
+    if (!selectedInvoice) return;
 
     if (values.amount <= 0) {
       form.setError("amount", {
@@ -166,58 +192,102 @@ export function PaymentToInvoiceForm({
     onSubmit(values, selectedInvoice);
   };
 
+  // ========================================
+  // ✅ VALIDACIONES & EARLY RETURNS (después de hooks)
+  // ========================================
+
+  // Validación: Requiere factura preseleccionada
+  if (!preselectedInvoiceId) {
+    return (
+      <Alert variant="destructive">
+        <AlertCircle className="h-4 w-4" />
+        <AlertDescription>
+          Este formulario requiere una factura preseleccionada. Por favor, use
+          el flujo de "Pago a Cliente" si desea seleccionar la factura
+          manualmente.
+        </AlertDescription>
+      </Alert>
+    );
+  }
+
+  // Loading state
+  if (isLoadingInvoice) {
+    return (
+      <div className="flex items-center justify-center p-8">
+        <div className="text-sm text-muted-foreground">Cargando factura...</div>
+      </div>
+    );
+  }
+
+  // Error state
+  if (invoiceError) {
+    return (
+      <Alert variant="destructive">
+        <AlertCircle className="h-4 w-4" />
+        <AlertDescription>
+          Error al cargar la factura. Por favor, intente nuevamente.
+        </AlertDescription>
+      </Alert>
+    );
+  }
+
+  // No invoice loaded (shouldn't happen with the early return)
+  if (!selectedInvoice) {
+    return (
+      <Alert variant="destructive">
+        <AlertCircle className="h-4 w-4" />
+        <AlertDescription>
+          No se pudo cargar la información de la factura.
+        </AlertDescription>
+      </Alert>
+    );
+  }
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-3">
-        {/* 1. Factura: Búsqueda o Pre-seleccionada */}
-        <InvoiceSearchField
-          control={form.control}
-          name="invoiceId"
-          label="Factura"
-          preselectedInvoiceId={preselectedInvoiceId}
-          onInvoiceSelect={handleInvoiceSelect}
-        />
-
-        {/* Info de Factura Seleccionada */}
-        {selectedInvoice && (
-          <div className="rounded-lg border bg-muted/50 p-4 space-y-2">
-            <div className="flex justify-between items-center">
-              <span className="text-sm text-muted-foreground">Cliente:</span>
-              <span className="font-medium">
-                {selectedInvoice.customer.razonSocial}
-              </span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-sm text-muted-foreground">
-                Total Factura:
-              </span>
-              <span className="font-medium">
-                {formatCurrency(
-                  selectedInvoice.total,
-                  selectedInvoice.currency,
-                )}
-              </span>
-            </div>
-            <div className="flex justify-between items-center">
-              <span className="text-sm text-muted-foreground">Ya Pagado:</span>
-              <span className="font-medium">
-                {formatCurrency(
-                  selectedInvoice.paidAmount,
-                  selectedInvoice.currency,
-                )}
-              </span>
-            </div>
-            <div className="flex justify-between items-center border-t pt-2">
-              <span className="text-sm font-semibold">Saldo Pendiente:</span>
-              <span className="font-bold text-lg">
-                {formatCurrency(
-                  selectedInvoice.balance,
-                  selectedInvoice.currency,
-                )}
-              </span>
-            </div>
+        {/* Info de Factura (incluye número) */}
+        <div className="rounded-lg border bg-muted/50 p-4 space-y-2">
+          <div className="flex items-center gap-2 pb-2 border-b">
+            <span className="font-semibold text-base">
+              Factura #{selectedInvoice.invoiceNumber}
+            </span>
           </div>
-        )}
+          <div className="flex justify-between items-center">
+            <span className="text-sm text-muted-foreground">Cliente:</span>
+            <CustomerNameInfo
+              rut={selectedInvoice.customer.rut}
+              razonSocial={selectedInvoice.customer.razonSocial}
+              tradeName={selectedInvoice.customer.tradeName ?? undefined}
+            />
+          </div>
+          <div className="flex justify-between items-center">
+            <span className="text-sm text-muted-foreground">
+              Total Factura:
+            </span>
+            <span className="font-medium">
+              {formatCurrency(selectedInvoice.total, selectedInvoice.currency)}
+            </span>
+          </div>
+          <div className="flex justify-between items-center">
+            <span className="text-sm text-muted-foreground">Ya Pagado:</span>
+            <span className="font-medium">
+              {formatCurrency(
+                selectedInvoice.paidAmount,
+                selectedInvoice.currency,
+              )}
+            </span>
+          </div>
+          <div className="flex justify-between items-center border-t pt-2">
+            <span className="text-sm font-semibold">Saldo Pendiente:</span>
+            <span className="font-bold text-lg">
+              {formatCurrency(
+                selectedInvoice.balance,
+                selectedInvoice.currency,
+              )}
+            </span>
+          </div>
+        </div>
 
         {/* 2. Monto y Fecha */}
         <PaymentAmountDateFields
@@ -276,10 +346,7 @@ export function PaymentToInvoiceForm({
           <Button
             type="submit"
             disabled={
-              isSubmitting ||
-              !selectedInvoice ||
-              watchedAmount <= 0 ||
-              !!isAmountExceedingBalance
+              isSubmitting || watchedAmount <= 0 || !!isAmountExceedingBalance
             }
           >
             {isSubmitting ? "Registrando..." : "Registrar Pago"}

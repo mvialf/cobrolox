@@ -191,7 +191,9 @@ export type InvoiceWithBalance = {
   };
   customer: {
     id: string;
+    rut: string;
     razonSocial: string;
+    tradeName: string | null;
   };
 };
 
