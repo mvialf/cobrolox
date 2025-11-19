@@ -108,13 +108,17 @@ export function InvoiceSearchField({
 
   // Auto-seleccionar factura pre-seleccionada
   useEffect(() => {
-    if (preselectedInvoice && !field.value) {
-      field.onChange(preselectedInvoice.id);
+    if (preselectedInvoice) {
+      // Solo actualizar el campo si es diferente al valor actual
+      if (field.value !== preselectedInvoice.id) {
+        field.onChange(preselectedInvoice.id);
+      }
+      // SIEMPRE notificar la selección (incluso si el valor ya existe desde defaultValues)
+      // Esto asegura que el formulario padre actualice su estado (selectedInvoice, amount, etc.)
       onInvoiceSelect?.(preselectedInvoice);
     }
     // Solo ejecutar cuando preselectedInvoice.id cambia, no cuando field/onInvoiceSelect se recrean
     // field.onChange es estable, onInvoiceSelect siempre usa la versión más reciente del closure
-    // La condición !field.value previene re-ejecuciones innecesarias
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [preselectedInvoice?.id]);
 

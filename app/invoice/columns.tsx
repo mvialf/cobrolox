@@ -23,7 +23,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { CustomerNameInfo } from "@/components/summarys/customer/customer-name-info";
 import { StatusBadge } from "@/components/ui/status-badge";
-import { Pencil, Trash2, Eye } from "lucide-react";
+import { Pencil, Trash2, Eye, DollarSign } from "lucide-react";
 import { InvoiceDueDateCell } from "@/components/cells/invoice-due-date-cell";
 import {
   INVOICE_STATUS_LABELS,
@@ -31,6 +31,7 @@ import {
 } from "@/lib/constants/invoice-status-constants";
 import { InvoiceDetailDialog } from "@/components/dialogs/invoice/invoice-detail-dialog";
 import { EditInvoiceDialog } from "@/components/dialogs/invoice/edit-invoice-dialog";
+import { PaymentToInvoiceDialog } from "@/components/dialogs/payments/payment-to-invoice-dialog";
 import { useDeleteInvoice } from "@/hooks/queries/use-invoices";
 import { formatDate, formatCurrency } from "@/lib/format";
 
@@ -79,6 +80,7 @@ function InvoiceActionsCell({
 }) {
   const [showDetailDialog, setShowDetailDialog] = useState(false);
   const [showEditDialog, setShowEditDialog] = useState(false);
+  const [showPaymentDialog, setShowPaymentDialog] = useState(false);
   const [showDeleteAlert, setShowDeleteAlert] = useState(false);
 
   const deleteInvoice = useDeleteInvoice();
@@ -110,6 +112,14 @@ function InvoiceActionsCell({
           Ver detalle
         </DropdownMenuItem>
 
+        {/* Registrar pago */}
+        <DropdownMenuItem onClick={() => setShowPaymentDialog(true)}>
+          <DollarSign className="mr-2 h-4 w-4" />
+          Registrar Pago
+        </DropdownMenuItem>
+
+        <DropdownMenuSeparator />
+
         {/* Editar */}
         <DropdownMenuItem onClick={() => setShowEditDialog(true)}>
           <Pencil className="mr-2 h-4 w-4" />
@@ -140,6 +150,17 @@ function InvoiceActionsCell({
         onOpenChange={setShowEditDialog}
         onInvoiceUpdated={() => {
           setShowEditDialog(false);
+          onInvoiceUpdated?.();
+        }}
+      />
+
+      {/* Dialog para registrar pago */}
+      <PaymentToInvoiceDialog
+        open={showPaymentDialog}
+        onOpenChange={setShowPaymentDialog}
+        preselectedInvoiceId={invoice.id}
+        onSuccess={() => {
+          setShowPaymentDialog(false);
           onInvoiceUpdated?.();
         }}
       />

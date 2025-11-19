@@ -6,15 +6,8 @@ import { AppLayout } from "@/components/layout/app-layout";
 import { DataTable } from "@/components/data-table";
 import { createColumns, type Payment } from "./columns";
 import { PaymentDetailsDialog } from "@/components/dialogs/payments/payment-details-dialog";
-import { PaymentToInvoiceDialog } from "@/components/dialogs/payments/payment-to-invoice-dialog";
 import { PaymentToCustomerDialog } from "@/components/dialogs/payments/payment-to-customer-dialog";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { usePayments, useDeletePayment } from "@/hooks/queries/use-payments";
 import type { Payment as APIPayment } from "@/lib/validations/payment-validations";
 
@@ -51,8 +44,6 @@ export default function PaymentsPage() {
   // Estado de dialogs
   const [selectedPayment, setSelectedPayment] = useState<Payment | null>(null);
   const [isDetailsDialogOpen, setIsDetailsDialogOpen] = useState(false);
-  const [isPaymentToInvoiceDialogOpen, setIsPaymentToInvoiceDialogOpen] =
-    useState(false);
   const [isPaymentToCustomerDialogOpen, setIsPaymentToCustomerDialogOpen] =
     useState(false);
 
@@ -79,26 +70,10 @@ export default function PaymentsPage() {
       pageTitle="Pagos"
       breadcrumbs={[{ label: "Inicio", href: "/" }, { label: "Pagos" }]}
       action={
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button>
-              <Plus className="mr-2 h-4 w-4" />
-              Nuevo Pago
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem
-              onClick={() => setIsPaymentToInvoiceDialogOpen(true)}
-            >
-              Pago a Factura
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={() => setIsPaymentToCustomerDialogOpen(true)}
-            >
-              Pago a Cliente (múltiples facturas)
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <Button onClick={() => setIsPaymentToCustomerDialogOpen(true)}>
+          <Plus className="mr-2 h-4 w-4" />
+          Nuevo Pago
+        </Button>
       }
     >
       <div className="space-y-4">
@@ -144,13 +119,6 @@ export default function PaymentsPage() {
         payment={selectedPayment as APIPayment | null}
         open={isDetailsDialogOpen}
         onOpenChange={setIsDetailsDialogOpen}
-      />
-
-      {/* Modal de registro de pago a factura */}
-      <PaymentToInvoiceDialog
-        open={isPaymentToInvoiceDialogOpen}
-        onOpenChange={setIsPaymentToInvoiceDialogOpen}
-        onSuccess={refetch}
       />
 
       {/* Modal de registro de pago a cliente */}
