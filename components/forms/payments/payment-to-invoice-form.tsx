@@ -39,7 +39,7 @@ const EMPTY_PAYMENT_METHODS: Array<{
 interface PaymentToInvoiceFormProps {
   onSubmit: (
     values: PaymentToInvoiceFormValues,
-    invoice: InvoiceWithBalance,
+    invoice: InvoiceWithBalance
   ) => void | Promise<void>;
   isSubmitting?: boolean;
   preselectedInvoiceId?: string;
@@ -77,7 +77,7 @@ export function PaymentToInvoiceForm({
       paymentMethodId: "",
       notes: "",
     }),
-    [preselectedInvoiceId],
+    [preselectedInvoiceId]
   );
 
   const form = useForm<PaymentToInvoiceFormValues>({
@@ -98,7 +98,7 @@ export function PaymentToInvoiceForm({
 
   const paymentMethods = useMemo(
     () => paymentMethodsData || EMPTY_PAYMENT_METHODS,
-    [paymentMethodsData],
+    [paymentMethodsData]
   );
 
   // Fetch factura preseleccionada
@@ -248,13 +248,7 @@ export function PaymentToInvoiceForm({
       <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-3">
         {/* Info de Factura (incluye número) */}
         <div className="rounded-lg border bg-muted/50 p-4 space-y-2">
-          <div className="flex items-center gap-2 pb-2 border-b">
-            <span className="font-semibold text-base">
-              Factura #{selectedInvoice.invoiceNumber}
-            </span>
-          </div>
           <div className="flex justify-between items-center">
-            <span className="text-sm text-muted-foreground">Cliente:</span>
             <CustomerNameInfo
               rut={selectedInvoice.customer.rut}
               razonSocial={selectedInvoice.customer.razonSocial}
@@ -262,28 +256,17 @@ export function PaymentToInvoiceForm({
             />
           </div>
           <div className="flex justify-between items-center">
-            <span className="text-sm text-muted-foreground">
-              Total Factura:
-            </span>
-            <span className="font-medium">
+            <span className="text-sm">F. {selectedInvoice.invoiceNumber}</span>
+            <span className="text-sm font-medium">
               {formatCurrency(selectedInvoice.total, selectedInvoice.currency)}
             </span>
           </div>
           <div className="flex justify-between items-center">
-            <span className="text-sm text-muted-foreground">Ya Pagado:</span>
-            <span className="font-medium">
-              {formatCurrency(
-                selectedInvoice.paidAmount,
-                selectedInvoice.currency,
-              )}
-            </span>
-          </div>
-          <div className="flex justify-between items-center border-t pt-2">
-            <span className="text-sm font-semibold">Saldo Pendiente:</span>
-            <span className="font-bold text-lg">
+            <span className="text-sm ">Saldo:</span>
+            <span className="text-sm font-medium">
               {formatCurrency(
                 selectedInvoice.balance,
-                selectedInvoice.currency,
+                selectedInvoice.currency
               )}
             </span>
           </div>
@@ -307,7 +290,7 @@ export function PaymentToInvoiceForm({
               el saldo pendiente de la factura (
               {formatCurrency(
                 selectedInvoice.balance,
-                selectedInvoice.currency,
+                selectedInvoice.currency
               )}
               )
             </AlertDescription>

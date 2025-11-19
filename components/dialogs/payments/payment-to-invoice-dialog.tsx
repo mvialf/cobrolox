@@ -13,7 +13,6 @@ import { PaymentToInvoiceForm } from "@/components/forms/payments/payment-to-inv
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -49,7 +48,7 @@ export function PaymentToInvoiceDialog({
 
   const handleSubmit = async (
     values: PaymentToInvoiceFormValues,
-    invoice: InvoiceWithBalance,
+    invoice: InvoiceWithBalance
   ) => {
     try {
       // Convertir form values a payload del API
@@ -81,11 +80,6 @@ export function PaymentToInvoiceDialog({
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Registrar Pago a Factura</DialogTitle>
-          <DialogDescription>
-            {preselectedInvoiceId
-              ? "Registre un pago que se asignará completamente a esta factura."
-              : "Registre un pago que se asignará completamente a una factura específica."}
-          </DialogDescription>
         </DialogHeader>
 
         <PaymentToInvoiceForm
