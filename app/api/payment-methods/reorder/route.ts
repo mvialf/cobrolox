@@ -37,7 +37,7 @@ export async function PATCH(request: NextRequest) {
           error: "Algunos IDs no existen",
           message: "Uno o más métodos de pago no fueron encontrados",
         },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -49,7 +49,7 @@ export async function PATCH(request: NextRequest) {
           error: "Count mismatch",
           message: `Se esperaban ${totalCount} métodos pero se recibieron ${orderedIds.length}`,
         },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -59,8 +59,8 @@ export async function PATCH(request: NextRequest) {
         prisma.paymentMethod.update({
           where: { id },
           data: { order: index },
-        }),
-      ),
+        })
+      )
     );
 
     return NextResponse.json({
@@ -76,7 +76,7 @@ export async function PATCH(request: NextRequest) {
           message: "Los datos proporcionados son inválidos",
           details: error.errors,
         },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -85,7 +85,7 @@ export async function PATCH(request: NextRequest) {
         error: "Internal server error",
         message: "Error al actualizar el orden de los métodos de pago",
       },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

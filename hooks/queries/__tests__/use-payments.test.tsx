@@ -97,7 +97,7 @@ describe("usePayments", () => {
     expect(result.current.data).toEqual(mockResponse);
     expect(result.current.data?.payments).toHaveLength(1);
     expect(global.fetch).toHaveBeenCalledWith(
-      expect.stringContaining("/api/payments?page=1&limit=10"),
+      expect.stringContaining("/api/payments?page=1&limit=10")
     );
   });
 
@@ -120,7 +120,7 @@ describe("usePayments", () => {
           startDate: "2025-01-01",
           endDate: "2025-01-31",
         }),
-      { wrapper: createWrapper() },
+      { wrapper: createWrapper() }
     );
 
     await waitFor(() => expect(global.fetch).toHaveBeenCalled());
@@ -189,14 +189,14 @@ describe("useSearchProjects", () => {
       () => useSearchProjects({ search: "P 00", limit: 20 }),
       {
         wrapper: createWrapper(),
-      },
+      }
     );
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
     expect(result.current.data).toEqual(mockProjects);
     expect(global.fetch).toHaveBeenCalledWith(
-      expect.stringContaining("/api/payments/search-projects"),
+      expect.stringContaining("/api/payments/search-projects")
     );
   });
 
@@ -219,7 +219,7 @@ describe("useSearchProjects", () => {
       () => useSearchProjects({ search: undefined }),
       {
         wrapper: createWrapper(),
-      },
+      }
     );
 
     // Query disabled: NO debe hacer fetch (isPending puede ser true para queries disabled)
@@ -284,8 +284,8 @@ describe("useCustomerProjects", () => {
     expect(result.current.data).toHaveLength(2);
     expect(global.fetch).toHaveBeenCalledWith(
       expect.stringContaining(
-        "/api/payments/customer-projects?customerId=cust-1",
-      ),
+        "/api/payments/customer-projects?customerId=cust-1"
+      )
     );
   });
 
@@ -344,7 +344,7 @@ describe("useCreatePayment", () => {
     };
 
     await expect(result.current.mutateAsync(invalidData)).rejects.toThrow(
-      "Pago tipo Invoice debe tener exactamente 1 asignación",
+      "Pago tipo Invoice debe tener exactamente 1 asignación"
     );
   });
 
@@ -369,7 +369,7 @@ describe("useCreatePayment", () => {
     };
 
     await expect(result.current.mutateAsync(invalidData)).rejects.toThrow(
-      "Pago tipo Invoice debe tener exactamente 1 asignación",
+      "Pago tipo Invoice debe tener exactamente 1 asignación"
     );
   });
 
@@ -421,7 +421,7 @@ describe("useCreatePayment", () => {
       expect.objectContaining({
         method: "POST",
         headers: { "Content-Type": "application/json" },
-      }),
+      })
     );
   });
 
@@ -447,7 +447,7 @@ describe("useCreatePayment", () => {
     };
 
     await expect(result.current.mutateAsync(invalidData)).rejects.toThrow(
-      "Pago tipo Customer debe tener al menos 1 asignación",
+      "Pago tipo Customer debe tener al menos 1 asignación"
     );
   });
 
@@ -568,7 +568,7 @@ describe("useCreatePayment", () => {
     };
 
     await expect(result.current.mutateAsync(invalidData)).rejects.toThrow(
-      /no suman el monto total/,
+      /no suman el monto total/
     );
   });
 
@@ -693,7 +693,7 @@ describe("useCreatePayment", () => {
     };
 
     await expect(result.current.mutateAsync(invalidData)).rejects.toThrow(
-      "No puede asignar el mismo factura múltiples veces",
+      "No puede asignar el mismo factura múltiples veces"
     );
   });
 
@@ -797,7 +797,7 @@ describe("useUpdatePayment", () => {
       "/api/payments/pay-1",
       expect.objectContaining({
         method: "PUT",
-      }),
+      })
     );
   });
 
@@ -817,7 +817,7 @@ describe("useUpdatePayment", () => {
       result.current.mutateAsync({
         id: "pay-with-installments",
         reference: "Nueva ref",
-      }),
+      })
     ).rejects.toThrow("No se puede editar un pago con cuotas configuradas");
   });
 
@@ -835,7 +835,7 @@ describe("useUpdatePayment", () => {
       result.current.mutateAsync({
         id: "pay-1",
         reference: "Nueva ref",
-      }),
+      })
     ).rejects.toThrow();
   });
 });
@@ -860,7 +860,7 @@ describe("useDeletePayment", () => {
       "/api/payments/pay-1",
       expect.objectContaining({
         method: "DELETE",
-      }),
+      })
     );
   });
 
@@ -914,8 +914,8 @@ describe("useDeletePayment", () => {
     global.fetch = vi.fn().mockImplementation(
       () =>
         new Promise(
-          (resolve) => setTimeout(() => resolve({ ok: true }), 100), // Delay para simular latencia
-        ),
+          (resolve) => setTimeout(() => resolve({ ok: true }), 100) // Delay para simular latencia
+        )
     );
 
     const wrapper = ({ children }: { children: React.ReactNode }) => (

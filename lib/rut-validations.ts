@@ -28,7 +28,7 @@ export const rutSchema = z
     },
     {
       message: "RUT inválido",
-    },
+    }
   );
 
 /**
@@ -54,7 +54,7 @@ export const rutSchemaOptional = z
     },
     {
       message: "RUT inválido",
-    },
+    }
   );
 
 /**

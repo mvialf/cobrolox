@@ -215,7 +215,7 @@ export const createColumns = ({
       const onDelete = async () => {
         if (
           !confirm(
-            `¿Estás seguro de eliminar este pago de ${payment.customer?.razonSocial || "este cliente"}?`,
+            `¿Estás seguro de eliminar este pago de ${payment.customer?.razonSocial || "este cliente"}?`
           )
         ) {
           return;

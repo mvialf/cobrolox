@@ -153,7 +153,7 @@ const amountSchema = z
   .max(FINANCIAL.MAX_AMOUNT)
   .refine(
     (val) => Math.abs(val - Math.round(val * 100) / 100) < 0.001,
-    "Amount must have max 2 decimal places",
+    "Amount must have max 2 decimal places"
   );
 ```
 

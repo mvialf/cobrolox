@@ -41,7 +41,7 @@ export async function GET(request: Request) {
     console.error("Error fetching invoice statuses:", error);
     return NextResponse.json(
       { error: "Error al obtener estados de factura" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

@@ -271,7 +271,7 @@ export const GET = withLogging(async (request, logger) => {
       limit,
       search: search || undefined,
     },
-    "Fetching entities with filters",
+    "Fetching entities with filters"
   );
 
   const skip = (page - 1) * limit;
@@ -304,7 +304,7 @@ export const GET = withLogging(async (request, logger) => {
         total,
         page,
       },
-      "Entities fetched successfully",
+      "Entities fetched successfully"
     );
 
     return NextResponse.json({
@@ -320,7 +320,7 @@ export const GET = withLogging(async (request, logger) => {
     logger.error({ err: error }, "Error fetching entities");
     return NextResponse.json(
       { error: "Error al obtener entities" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 });
@@ -354,7 +354,7 @@ export const POST = withLogging(async (request, logger) => {
       entityLogger.warn("Missing or invalid field1");
       return NextResponse.json(
         { error: "El field1 es requerido" },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -362,7 +362,7 @@ export const POST = withLogging(async (request, logger) => {
       entityLogger.warn("Missing or invalid field2");
       return NextResponse.json(
         { error: "El field2 es requerido" },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -381,7 +381,7 @@ export const POST = withLogging(async (request, logger) => {
       {
         entityId: entity.id,
       },
-      "Entity created successfully",
+      "Entity created successfully"
     );
 
     return NextResponse.json(entity, { status: 201 });
@@ -389,7 +389,7 @@ export const POST = withLogging(async (request, logger) => {
     entityLogger.error({ err: error }, "Error creating entity");
     return NextResponse.json(
       { error: "Error al crear entity" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 });

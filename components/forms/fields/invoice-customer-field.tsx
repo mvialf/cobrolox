@@ -81,7 +81,7 @@ export function InvoiceCustomerField({
         return res.json() as Promise<CustomerFiscal>;
       },
       enabled: !!preselectedCustomerId,
-    },
+    }
   );
 
   // Fetch clientes (server-side search) - solo si NO hay cliente pre-seleccionado
@@ -89,7 +89,7 @@ export function InvoiceCustomerField({
     queryKey: ["customers-search-invoice", debouncedCustomerSearch],
     queryFn: async () => {
       const res = await fetch(
-        `/api/customers?search=${debouncedCustomerSearch}&limit=20`,
+        `/api/customers?search=${debouncedCustomerSearch}&limit=20`
       );
       if (!res.ok) throw new Error("Error al buscar clientes");
       const data = await res.json();

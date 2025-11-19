@@ -38,7 +38,7 @@ export const GET = withLogging(async (request, logger) => {
         dateRange: startDate || endDate ? { startDate, endDate } : undefined,
       },
     },
-    "Fetching payments with filters",
+    "Fetching payments with filters"
   );
 
   const skip = (page - 1) * limit;
@@ -127,7 +127,7 @@ export const GET = withLogging(async (request, logger) => {
         total,
         page,
       },
-      "Payments fetched successfully",
+      "Payments fetched successfully"
     );
 
     return NextResponse.json({
@@ -143,7 +143,7 @@ export const GET = withLogging(async (request, logger) => {
     logger.error({ err: error }, "Error fetching payments");
     return NextResponse.json(
       { error: "Error al obtener pagos" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 });
@@ -197,7 +197,7 @@ export const POST = withLogging(async (request, logger) => {
       paymentLogger.warn({ providedType: type }, "Invalid payment type");
       return NextResponse.json(
         { error: 'El tipo de pago debe ser "Invoice" o "Customer"' },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -205,7 +205,7 @@ export const POST = withLogging(async (request, logger) => {
       paymentLogger.warn("Missing or invalid customerId");
       return NextResponse.json(
         { error: "El cliente es requerido" },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -213,7 +213,7 @@ export const POST = withLogging(async (request, logger) => {
       paymentLogger.warn({ amount }, "Invalid amount");
       return NextResponse.json(
         { error: "El monto debe ser mayor a 0" },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -221,7 +221,7 @@ export const POST = withLogging(async (request, logger) => {
       paymentLogger.warn({ currency }, "Invalid currency");
       return NextResponse.json(
         { error: "La moneda debe ser un código de 3 letras" },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -229,7 +229,7 @@ export const POST = withLogging(async (request, logger) => {
       paymentLogger.warn("Missing date");
       return NextResponse.json(
         { error: "La fecha es requerida" },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -237,7 +237,7 @@ export const POST = withLogging(async (request, logger) => {
       paymentLogger.warn("Missing or invalid paymentMethodId");
       return NextResponse.json(
         { error: "El método de pago es requerido" },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -249,7 +249,7 @@ export const POST = withLogging(async (request, logger) => {
       paymentLogger.warn("Missing or empty allocations");
       return NextResponse.json(
         { error: "Debe asignar el pago a al menos una factura" },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -257,22 +257,22 @@ export const POST = withLogging(async (request, logger) => {
     if (type === "Invoice" && allocations.length !== 1) {
       paymentLogger.warn(
         { expected: 1, actual: allocations.length },
-        "Invoice payment must have exactly 1 allocation",
+        "Invoice payment must have exactly 1 allocation"
       );
       return NextResponse.json(
         { error: 'Un pago tipo "Invoice" debe tener exactamente 1 asignación' },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
     if (type === "Customer" && allocations.length < 1) {
       paymentLogger.warn(
         { actual: allocations.length },
-        "Customer payment must have at least 1 allocation",
+        "Customer payment must have at least 1 allocation"
       );
       return NextResponse.json(
         { error: 'Un pago tipo "Customer" debe tener al menos 1 asignación' },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -288,14 +288,14 @@ export const POST = withLogging(async (request, logger) => {
       paymentLogger.warn("Customer not found");
       return NextResponse.json(
         { error: "El cliente no existe" },
-        { status: 404 },
+        { status: 404 }
       );
     }
 
     // Verificar que el payment method existe
     paymentLogger.debug(
       { paymentMethodId },
-      "Validating payment method exists",
+      "Validating payment method exists"
     );
     const paymentMethod = await prisma.paymentMethod.findUnique({
       where: { id: paymentMethodId },
@@ -305,7 +305,7 @@ export const POST = withLogging(async (request, logger) => {
       paymentLogger.warn("Payment method not found");
       return NextResponse.json(
         { error: "El método de pago no existe" },
-        { status: 404 },
+        { status: 404 }
       );
     }
 
@@ -315,7 +315,7 @@ export const POST = withLogging(async (request, logger) => {
       paymentLogger.warn({ invoiceIds }, "Duplicate invoice IDs detected");
       return NextResponse.json(
         { error: "No puede asignar la misma factura dos veces" },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -335,23 +335,23 @@ export const POST = withLogging(async (request, logger) => {
     if (invoices.length !== invoiceIds.length) {
       paymentLogger.warn(
         { expected: invoiceIds.length, found: invoices.length },
-        "Some invoices not found",
+        "Some invoices not found"
       );
       return NextResponse.json(
         { error: "Una o más facturas no existen" },
-        { status: 404 },
+        { status: 404 }
       );
     }
 
     // Verificar que todas las facturas pertenecen al mismo cliente
     const allSameCustomer = invoices.every(
-      (inv) => inv.customerId === customerId,
+      (inv) => inv.customerId === customerId
     );
     if (!allSameCustomer) {
       paymentLogger.warn("Not all invoices belong to same customer");
       return NextResponse.json(
         { error: "Todas las facturas deben pertenecer al mismo cliente" },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -360,33 +360,33 @@ export const POST = withLogging(async (request, logger) => {
     if (!allSameCurrency) {
       paymentLogger.warn(
         { expected: currency, found: invoices.map((inv) => inv.currency) },
-        "Currency mismatch",
+        "Currency mismatch"
       );
       return NextResponse.json(
         {
           error: "Todas las facturas deben tener la misma moneda que el pago",
         },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
     // Verificar que la suma de allocations sea igual al amount (con tolerancia de decimales)
     const totalAllocated = allocations.reduce(
       (sum: number, a: AllocationInput) => sum + a.allocatedAmount,
-      0,
+      0
     );
     const diff = Math.abs(totalAllocated - amount);
     if (diff >= 0.01) {
       paymentLogger.warn(
         { expected: amount, actual: totalAllocated, diff },
-        "Allocation sum mismatch",
+        "Allocation sum mismatch"
       );
       return NextResponse.json(
         {
           error:
             "La suma de los montos asignados debe ser igual al monto total del pago",
         },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -410,14 +410,14 @@ export const POST = withLogging(async (request, logger) => {
 
     for (const allocation of allocations) {
       const invoice = invoicesWithAllocations.find(
-        (inv) => inv.id === allocation.invoiceId,
+        (inv) => inv.id === allocation.invoiceId
       );
       if (!invoice) continue; // Ya validado antes que existe
 
       // Calcular balance actual
       const paidAmount = invoice.allocations.reduce(
         (sum, a) => sum + Number(a.allocatedAmount),
-        0,
+        0
       );
       const currentBalance = Number(invoice.total) - paidAmount;
 
@@ -431,13 +431,13 @@ export const POST = withLogging(async (request, logger) => {
             currentBalance,
             excess: allocation.allocatedAmount - currentBalance,
           },
-          "Allocation exceeds invoice balance",
+          "Allocation exceeds invoice balance"
         );
         return NextResponse.json(
           {
             error: `El monto asignado ($${allocation.allocatedAmount.toLocaleString("es-CL")}) excede el balance actual de la factura ${invoice.invoiceNumber} ($${currentBalance.toLocaleString("es-CL")})`,
           },
-          { status: 400 },
+          { status: 400 }
         );
       }
     }
@@ -452,7 +452,7 @@ export const POST = withLogging(async (request, logger) => {
         installments: selectedInstallments || 1,
         hasInstallments: !!selectedInstallments && selectedInstallments > 1,
       },
-      "Creating payment in database",
+      "Creating payment in database"
     );
 
     const payment = await prisma.payment.create({
@@ -496,7 +496,7 @@ export const POST = withLogging(async (request, logger) => {
                   // Subsecuentes: cada 30 días
                   const dueDate = new Date(paymentDate);
                   dueDate.setDate(
-                    dueDate.getDate() + (installmentNumber - 1) * 30,
+                    dueDate.getDate() + (installmentNumber - 1) * 30
                   );
 
                   return {
@@ -504,7 +504,7 @@ export const POST = withLogging(async (request, logger) => {
                     amount: new Decimal(
                       isLastInstallment
                         ? lastInstallmentAmount
-                        : baseInstallmentAmount,
+                        : baseInstallmentAmount
                     ),
                     dueDate,
                     status: "pending",
@@ -566,21 +566,21 @@ export const POST = withLogging(async (request, logger) => {
         allocationsCreated: payment.allocations.length,
         installmentsCreated: payment.installments.length,
       },
-      "Payment created successfully",
+      "Payment created successfully"
     );
 
     // Actualizar balance de facturas afectadas
     const invoiceIdsToUpdate = payment.allocations.map((a) => a.invoice.id);
     paymentLogger.debug(
       { invoiceIds: invoiceIdsToUpdate },
-      "Updating invoice balances after payment creation",
+      "Updating invoice balances after payment creation"
     );
     await updateInvoicesBalance(invoiceIdsToUpdate);
 
     // Recalcular balances del cliente después de crear pago con allocations (con retry automático)
     paymentLogger.debug(
       { customerId },
-      "Recalculating customer balances after payment creation",
+      "Recalculating customer balances after payment creation"
     );
     await recalculateCustomerBalancesWithRetry(customerId, paymentLogger);
 

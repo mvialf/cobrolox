@@ -293,7 +293,7 @@ logger.debug(
   {
     complexData: expensiveComputation(data), // Se evalúa SIEMPRE
   },
-  "Debug info",
+  "Debug info"
 );
 
 // ✅ MEJOR: Computación solo si nivel habilitado
@@ -302,7 +302,7 @@ if (logger.isLevelEnabled("debug")) {
     {
       complexData: expensiveComputation(data),
     },
-    "Debug info",
+    "Debug info"
   );
 }
 ```

@@ -332,7 +332,7 @@ export async function GET(request: Request) {
 
   try {
     const { stdout, stderr } = await execAsync(
-      "npx tsx scripts/verify-and-fix-customer-balances.ts",
+      "npx tsx scripts/verify-and-fix-customer-balances.ts"
     );
 
     return NextResponse.json({
@@ -346,7 +346,7 @@ export async function GET(request: Request) {
         success: false,
         error: error instanceof Error ? error.message : "Unknown error",
       },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

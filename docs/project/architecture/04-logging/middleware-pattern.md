@@ -15,13 +15,13 @@ import { randomUUID } from "crypto";
 export type APIHandler = (
   request: NextRequest,
   logger: Logger,
-  context?: { params: Record<string, string> },
+  context?: { params: Record<string, string> }
 ) => Promise<NextResponse>;
 
 export function withLogging(handler: APIHandler) {
   return async (
     request: NextRequest,
-    context?: { params: Record<string, string> },
+    context?: { params: Record<string, string> }
   ) => {
     const requestId = generateRequestId();
     const { method, url } = request;
@@ -44,7 +44,7 @@ export function withLogging(handler: APIHandler) {
 
       requestLogger.info(
         { status: response.status, duration },
-        "Request completed",
+        "Request completed"
       );
 
       return response;
@@ -164,7 +164,7 @@ try {
 export type APIHandler = (
   request: NextRequest,
   logger: Logger, // ← Pino logger
-  context?: { params: Record<string, string> },
+  context?: { params: Record<string, string> }
 ) => Promise<NextResponse>;
 ```
 

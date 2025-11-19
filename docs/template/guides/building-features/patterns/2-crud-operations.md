@@ -212,14 +212,14 @@ export async function POST(request: Request) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         { message: "Validation error", errors: error.errors },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
     console.error("Error creating product:", error);
     return NextResponse.json(
       { message: "Internal server error" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

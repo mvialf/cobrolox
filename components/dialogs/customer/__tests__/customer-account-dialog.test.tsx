@@ -138,7 +138,7 @@ describe("CustomerAccountDialog - Cálculo Dinámico de Balances", () => {
         customer={mockCustomer}
         open={true}
         onOpenChange={() => {}}
-      />,
+      />
     );
 
     // Esperar a que el fetch complete y useEffect calcule balances
@@ -149,7 +149,7 @@ describe("CustomerAccountDialog - Cálculo Dinámico de Balances", () => {
         const amounts = screen.getAllByText(/467\.519/i);
         expect(amounts.length).toBeGreaterThan(0);
       },
-      { timeout: 3000 },
+      { timeout: 3000 }
     );
 
     // Verificar que aparecen los labels de balance
@@ -171,7 +171,7 @@ describe("CustomerAccountDialog - Cálculo Dinámico de Balances", () => {
         customer={mockCustomer}
         open={true}
         onOpenChange={() => {}}
-      />,
+      />
     );
 
     await waitFor(
@@ -180,7 +180,7 @@ describe("CustomerAccountDialog - Cálculo Dinámico de Balances", () => {
         const amounts = screen.getAllByText(/702\.086/i);
         expect(amounts.length).toBeGreaterThan(0);
       },
-      { timeout: 3000 },
+      { timeout: 3000 }
     );
 
     // Verificar que aparecen los labels de balance
@@ -200,7 +200,7 @@ describe("CustomerAccountDialog - Cálculo Dinámico de Balances", () => {
         customer={mockCustomer}
         open={true}
         onOpenChange={() => {}}
-      />,
+      />
     );
 
     await waitFor(
@@ -209,7 +209,7 @@ describe("CustomerAccountDialog - Cálculo Dinámico de Balances", () => {
         const amounts = screen.getAllByText(/234\.567/i);
         expect(amounts.length).toBeGreaterThan(0);
       },
-      { timeout: 3000 },
+      { timeout: 3000 }
     );
 
     // Verificar que Vigente tiene valor
@@ -228,7 +228,7 @@ describe("CustomerAccountDialog - Cálculo Dinámico de Balances", () => {
         customer={mockCustomer}
         open={true}
         onOpenChange={() => {}}
-      />,
+      />
     );
 
     await waitFor(
@@ -238,7 +238,7 @@ describe("CustomerAccountDialog - Cálculo Dinámico de Balances", () => {
         const zeroBalances = screen.getAllByText(/\$0/i);
         expect(zeroBalances.length).toBeGreaterThan(0);
       },
-      { timeout: 3000 },
+      { timeout: 3000 }
     );
   });
 
@@ -265,7 +265,7 @@ describe("CustomerAccountDialog - Cálculo Dinámico de Balances", () => {
         customer={mockCustomer}
         open={true}
         onOpenChange={() => {}}
-      />,
+      />
     );
 
     await waitFor(
@@ -274,7 +274,7 @@ describe("CustomerAccountDialog - Cálculo Dinámico de Balances", () => {
         const amounts = screen.getAllByText(/234\.567/i);
         expect(amounts.length).toBeGreaterThan(0);
       },
-      { timeout: 3000 },
+      { timeout: 3000 }
     );
   });
 
@@ -290,7 +290,7 @@ describe("CustomerAccountDialog - Cálculo Dinámico de Balances", () => {
         customer={mockCustomer}
         open={true}
         onOpenChange={() => {}}
-      />,
+      />
     );
 
     // Esperar primer cálculo
@@ -311,7 +311,7 @@ describe("CustomerAccountDialog - Cálculo Dinámico de Balances", () => {
         customer={mockCustomer}
         open={false}
         onOpenChange={() => {}}
-      />,
+      />
     );
 
     rerender(
@@ -319,7 +319,7 @@ describe("CustomerAccountDialog - Cálculo Dinámico de Balances", () => {
         customer={mockCustomer}
         open={true}
         onOpenChange={() => {}}
-      />,
+      />
     );
 
     // Esperar nuevo cálculo
@@ -332,7 +332,7 @@ describe("CustomerAccountDialog - Cálculo Dinámico de Balances", () => {
   it("debe mostrar loading state mientras fetchea invoices", async () => {
     // Mock: fetch que nunca resuelve (simular loading)
     (global.fetch as ReturnType<typeof vi.fn>).mockImplementation(
-      () => new Promise(() => {}),
+      () => new Promise(() => {})
     );
 
     render(
@@ -340,7 +340,7 @@ describe("CustomerAccountDialog - Cálculo Dinámico de Balances", () => {
         customer={mockCustomer}
         open={true}
         onOpenChange={() => {}}
-      />,
+      />
     );
 
     // Debería mostrar loader de Lucide
@@ -360,7 +360,7 @@ describe("CustomerAccountDialog - Cálculo Dinámico de Balances", () => {
 
     // Mock: fetch falla
     (global.fetch as ReturnType<typeof vi.fn>).mockRejectedValue(
-      new Error("Network error"),
+      new Error("Network error")
     );
 
     render(
@@ -368,17 +368,17 @@ describe("CustomerAccountDialog - Cálculo Dinámico de Balances", () => {
         customer={customerWithOldBalances}
         open={true}
         onOpenChange={() => {}}
-      />,
+      />
     );
 
     // Debería mostrar error message
     await waitFor(
       () => {
         expect(
-          screen.getByText(/error al cargar facturas/i),
+          screen.getByText(/error al cargar facturas/i)
         ).toBeInTheDocument();
       },
-      { timeout: 3000 },
+      { timeout: 3000 }
     );
   });
 
@@ -388,7 +388,7 @@ describe("CustomerAccountDialog - Cálculo Dinámico de Balances", () => {
         customer={mockCustomer}
         open={false}
         onOpenChange={() => {}}
-      />,
+      />
     );
 
     // fetch NO debería haberse llamado
@@ -406,12 +406,12 @@ describe("CustomerAccountDialog - Cálculo Dinámico de Balances", () => {
         customer={mockCustomer}
         open={true}
         onOpenChange={() => {}}
-      />,
+      />
     );
 
     await waitFor(() => {
       expect(global.fetch).toHaveBeenCalledWith(
-        `/api/invoices?customerId=${mockCustomer.id}&withBalance=true`,
+        `/api/invoices?customerId=${mockCustomer.id}&withBalance=true`
       );
     });
   });

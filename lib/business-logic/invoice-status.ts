@@ -55,7 +55,7 @@ export interface CalculatedStatuses {
  */
 export function calculateInvoiceStatuses(
   input: InvoiceStatusInput,
-  statuses: AvailableStatuses,
+  statuses: AvailableStatuses
 ): CalculatedStatuses {
   const { balance, paidAmount, dueDate } = input;
   const now = new Date();
@@ -95,7 +95,7 @@ export function calculateInvoiceStatuses(
  */
 export function hasStatusChanged(
   current: CalculatedStatuses,
-  calculated: CalculatedStatuses,
+  calculated: CalculatedStatuses
 ): boolean {
   return (
     current.invoiceStatus.id !== calculated.invoiceStatus.id ||
@@ -108,7 +108,7 @@ export function hasStatusChanged(
  */
 export function getInvoiceStatus(
   input: InvoiceStatusInput,
-  statuses: AvailableStatuses,
+  statuses: AvailableStatuses
 ): InvoiceStatus {
   return calculateInvoiceStatuses(input, statuses).invoiceStatus;
 }
@@ -118,7 +118,7 @@ export function getInvoiceStatus(
  */
 export function getPaymentStatus(
   input: InvoiceStatusInput,
-  statuses: AvailableStatuses,
+  statuses: AvailableStatuses
 ): PaymentInvoiceStatus {
   return calculateInvoiceStatuses(input, statuses).paymentInvoiceStatus;
 }

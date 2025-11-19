@@ -509,11 +509,11 @@ describe("calculateInvoiceStatuses", () => {
     (balance, paid, date, expectedInvoice, expectedPayment) => {
       const result = calculateInvoiceStatuses(
         { balance, paidAmount: paid, dueDate: date },
-        statuses,
+        statuses
       );
       expect(result.invoiceStatus).toBe(expectedInvoice);
       expect(result.paymentInvoiceStatus).toBe(expectedPayment);
-    },
+    }
   );
 });
 ```
@@ -530,8 +530,8 @@ it("sum of installments always equals total", () => {
         const result = calculateInstallments(amount, installments, new Date());
         const sum = result.reduce((acc, inst) => acc + inst.amount, 0);
         return Math.abs(sum - amount) < 0.01;
-      },
-    ),
+      }
+    )
   );
 });
 ```

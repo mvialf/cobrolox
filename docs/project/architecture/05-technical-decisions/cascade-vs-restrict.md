@@ -193,7 +193,7 @@ export const DELETE = withLogging(async (request, logger, context) => {
         error: "Cannot delete status",
         reason: "This status is being used by active projects",
       },
-      { status: 400 },
+      { status: 400 }
     );
   }
 });

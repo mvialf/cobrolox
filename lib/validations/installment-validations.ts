@@ -79,7 +79,7 @@ export const installmentSchema = z
       .positive("El monto debe ser mayor a 0")
       .multipleOf(
         FINANCIAL.DECIMAL_PRECISION,
-        "El monto debe tener máximo 2 decimales",
+        "El monto debe tener máximo 2 decimales"
       ),
 
     // Fecha de vencimiento (obligatoria)
@@ -117,7 +117,7 @@ export const installmentSchema = z
     {
       message: "La fecha de pago es obligatoria para cuotas pagadas",
       path: ["paidDate"],
-    },
+    }
   )
   .refine(
     (data) => {
@@ -134,7 +134,7 @@ export const installmentSchema = z
     {
       message: "Las cuotas pendientes o vencidas no pueden tener fecha de pago",
       path: ["paidDate"],
-    },
+    }
   )
   .refine(
     (data) => {
@@ -152,7 +152,7 @@ export const installmentSchema = z
       message:
         "La fecha de pago no puede ser más de 1 año antes del vencimiento",
       path: ["paidDate"],
-    },
+    }
   );
 
 /**
@@ -183,7 +183,7 @@ export type UpdateInstallmentPayload = Partial<
  * Helper para convertir form values a API payload
  */
 export function formValuesToPayload(
-  values: InstallmentFormValues,
+  values: InstallmentFormValues
 ): CreateInstallmentPayload {
   return {
     paymentId: values.paymentId,
@@ -199,7 +199,7 @@ export function formValuesToPayload(
  * Helper para convertir Installment a form values
  */
 export function installmentToFormValues(
-  installment: Installment,
+  installment: Installment
 ): InstallmentFormValues {
   return {
     paymentId: installment.paymentId,
@@ -220,7 +220,7 @@ export function installmentToFormValues(
  */
 export function markAsPaid(
   installment: Installment,
-  paidDate?: Date,
+  paidDate?: Date
 ): UpdateInstallmentPayload {
   return {
     status: INSTALLMENT_STATUS.PAID,
@@ -235,7 +235,7 @@ export function markAsPaid(
  * @returns Payload para actualizar la cuota
  */
 export function markAsOverdue(
-  _installment: Installment,
+  _installment: Installment
 ): UpdateInstallmentPayload {
   return {
     status: INSTALLMENT_STATUS.OVERDUE,

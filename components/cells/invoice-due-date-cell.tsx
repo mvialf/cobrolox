@@ -44,7 +44,7 @@ export function InvoiceDueDateCell({
         className={cn(
           "min-w-[2.5rem] justify-center font-mono tabular-nums",
           // Ajustar tamaño para números grandes
-          Math.abs(diffDays) >= 100 && "text-xs px-1",
+          Math.abs(diffDays) >= 100 && "text-xs px-1"
         )}
         aria-label={
           diffDays < 0

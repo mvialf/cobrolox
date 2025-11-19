@@ -83,7 +83,7 @@ export function cn(...inputs: ClassValue[]) {
     "rounded-md px-4 py-2",
     isLoading && "opacity-50 cursor-not-allowed",
     variant === "primary" && "bg-blue-500 text-white",
-    variant === "secondary" && "bg-gray-200 text-gray-900",
+    variant === "secondary" && "bg-gray-200 text-gray-900"
   )}
 />
 ```
@@ -148,7 +148,7 @@ function Button({ size = "md", className }) {
         size === "sm" && "text-sm px-2 py-1",
         size === "lg" && "text-lg px-6 py-3",
         // User override (gana sobre size)
-        className,
+        className
       )}
     />
   );
@@ -184,7 +184,7 @@ const buttonVariants = cva(
       variant: "default",
       size: "default",
     },
-  },
+  }
 );
 
 interface ButtonProps extends VariantProps<typeof buttonVariants> {

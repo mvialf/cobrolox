@@ -750,7 +750,7 @@ export const mockTableData: MockProject[] = [
  */
 export function filterByStatus(
   data: MockProject[],
-  status: string[],
+  status: string[]
 ): MockProject[] {
   if (status.length === 0) return data;
   return data.filter((item) => status.includes(item.status));
@@ -761,7 +761,7 @@ export function filterByStatus(
  */
 export function filterByPriority(
   data: MockProject[],
-  priority: string[],
+  priority: string[]
 ): MockProject[] {
   if (priority.length === 0) return data;
   return data.filter((item) => priority.includes(item.priority));

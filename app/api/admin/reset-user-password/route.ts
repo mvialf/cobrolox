@@ -41,11 +41,11 @@ export async function POST(req: NextRequest) {
 
     if (currentUser?.role !== "admin") {
       logger.warn(
-        `Usuario ${currentUser?.email} intentó resetear contraseña sin ser admin`,
+        `Usuario ${currentUser?.email} intentó resetear contraseña sin ser admin`
       );
       return NextResponse.json(
         { error: "Solo administradores pueden resetear contraseñas" },
-        { status: 403 },
+        { status: 403 }
       );
     }
 
@@ -59,7 +59,7 @@ export async function POST(req: NextRequest) {
           error: "Datos inválidos",
           details: validation.error.errors,
         },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -75,7 +75,7 @@ export async function POST(req: NextRequest) {
       logger.warn(`Admin intentó resetear usuario inexistente: ${userId}`);
       return NextResponse.json(
         { error: "Usuario no encontrado" },
-        { status: 404 },
+        { status: 404 }
       );
     }
 
@@ -92,11 +92,11 @@ export async function POST(req: NextRequest) {
 
     if (!account) {
       logger.warn(
-        `Usuario ${targetUser.email} no tiene cuenta de tipo credential`,
+        `Usuario ${targetUser.email} no tiene cuenta de tipo credential`
       );
       return NextResponse.json(
         { error: "Usuario no tiene cuenta con contraseña" },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -112,7 +112,7 @@ export async function POST(req: NextRequest) {
     });
 
     logger.info(
-      `Admin ${currentUser.email} reseteó contraseña del usuario ${targetUser.email}`,
+      `Admin ${currentUser.email} reseteó contraseña del usuario ${targetUser.email}`
     );
 
     return NextResponse.json({
@@ -123,7 +123,7 @@ export async function POST(req: NextRequest) {
     logger.error({ err: error }, "Error al resetear contraseña");
     return NextResponse.json(
       { error: "Error al resetear contraseña" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

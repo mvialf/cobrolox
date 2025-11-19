@@ -51,7 +51,7 @@ for (const payment of paymentsWithInstallments) {
 
 console.log("📈 DISTRIBUCIÓN POR NÚMERO DE CUOTAS:\n");
 const sortedInstallments = Array.from(byInstallments.entries()).sort(
-  (a, b) => a[0] - b[0],
+  (a, b) => a[0] - b[0]
 );
 for (const [installments, count] of sortedInstallments) {
   console.log(`${installments} cuota(s): ${count} pago(s)`);
@@ -59,7 +59,7 @@ for (const [installments, count] of sortedInstallments) {
 
 console.log("\n📝 DETALLE DE PAGOS CON CUOTAS:\n");
 const sortedPayments = paymentsWithInstallments.sort(
-  (a, b) => a.installments - b.installments,
+  (a, b) => a.installments - b.installments
 );
 
 for (const payment of sortedPayments) {
@@ -74,14 +74,14 @@ for (const payment of sortedPayments) {
 // Verificar si todos los pagos con cuotas son tarjeta de crédito
 console.log("🔍 VERIFICACIÓN DE MÉTODO DE PAGO:\n");
 const notCreditCard = paymentsWithInstallments.filter(
-  (p) => !p.paymentMethod.toLowerCase().includes("tarjeta"),
+  (p) => !p.paymentMethod.toLowerCase().includes("tarjeta")
 );
 
 if (notCreditCard.length === 0) {
   console.log("✅ Todos los pagos con cuotas son tarjeta de crédito");
 } else {
   console.log(
-    `⚠️  Hay ${notCreditCard.length} pago(s) con cuotas que NO son tarjeta de crédito:`,
+    `⚠️  Hay ${notCreditCard.length} pago(s) con cuotas que NO son tarjeta de crédito:`
   );
   for (const payment of notCreditCard) {
     console.log(`  - Línea ${payment.line}: ${payment.paymentMethod}`);

@@ -98,7 +98,7 @@ export function formatCurrency(amount: number): string {
  */
 export function calculateDueDate(
   issueDate: Date,
-  paymentTermsDays: number,
+  paymentTermsDays: number
 ): Date {
   return addDays(issueDate, paymentTermsDays);
   // TODO futuro: Ajustar por días hábiles y feriados chilenos (Código de Comercio art. 7)
@@ -128,7 +128,7 @@ export function calculateDueDate(
  */
 export function getInvoiceDueDateStatus(
   dueDate: Date,
-  warningThresholdDays = 7,
+  warningThresholdDays = 7
 ): InvoiceDueDateStatus {
   const today = new Date();
 

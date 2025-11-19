@@ -153,7 +153,7 @@ const buttonVariants = cva(
         xl: "h-14 px-10 text-lg",
       },
     },
-  },
+  }
 );
 ```
 

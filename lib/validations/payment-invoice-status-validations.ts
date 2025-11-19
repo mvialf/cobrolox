@@ -82,7 +82,7 @@ export const paymentInvoiceStatusSchema = z
     {
       message: "Un estado no puede ser inicial y final al mismo tiempo",
       path: ["isInitial"],
-    },
+    }
   );
 
 /**
@@ -114,7 +114,7 @@ export type UpdatePaymentInvoiceStatusPayload =
  * Helper para convertir form values a API payload
  */
 export function formValuesToPayload(
-  values: PaymentInvoiceStatusFormValues,
+  values: PaymentInvoiceStatusFormValues
 ): CreatePaymentInvoiceStatusPayload {
   return {
     name: values.name,
@@ -130,7 +130,7 @@ export function formValuesToPayload(
  * Helper para convertir PaymentInvoiceStatus a form values
  */
 export function paymentInvoiceStatusToFormValues(
-  status: PaymentInvoiceStatus,
+  status: PaymentInvoiceStatus
 ): PaymentInvoiceStatusFormValues {
   return {
     name: status.name,

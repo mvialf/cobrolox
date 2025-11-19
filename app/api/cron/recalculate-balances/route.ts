@@ -25,7 +25,7 @@ export const POST = withLogging(async (request, logger) => {
       {
         receivedAuth: authHeader ? "present" : "missing",
       },
-      "Unauthorized cron job attempt",
+      "Unauthorized cron job attempt"
     );
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
@@ -46,7 +46,7 @@ export const POST = withLogging(async (request, logger) => {
         durationMs: duration,
         durationSeconds: Math.round(duration / 1000),
       },
-      "Customer balance recalculation completed successfully",
+      "Customer balance recalculation completed successfully"
     );
 
     return NextResponse.json({
@@ -60,7 +60,7 @@ export const POST = withLogging(async (request, logger) => {
       {
         err: error,
       },
-      "Error during scheduled balance recalculation",
+      "Error during scheduled balance recalculation"
     );
 
     return NextResponse.json(
@@ -68,7 +68,7 @@ export const POST = withLogging(async (request, logger) => {
         error: "Error recalculating balances",
         message: error instanceof Error ? error.message : "Unknown error",
       },
-      { status: 500 },
+      { status: 500 }
     );
   }
 });

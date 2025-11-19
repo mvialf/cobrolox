@@ -25,21 +25,21 @@ async function testAlerts() {
   const hasSlack = !!process.env.SLACK_WEBHOOK_URL;
 
   console.log(
-    `   ✓ SLACK_WEBHOOK_URL:  ${hasSlack ? "✅ Configurado" : "⚠️  No configurado (opcional)"}`,
+    `   ✓ SLACK_WEBHOOK_URL:  ${hasSlack ? "✅ Configurado" : "⚠️  No configurado (opcional)"}`
   );
 
   if (!hasSlack) {
     console.log("\n⚠️  WARNING: No hay canales de alerta configurados.");
     console.log("   → Las alertas solo se mostrarán en console logs");
     console.log(
-      "\n   Para configurar Slack: Agrega SLACK_WEBHOOK_URL a .env\n",
+      "\n   Para configurar Slack: Agrega SLACK_WEBHOOK_URL a .env\n"
     );
   }
 
   // 2. Test de alerta crítica
   console.log("\n═".repeat(80));
   console.log(
-    "\n🚨 2. PROBANDO ALERTA CRÍTICA (Balance Calculation Failure)\n",
+    "\n🚨 2. PROBANDO ALERTA CRÍTICA (Balance Calculation Failure)\n"
   );
 
   const testFailure = {
@@ -110,7 +110,7 @@ async function testAlerts() {
         totalCustomers: 5,
         fixed: 2,
         failed: 0,
-      },
+      }
     );
 
     if (reportSent) {
@@ -133,7 +133,7 @@ async function testAlerts() {
   if (totalTests === 0) {
     console.log("   ⚠️  No se ejecutaron pruebas (sin canales configurados)");
     console.log(
-      "\n   Para probar las alertas, configura Slack: SLACK_WEBHOOK_URL",
+      "\n   Para probar las alertas, configura Slack: SLACK_WEBHOOK_URL"
     );
   } else {
     console.log(`   Total de pruebas: ${totalTests}`);
@@ -162,7 +162,7 @@ async function testAlerts() {
 
     console.log("2. Configura variable de entorno en .env:");
     console.log(
-      '   SLACK_WEBHOOK_URL="https://hooks.slack.com/services/T.../B.../xxx"\n',
+      '   SLACK_WEBHOOK_URL="https://hooks.slack.com/services/T.../B.../xxx"\n'
     );
 
     console.log("3. Vuelve a ejecutar este test:");

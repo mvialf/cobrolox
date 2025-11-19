@@ -25,7 +25,7 @@ describe("CurrencyInput", () => {
           onChange={handleChange}
           id="test-input"
           data-testid="currency-input"
-        />,
+        />
       );
 
       const input = screen.getByTestId("currency-input");
@@ -53,7 +53,7 @@ describe("CurrencyInput", () => {
           currency="EUR"
           locale="es-ES"
           data-testid="currency-input"
-        />,
+        />
       );
 
       const input = screen.getByTestId("currency-input");
@@ -78,7 +78,7 @@ describe("CurrencyInput", () => {
           currency="CLP"
           locale="es-CL"
           data-testid="currency-input"
-        />,
+        />
       );
 
       const input = screen.getByTestId("currency-input");
@@ -107,7 +107,7 @@ describe("CurrencyInput", () => {
           min={50}
           max={500}
           data-testid="currency-input"
-        />,
+        />
       );
 
       const input = screen.getByTestId("currency-input");
@@ -133,7 +133,7 @@ describe("CurrencyInput", () => {
           min={50}
           max={500}
           data-testid="currency-input"
-        />,
+        />
       );
 
       const input = screen.getByTestId("currency-input");
@@ -157,7 +157,7 @@ describe("CurrencyInput", () => {
           value={0}
           onChange={handleChange}
           data-testid="currency-input"
-        />,
+        />
       );
 
       const input = screen.getByTestId("currency-input");
@@ -180,7 +180,7 @@ describe("CurrencyInput", () => {
           onChange={handleChange}
           min={0}
           data-testid="currency-input"
-        />,
+        />
       );
 
       const input = screen.getByTestId("currency-input");
@@ -205,7 +205,7 @@ describe("CurrencyInput", () => {
           value={1234}
           onChange={handleChange}
           data-testid="currency-input"
-        />,
+        />
       );
 
       const input = screen.getByTestId("currency-input") as HTMLInputElement;
@@ -224,7 +224,7 @@ describe("CurrencyInput", () => {
           currency="USD"
           locale="en-US"
           data-testid="currency-input"
-        />,
+        />
       );
 
       const input = screen.getByTestId("currency-input") as HTMLInputElement;
@@ -241,7 +241,7 @@ describe("CurrencyInput", () => {
           currency="EUR"
           locale="es-ES"
           data-testid="currency-input"
-        />,
+        />
       );
 
       const input = screen.getByTestId("currency-input");
@@ -259,7 +259,7 @@ describe("CurrencyInput", () => {
           onChange={vi.fn()}
           disabled
           data-testid="currency-input"
-        />,
+        />
       );
 
       const input = screen.getByTestId("currency-input");
@@ -273,7 +273,7 @@ describe("CurrencyInput", () => {
           onChange={vi.fn()}
           placeholder="Ingrese monto"
           data-testid="currency-input"
-        />,
+        />
       );
 
       const input = screen.getByTestId("currency-input");
@@ -290,7 +290,7 @@ describe("CurrencyInput", () => {
           onChange={vi.fn()}
           onFocus={handleFocus}
           data-testid="currency-input"
-        />,
+        />
       );
 
       const input = screen.getByTestId("currency-input");
@@ -309,7 +309,7 @@ describe("CurrencyInput", () => {
           onChange={vi.fn()}
           onBlur={handleBlur}
           data-testid="currency-input"
-        />,
+        />
       );
 
       const input = screen.getByTestId("currency-input");
@@ -330,7 +330,7 @@ describe("CurrencyInput", () => {
           value={0}
           onChange={handleChange}
           data-testid="currency-input"
-        />,
+        />
       );
 
       const input = screen.getByTestId("currency-input");
@@ -357,7 +357,7 @@ describe("CurrencyInput", () => {
           value={1234}
           onChange={handleChange}
           data-testid="currency-input"
-        />,
+        />
       );
 
       const input = screen.getByTestId("currency-input") as HTMLInputElement;

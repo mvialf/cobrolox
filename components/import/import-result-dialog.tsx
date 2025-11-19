@@ -61,7 +61,7 @@ interface ImportResultDialogProps {
  */
 function groupErrorsByMessage(
   errors: ParseError[],
-  entityType: string,
+  entityType: string
 ): GroupedError[] {
   const groups = new Map<string, GroupedError>();
 
@@ -111,7 +111,7 @@ function getSuggestionForError(error: ParseError): string | undefined {
  */
 function formatEntityList(
   entities: string[],
-  entityName: string = "Factura",
+  entityName: string = "Factura"
 ): string {
   const entityNamePlural = `${entityName}s`;
 

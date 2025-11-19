@@ -26,7 +26,7 @@ import { recalculateAllCustomers } from "@/lib/business-logic/customer-balance";
 
 async function main() {
   console.log(
-    "🚀 Iniciando recálculo de balances para todos los clientes...\n",
+    "🚀 Iniciando recálculo de balances para todos los clientes...\n"
   );
 
   try {

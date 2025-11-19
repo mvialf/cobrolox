@@ -53,7 +53,7 @@ async function backfillInvoiceBalance() {
           // Calcular paidAmount (suma de allocations)
           const paidAmount = invoice.allocations.reduce(
             (sum, alloc) => sum + Number(alloc.allocatedAmount),
-            0,
+            0
           );
 
           // Calcular balance (total - pagado)
@@ -66,7 +66,7 @@ async function backfillInvoiceBalance() {
               balance,
             },
           });
-        }),
+        })
       );
 
       processed += batch.length;
@@ -84,7 +84,7 @@ async function backfillInvoiceBalance() {
     console.log(`❌ Errores: ${errors}`);
   }
   console.log(
-    "\n📝 Siguiente paso: Ejecutar verify script para validar consistencia",
+    "\n📝 Siguiente paso: Ejecutar verify script para validar consistencia"
   );
   console.log("   npx tsx scripts/verify-invoice-balance.ts\n");
 }

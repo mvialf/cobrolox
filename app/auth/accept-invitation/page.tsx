@@ -67,7 +67,7 @@ function AcceptInvitationContent() {
   const validateToken = async (tokenValue: string) => {
     try {
       const response = await fetch(
-        `/api/invitations/validate?token=${encodeURIComponent(tokenValue)}`,
+        `/api/invitations/validate?token=${encodeURIComponent(tokenValue)}`
       );
       const data = await response.json();
 
@@ -117,7 +117,7 @@ function AcceptInvitationContent() {
       }, 2000);
     } catch (error) {
       toast.error(
-        error instanceof Error ? error.message : "Error al aceptar invitación",
+        error instanceof Error ? error.message : "Error al aceptar invitación"
       );
       setIsSubmitting(false);
     }

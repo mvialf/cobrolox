@@ -138,7 +138,7 @@ export function NewInvitationDialog({ onSuccess }: NewInvitationDialogProps) {
       }
     } catch (error) {
       toast.error(
-        error instanceof Error ? error.message : "Error al crear invitación",
+        error instanceof Error ? error.message : "Error al crear invitación"
       );
     } finally {
       setIsSubmitting(false);

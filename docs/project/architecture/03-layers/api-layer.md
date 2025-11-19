@@ -80,7 +80,7 @@ export const POST = withLogging(async (request, logger) => {
     logger.warn({ errors: validation.error }, "Validation failed");
     return NextResponse.json(
       { error: "Validation failed", details: validation.error },
-      { status: 400 },
+      { status: 400 }
     );
   }
 

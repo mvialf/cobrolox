@@ -153,13 +153,13 @@ describe("calculateDueDate", () => {
     const issueDate = startOfDay(new Date("2025-01-15"));
 
     expect(startOfDay(calculateDueDate(issueDate, 30))).toEqual(
-      startOfDay(new Date("2025-02-14")),
+      startOfDay(new Date("2025-02-14"))
     );
     expect(startOfDay(calculateDueDate(issueDate, 60))).toEqual(
-      startOfDay(new Date("2025-03-16")),
+      startOfDay(new Date("2025-03-16"))
     );
     expect(startOfDay(calculateDueDate(issueDate, 90))).toEqual(
-      startOfDay(new Date("2025-04-15")),
+      startOfDay(new Date("2025-04-15"))
     );
   });
 

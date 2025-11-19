@@ -231,7 +231,7 @@ Flujo para registrar un pago asignado a UN SOLO proyecto específico.
 if (type === "Project" && allocations.length !== 1) {
   return NextResponse.json(
     { error: 'Payment tipo "Project" debe tener exactamente 1 allocation' },
-    { status: 400 },
+    { status: 400 }
   );
 }
 ```
@@ -242,7 +242,7 @@ if (type === "Project" && allocations.length !== 1) {
 // ✅ La suma de allocations debe igualar el monto del pago
 const totalAllocated = allocations.reduce(
   (sum, a) => sum + a.allocatedAmount,
-  0,
+  0
 );
 
 const tolerance = 0.01; // Tolerancia para errores de redondeo
@@ -252,7 +252,7 @@ if (Math.abs(totalAllocated - amount) > tolerance) {
     {
       error: `La suma de allocations (${totalAllocated}) no coincide con el monto (${amount})`,
     },
-    { status: 400 },
+    { status: 400 }
   );
 }
 ```
@@ -269,21 +269,21 @@ const project = await prisma.project.findUnique({
 if (!project) {
   return NextResponse.json(
     { error: "Proyecto no encontrado" },
-    { status: 404 },
+    { status: 404 }
   );
 }
 
 if (project.customerId !== customerId) {
   return NextResponse.json(
     { error: "El proyecto no pertenece a este cliente" },
-    { status: 400 },
+    { status: 400 }
   );
 }
 
 if (project.currency !== currency) {
   return NextResponse.json(
     { error: "La moneda no coincide con la del proyecto" },
-    { status: 400 },
+    { status: 400 }
   );
 }
 ```
@@ -407,11 +407,11 @@ export function PaymentToProjectForm({ project, onSuccess }: FormProps) {
 ```typescript
 // lib/business-logic/project-balance.ts
 export function calculateProjectBalance(
-  project: ProjectWithAllocations,
+  project: ProjectWithAllocations
 ): number {
   const totalAllocated = project.paymentAllocations.reduce(
     (sum, allocation) => sum + Number(allocation.allocatedAmount),
-    0,
+    0
   );
 
   return Number(project.total) - totalAllocated;

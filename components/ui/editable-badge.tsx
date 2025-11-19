@@ -142,7 +142,7 @@ export function EditableBadge({
             <span
               className={cn(
                 "text-sm text-muted-foreground cursor-pointer",
-                className,
+                className
               )}
             >
               {placeholder}

@@ -49,19 +49,19 @@ describe("calculateProjectTotal", () => {
     it("debe rechazar montos negativos con error", () => {
       const subtotal = -1000;
       expect(() => calculateProjectTotal(subtotal)).toThrow(
-        "El subtotal no puede ser negativo",
+        "El subtotal no puede ser negativo"
       );
     });
 
     it("debe rechazar tasa de impuesto negativa", () => {
       expect(() => calculateProjectTotal(1000, -5)).toThrow(
-        "La tasa de impuesto debe estar entre 0% y 100%",
+        "La tasa de impuesto debe estar entre 0% y 100%"
       );
     });
 
     it("debe rechazar tasa de impuesto mayor a 100%", () => {
       expect(() => calculateProjectTotal(1000, 150)).toThrow(
-        "La tasa de impuesto debe estar entre 0% y 100%",
+        "La tasa de impuesto debe estar entre 0% y 100%"
       );
     });
 
@@ -106,19 +106,19 @@ describe("calculateTax", () => {
 
   it("debe rechazar subtotales negativos", () => {
     expect(() => calculateTax(-1000, 19)).toThrow(
-      "El subtotal no puede ser negativo",
+      "El subtotal no puede ser negativo"
     );
   });
 
   it("debe rechazar tasa de impuesto negativa", () => {
     expect(() => calculateTax(1000, -5)).toThrow(
-      "La tasa de impuesto debe estar entre 0% y 100%",
+      "La tasa de impuesto debe estar entre 0% y 100%"
     );
   });
 
   it("debe rechazar tasa de impuesto mayor a 100%", () => {
     expect(() => calculateTax(1000, 150)).toThrow(
-      "La tasa de impuesto debe estar entre 0% y 100%",
+      "La tasa de impuesto debe estar entre 0% y 100%"
     );
   });
 });
@@ -162,19 +162,19 @@ describe("calculateSubtotalFromTotal", () => {
 
   it("debe rechazar totales negativos", () => {
     expect(() => calculateSubtotalFromTotal(-1000, 19)).toThrow(
-      "El total no puede ser negativo",
+      "El total no puede ser negativo"
     );
   });
 
   it("debe rechazar tasa de impuesto negativa", () => {
     expect(() => calculateSubtotalFromTotal(1000, -5)).toThrow(
-      "La tasa de impuesto debe estar entre 0% y 100%",
+      "La tasa de impuesto debe estar entre 0% y 100%"
     );
   });
 
   it("debe rechazar tasa de impuesto mayor a 100%", () => {
     expect(() => calculateSubtotalFromTotal(1000, 150)).toThrow(
-      "La tasa de impuesto debe estar entre 0% y 100%",
+      "La tasa de impuesto debe estar entre 0% y 100%"
     );
   });
 });

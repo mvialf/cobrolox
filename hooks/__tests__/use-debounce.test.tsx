@@ -38,7 +38,7 @@ describe("useDebounce", () => {
       ({ value, delay }) => useDebounce(value, delay),
       {
         initialProps: { value: "initial", delay: 500 },
-      },
+      }
     );
 
     expect(result.current).toBe("initial");
@@ -61,7 +61,7 @@ describe("useDebounce", () => {
       ({ value }) => useDebounce(value, 300),
       {
         initialProps: { value: "initial" },
-      },
+      }
     );
 
     rerender({ value: "change1" });
@@ -89,7 +89,7 @@ describe("useDebounce", () => {
     // String
     const { result: stringResult, rerender: stringRerender } = renderHook(
       ({ value }) => useDebounce(value, 100),
-      { initialProps: { value: "test" } },
+      { initialProps: { value: "test" } }
     );
     stringRerender({ value: "updated" });
     act(() => {
@@ -100,7 +100,7 @@ describe("useDebounce", () => {
     // Number
     const { result: numberResult, rerender: numberRerender } = renderHook(
       ({ value }) => useDebounce(value, 100),
-      { initialProps: { value: 123 } },
+      { initialProps: { value: 123 } }
     );
     numberRerender({ value: 456 });
     act(() => {
@@ -111,7 +111,7 @@ describe("useDebounce", () => {
     // Object
     const { result: objectResult, rerender: objectRerender } = renderHook(
       ({ value }) => useDebounce(value, 100),
-      { initialProps: { value: { name: "initial" } } },
+      { initialProps: { value: { name: "initial" } } }
     );
     const newObj = { name: "updated" };
     objectRerender({ value: newObj });
@@ -123,7 +123,7 @@ describe("useDebounce", () => {
     // Array
     const { result: arrayResult, rerender: arrayRerender } = renderHook(
       ({ value }) => useDebounce(value, 100),
-      { initialProps: { value: [1, 2, 3] } },
+      { initialProps: { value: [1, 2, 3] } }
     );
     const newArray = [4, 5, 6];
     arrayRerender({ value: newArray });
@@ -139,7 +139,7 @@ describe("useDebounce", () => {
       ({ value }) => useDebounce(value, 300),
       {
         initialProps: { value: "initial" },
-      },
+      }
     );
 
     rerender({ value: "changed" });
@@ -153,7 +153,7 @@ describe("useDebounce", () => {
       ({ value }) => useDebounce(value, 0),
       {
         initialProps: { value: "initial" },
-      },
+      }
     );
 
     rerender({ value: "immediate" });
@@ -168,7 +168,7 @@ describe("useDebounce", () => {
   it("debe manejar null y undefined", () => {
     const { result, rerender } = renderHook(
       ({ value }) => useDebounce<string | null | undefined>(value, 100),
-      { initialProps: { value: "initial" as string | null | undefined } },
+      { initialProps: { value: "initial" as string | null | undefined } }
     );
 
     rerender({ value: null });
@@ -189,7 +189,7 @@ describe("useDebounce", () => {
       ({ searchTerm }) => useDebounce(searchTerm, 300),
       {
         initialProps: { searchTerm: "" },
-      },
+      }
     );
 
     rerender({ searchTerm: "r" });

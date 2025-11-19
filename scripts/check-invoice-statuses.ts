@@ -24,7 +24,7 @@ async function checkInvoiceStatuses() {
       "Vencimiento".padEnd(15) +
       "Cliente".padEnd(30) +
       "Estado Actual".padEnd(20) +
-      "Debería ser",
+      "Debería ser"
   );
   console.log("=".repeat(100));
 
@@ -39,7 +39,7 @@ async function checkInvoiceStatuses() {
         invoice.customer.razonSocial.substring(0, 28).padEnd(30) +
         invoice.status.name.padEnd(20) +
         expectedStatus +
-        mismatch,
+        mismatch
     );
   });
 
@@ -54,7 +54,7 @@ async function checkInvoiceStatuses() {
   console.log("\n📈 Resumen:");
   console.log(`- Total facturas verificadas: ${invoices.length}`);
   console.log(
-    `- Facturas vencidas con estado incorrecto: ${overdueInvoices.length}`,
+    `- Facturas vencidas con estado incorrecto: ${overdueInvoices.length}`
   );
 
   await prisma.$disconnect();

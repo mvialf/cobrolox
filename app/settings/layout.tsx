@@ -77,7 +77,7 @@ export default function SettingsLayout({
                 href={section.href}
                 className={cn(
                   "flex items-start gap-3 rounded-lg px-3 py-2 text-sm transition-colors hover:bg-muted",
-                  isActive && "bg-muted font-medium",
+                  isActive && "bg-muted font-medium"
                 )}
               >
                 <Icon className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />

@@ -139,7 +139,7 @@ for (const payment of payments) {
   installments = installments.map((i) =>
     i.status === "pending" && new Date(i.dueDate) <= today
       ? { ...i, status: "paid", paidDate: today }
-      : i,
+      : i
   );
   await prisma.payment.update({
     where: { id: payment.id },
@@ -269,7 +269,7 @@ export const POST = withLogging(async (request, logger) => {
 
   logger.info(
     { paymentId: payment.id, installmentsCount: installments.length },
-    "Payment with installments created",
+    "Payment with installments created"
   );
 });
 ```
@@ -303,7 +303,7 @@ export async function POST(request: Request) {
 
   logger.info(
     { updated: result.count, date: today },
-    "Installments marked as paid",
+    "Installments marked as paid"
   );
 
   return NextResponse.json({

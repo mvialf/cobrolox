@@ -60,7 +60,7 @@ export const paymentMethodSchema = z
       message:
         "El número máximo de cuotas es obligatorio cuando se habilitan cuotas",
       path: ["maxInstallments"],
-    },
+    }
   );
 
 /**
@@ -89,7 +89,7 @@ export type UpdatePaymentMethodPayload = CreatePaymentMethodPayload;
  * Helper para convertir form values a API payload
  */
 export function formValuesToPayload(
-  values: PaymentMethodFormValues,
+  values: PaymentMethodFormValues
 ): CreatePaymentMethodPayload {
   return {
     name: values.name,
@@ -103,7 +103,7 @@ export function formValuesToPayload(
  * Helper para convertir PaymentMethod a form values
  */
 export function methodToFormValues(
-  method: PaymentMethod,
+  method: PaymentMethod
 ): PaymentMethodFormValues {
   return {
     name: method.name,

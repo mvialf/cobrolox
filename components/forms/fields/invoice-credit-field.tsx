@@ -51,7 +51,7 @@ export function InvoiceCreditField({
         // Verificar si el valor actual es personalizado
         const currentValue = field.value?.toString() || "0";
         const isCommonTerm = commonTerms.some(
-          (term) => term.value === currentValue,
+          (term) => term.value === currentValue
         );
 
         // Si el valor no está en los términos comunes y no está en modo personalizado, activar modo personalizado

@@ -70,7 +70,7 @@ export function ConfigurationProvider({
   children: React.ReactNode;
 }) {
   const [configuration, setConfiguration] = React.useState<UserConfiguration>(
-    DEFAULT_CONFIGURATION,
+    DEFAULT_CONFIGURATION
   );
   const [isInitialized, setIsInitialized] = React.useState(false);
 
@@ -134,7 +134,7 @@ export function ConfigurationProvider({
         return newConfig;
       });
     },
-    [],
+    []
   );
 
   // Función para resetear a defaults
@@ -148,7 +148,7 @@ export function ConfigurationProvider({
       updateConfiguration,
       resetToDefaults,
     }),
-    [configuration, updateConfiguration, resetToDefaults],
+    [configuration, updateConfiguration, resetToDefaults]
   );
 
   return (
@@ -180,7 +180,7 @@ export function useConfiguration() {
   const context = React.useContext(ConfigurationContext);
   if (context === undefined) {
     throw new Error(
-      "useConfiguration must be used within a ConfigurationProvider",
+      "useConfiguration must be used within a ConfigurationProvider"
     );
   }
   return context;

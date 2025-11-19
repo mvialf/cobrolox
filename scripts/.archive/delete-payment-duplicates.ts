@@ -26,7 +26,7 @@ async function deleteDuplicates() {
         console.log(`- ID: ${id}`);
         console.log(`  Cliente: ${payment.customer.razonSocial}`);
         console.log(
-          `  Monto: $${Number(payment.amount).toLocaleString("es-CL")} ${payment.currency}`,
+          `  Monto: $${Number(payment.amount).toLocaleString("es-CL")} ${payment.currency}`
         );
         console.log(`  Cuotas: ${payment.selectedInstallments}`);
         console.log("");
@@ -34,7 +34,7 @@ async function deleteDuplicates() {
     }
 
     console.log(
-      "⚠️  ¿Deseas continuar con la eliminación? (comentar línea 41 para confirmar)\n",
+      "⚠️  ¿Deseas continuar con la eliminación? (comentar línea 41 para confirmar)\n"
     );
     // return // ← Comentar esta línea para ejecutar la eliminación
 
@@ -46,7 +46,7 @@ async function deleteDuplicates() {
         where: { paymentId },
       });
       console.log(
-        `✅ Allocations eliminados para pago ${paymentId}: ${result.count}`,
+        `✅ Allocations eliminados para pago ${paymentId}: ${result.count}`
       );
     }
 
@@ -72,11 +72,11 @@ async function deleteDuplicates() {
 
     if (totalPayments === 100 && totalAllocations === 100) {
       console.log(
-        "\n✅ Duplicados eliminados exitosamente. Base de datos consistente.",
+        "\n✅ Duplicados eliminados exitosamente. Base de datos consistente."
       );
     } else {
       console.log(
-        "\n⚠️  Revisa los totales - pueden no coincidir con lo esperado.",
+        "\n⚠️  Revisa los totales - pueden no coincidir con lo esperado."
       );
     }
   } catch (error) {

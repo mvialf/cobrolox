@@ -24,7 +24,7 @@ export default function CustomersPage() {
   // Extraer data del hook (con fallbacks) y cast a tipo local
   const customers = useMemo(
     () => (data?.customers || []) as Customer[],
-    [data?.customers],
+    [data?.customers]
   );
 
   const handleCustomerDeleted = async (customerId: string) => {

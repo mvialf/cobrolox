@@ -36,14 +36,14 @@ Flujo para registrar un pago de cliente que se distribuye entre MÚLTIPLES proye
 // lib/business-logic/payment-fifo.ts
 export function calculateFIFOAllocation(
   projects: ProjectWithBalance[],
-  paymentAmount: number,
+  paymentAmount: number
 ): PaymentAllocation[] {
   const allocations: PaymentAllocation[] = [];
   let remainingAmount = paymentAmount;
 
   // Ordenar proyectos por fecha (más antiguos primero)
   const sortedProjects = [...projects].sort(
-    (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
+    (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
   );
 
   for (const project of sortedProjects) {
@@ -105,13 +105,13 @@ if (type === "Customer" && allocations.length < 1) {
 ```typescript
 const totalAllocated = allocations.reduce(
   (sum, a) => sum + a.allocatedAmount,
-  0,
+  0
 );
 const tolerance = 0.01;
 
 if (Math.abs(totalAllocated - amount) > tolerance) {
   throw new Error(
-    `La suma de allocations (${totalAllocated}) no coincide con el monto (${amount})`,
+    `La suma de allocations (${totalAllocated}) no coincide con el monto (${amount})`
   );
 }
 ```

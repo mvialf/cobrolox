@@ -35,7 +35,7 @@ interface BalanceError {
 
 async function verifyInvoiceBalance() {
   console.log(
-    "🔍 Verificando consistencia de Invoice.balance y Invoice.paidAmount",
+    "🔍 Verificando consistencia de Invoice.balance y Invoice.paidAmount"
   );
   console.log("⏳ Cargando facturas...\n");
 
@@ -59,7 +59,7 @@ async function verifyInvoiceBalance() {
     // Calcular paidAmount (suma de allocations)
     const calculatedPaidAmount = invoice.allocations.reduce(
       (sum, alloc) => sum + Number(alloc.allocatedAmount),
-      0,
+      0
     );
 
     // Calcular balance (total - pagado)
@@ -68,7 +68,7 @@ async function verifyInvoiceBalance() {
     // Comparar con valores almacenados (tolerancia de 0.01 por redondeos)
     const balanceDiff = Math.abs(Number(invoice.balance) - calculatedBalance);
     const paidAmountDiff = Math.abs(
-      Number(invoice.paidAmount) - calculatedPaidAmount,
+      Number(invoice.paidAmount) - calculatedPaidAmount
     );
 
     if (balanceDiff > 0.01 || paidAmountDiff > 0.01) {
@@ -93,24 +93,24 @@ async function verifyInvoiceBalance() {
     console.log(`   ${total} facturas verificadas, 0 errores encontrados\n`);
   } else {
     console.log(
-      `\n❌ ENCONTRADAS ${errors.length} FACTURAS CON BALANCE INCORRECTO:\n`,
+      `\n❌ ENCONTRADAS ${errors.length} FACTURAS CON BALANCE INCORRECTO:\n`
     );
 
     errors.forEach((error, index) => {
       console.log(
-        `${index + 1}. Factura ${error.invoiceNumber} (${error.invoiceId})`,
+        `${index + 1}. Factura ${error.invoiceNumber} (${error.invoiceId})`
       );
       console.log(`   Total: $${error.total.toFixed(2)}`);
       console.log(`   Balance almacenado: $${error.storedBalance.toFixed(2)}`);
       console.log(
-        `   Balance calculado:  $${error.calculatedBalance.toFixed(2)}`,
+        `   Balance calculado:  $${error.calculatedBalance.toFixed(2)}`
       );
       console.log(`   Diferencia: $${error.difference.toFixed(2)}`);
       console.log(
-        `   PaidAmount almacenado: $${error.storedPaidAmount.toFixed(2)}`,
+        `   PaidAmount almacenado: $${error.storedPaidAmount.toFixed(2)}`
       );
       console.log(
-        `   PaidAmount calculado:  $${error.calculatedPaidAmount.toFixed(2)}`,
+        `   PaidAmount calculado:  $${error.calculatedPaidAmount.toFixed(2)}`
       );
       console.log("");
     });

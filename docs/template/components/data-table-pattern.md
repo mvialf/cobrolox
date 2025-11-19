@@ -668,7 +668,7 @@ Para búsqueda multi-campo:
 const globalFilterFn = (
   row: Row<Project>,
   _columnId: string,
-  filterValue: string,
+  filterValue: string
 ) => {
   const project = row.original;
   const search = filterValue.toLowerCase();

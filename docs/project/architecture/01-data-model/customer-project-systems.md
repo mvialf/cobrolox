@@ -206,11 +206,11 @@ balance = project.total - SUM(paymentAllocations.allocatedAmount);
 ```typescript
 // lib/business-logic/project-balance.ts
 export function calculateProjectBalance(
-  project: ProjectWithAllocations,
+  project: ProjectWithAllocations
 ): number {
   const totalAllocated = project.paymentAllocations.reduce(
     (sum, allocation) => sum + Number(allocation.allocatedAmount),
-    0,
+    0
   );
   return Number(project.total) - totalAllocated;
 }

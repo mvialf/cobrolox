@@ -107,7 +107,7 @@ function PhoneInput({
         className={cn(
           showCountryPrefix && "pl-7", // Espacio para prefijo (+56)
           showIcon && "pr-9", // Espacio para icono
-          className,
+          className
         )}
         placeholder={placeholder}
         aria-invalid={value.length > 0 && !isValid}
@@ -141,7 +141,7 @@ const InputComponent = React.forwardRef<HTMLInputElement, any>(
         {...props}
       />
     );
-  },
+  }
 );
 
 InputComponent.displayName = "InputComponent";

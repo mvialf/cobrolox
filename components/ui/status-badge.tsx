@@ -133,7 +133,7 @@ export function StatusBadge({
           "border-2",
           // Text color: usar el color del border pero más oscuro
           bgClass.replace("bg-", "text-"),
-          className,
+          className
         )}
       >
         {label}

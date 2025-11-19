@@ -7,7 +7,7 @@ describe("Button", () => {
   it("debe renderizar correctamente", () => {
     render(<Button>Click me</Button>);
     expect(
-      screen.getByRole("button", { name: /click me/i }),
+      screen.getByRole("button", { name: /click me/i })
     ).toBeInTheDocument();
   });
 
@@ -89,7 +89,7 @@ describe("Button", () => {
     render(
       <Button onClick={handleClick} disabled>
         Disabled
-      </Button>,
+      </Button>
     );
     const button = screen.getByRole("button");
 
@@ -103,7 +103,7 @@ describe("Button", () => {
     render(
       <form onSubmit={handleSubmit}>
         <Button type="submit">Submit</Button>
-      </form>,
+      </form>
     );
 
     const button = screen.getByRole("button");

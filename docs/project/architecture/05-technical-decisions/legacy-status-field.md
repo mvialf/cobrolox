@@ -444,7 +444,7 @@ export const POST = withLogging(async (request, logger) => {
 
   logger.info(
     { projectId: project.id, statusId: project.projectStatusId },
-    "Project created with new status system",
+    "Project created with new status system"
   );
 
   return NextResponse.json(project, { status: 201 });

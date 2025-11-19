@@ -70,7 +70,7 @@ export interface BalanceCalculationFailure {
  * Envía alerta a Slack sobre fallo crítico
  */
 export async function sendBalanceCalculationFailureSlack(
-  failure: BalanceCalculationFailure,
+  failure: BalanceCalculationFailure
 ): Promise<boolean> {
   const webhookUrl = process.env.SLACK_WEBHOOK_URL;
 
@@ -147,7 +147,7 @@ export async function sendDailyInconsistencyReportSlack(
     totalCustomers: number;
     fixed: number;
     failed: number;
-  },
+  }
 ): Promise<boolean> {
   const webhookUrl = process.env.SLACK_WEBHOOK_URL;
 
@@ -158,7 +158,7 @@ export async function sendDailyInconsistencyReportSlack(
 
   try {
     const criticalCount = inconsistencies.filter(
-      (i) => i.severity === "critical",
+      (i) => i.severity === "critical"
     ).length;
 
     const emoji = criticalCount > 0 ? "🚨" : "✅";
@@ -172,7 +172,7 @@ export async function sendDailyInconsistencyReportSlack(
       .slice(0, 5)
       .map(
         (inc) =>
-          `• ${inc.customerRut} - ${inc.customerName}\n  Diff Vencido: $${Math.abs(inc.diff.vencido).toLocaleString("es-CL")} (${inc.severity === "critical" ? "⚠️ CRITICAL" : "⚠ Warning"})`,
+          `• ${inc.customerRut} - ${inc.customerName}\n  Diff Vencido: $${Math.abs(inc.diff.vencido).toLocaleString("es-CL")} (${inc.severity === "critical" ? "⚠️ CRITICAL" : "⚠ Warning"})`
       )
       .join("\n");
 
@@ -265,10 +265,10 @@ export async function sendDailyInconsistencyReportSlack(
  * Envía alerta por todos los canales configurados
  */
 export async function sendBalanceCalculationFailureAlert(
-  failure: BalanceCalculationFailure,
+  failure: BalanceCalculationFailure
 ): Promise<void> {
   console.error(
-    `🚨 CRITICAL ALERT: Balance calculation failed for customer ${failure.customerId}`,
+    `🚨 CRITICAL ALERT: Balance calculation failed for customer ${failure.customerId}`
   );
 
   // Intentar Slack
@@ -284,7 +284,7 @@ export async function sendDailyInconsistencyReport(
     totalCustomers: number;
     fixed: number;
     failed: number;
-  },
+  }
 ): Promise<boolean> {
   // Log en console
   console.log("\n📊 REPORTE DIARIO DE BALANCES");

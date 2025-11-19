@@ -45,7 +45,7 @@ export const GET = withLogging(async (request, logger) => {
       pendingOnly,
       includeCompleted,
     },
-    "Fetching invoices with filters",
+    "Fetching invoices with filters"
   );
 
   const skip = limit ? (page - 1) * limit : 0;
@@ -132,7 +132,7 @@ export const GET = withLogging(async (request, logger) => {
           paidAmount,
           dueDate: invoice.dueDate,
         },
-        availableStatuses,
+        availableStatuses
       );
 
       // Retornar factura con estados calculados
@@ -157,7 +157,7 @@ export const GET = withLogging(async (request, logger) => {
         pendingOnly,
         includeCompleted,
       },
-      "Invoices fetched successfully",
+      "Invoices fetched successfully"
     );
 
     return NextResponse.json({
@@ -173,7 +173,7 @@ export const GET = withLogging(async (request, logger) => {
     logger.error({ err: error }, "Error fetching invoices");
     return NextResponse.json(
       { error: "Error al obtener facturas" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 });
@@ -224,7 +224,7 @@ export const POST = withLogging(async (request, logger) => {
       invoiceLogger.warn("Missing required fields");
       return NextResponse.json(
         { error: "Faltan campos requeridos" },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -248,7 +248,7 @@ export const POST = withLogging(async (request, logger) => {
           error:
             "Estados iniciales no configurados. Ejecute el seed de la base de datos.",
         },
-        { status: 500 },
+        { status: 500 }
       );
     }
 
@@ -259,13 +259,13 @@ export const POST = withLogging(async (request, logger) => {
         paymentStatusId: initialPaymentStatus.id,
         paymentStatusName: initialPaymentStatus.name,
       },
-      "Using initial statuses",
+      "Using initial statuses"
     );
 
     // Verificar si el número de factura ya existe
     invoiceLogger.debug(
       { invoiceNumber },
-      "Checking for duplicate invoice number",
+      "Checking for duplicate invoice number"
     );
     const existingInvoice = await prisma.invoice.findUnique({
       where: { invoiceNumber },
@@ -274,7 +274,7 @@ export const POST = withLogging(async (request, logger) => {
       invoiceLogger.warn({ invoiceNumber }, "Invoice number already exists");
       return NextResponse.json(
         { error: "Ya existe una factura con ese número" },
-        { status: 409 },
+        { status: 409 }
       );
     }
 
@@ -286,7 +286,7 @@ export const POST = withLogging(async (request, logger) => {
       invoiceLogger.warn({ customerId }, "Customer not found");
       return NextResponse.json(
         { error: "Cliente no encontrado" },
-        { status: 404 },
+        { status: 404 }
       );
     }
 
@@ -336,13 +336,13 @@ export const POST = withLogging(async (request, logger) => {
       {
         invoiceId: invoice.id,
       },
-      "Invoice created successfully",
+      "Invoice created successfully"
     );
 
     // Recalcular balances del cliente después de crear factura (con retry automático)
     invoiceLogger.debug(
       { customerId },
-      "Recalculating customer balances after invoice creation",
+      "Recalculating customer balances after invoice creation"
     );
     await recalculateCustomerBalancesWithRetry(customerId, invoiceLogger);
 
@@ -351,7 +351,7 @@ export const POST = withLogging(async (request, logger) => {
     invoiceLogger.error({ err: error }, "Error creating invoice");
     return NextResponse.json(
       { error: "Error al crear factura" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 });

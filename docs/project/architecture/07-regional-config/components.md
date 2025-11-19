@@ -554,7 +554,7 @@ export function ProjectForm() {
 
    ```typescript
    const regionCodigo = regiones.find(
-     (r) => `${r.nombre_corto} (${r.numero_romano})` === selectedRegion,
+     (r) => `${r.nombre_corto} (${r.numero_romano})` === selectedRegion
    )?.codigo;
 
    const comunasDisponibles = getComunasByRegion(regionCodigo);

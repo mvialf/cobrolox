@@ -63,7 +63,7 @@ export function CustomerAccountDialog({
   const [error, setError] = useState<string | null>(null);
   const [generatedDate, setGeneratedDate] = useState(new Date());
   const [selectedStatuses, setSelectedStatuses] = useState<Set<string>>(
-    new Set(),
+    new Set()
   );
   const [calculatedBalances, setCalculatedBalances] = useState({
     balanceTotal: customer?.balanceTotal ?? 0,
@@ -100,7 +100,7 @@ export function CustomerAccountDialog({
       return invoices; // Sin filtros = mostrar todas
     }
     return invoices.filter((inv) =>
-      selectedStatuses.has(inv.invoiceStatus.name),
+      selectedStatuses.has(inv.invoiceStatus.name)
     );
   }, [invoices, selectedStatuses]);
 
@@ -123,7 +123,7 @@ export function CustomerAccountDialog({
       `FACTURAS (${filteredInvoices.length} de ${invoices.length})`,
       ...filteredInvoices.map(
         (inv) =>
-          `${inv.invoiceNumber}: ${formatCurrency(inv.total)} | Saldo: ${formatCurrency(inv.balance)} | Estado: ${inv.invoiceStatus.name}`,
+          `${inv.invoiceNumber}: ${formatCurrency(inv.total)} | Saldo: ${formatCurrency(inv.balance)} | Estado: ${inv.invoiceStatus.name}`
       ),
     ];
 
@@ -147,7 +147,7 @@ export function CustomerAccountDialog({
 
       try {
         const response = await fetch(
-          `/api/invoices?customerId=${customer.id}&withBalance=true`,
+          `/api/invoices?customerId=${customer.id}&withBalance=true`
         );
 
         if (!response.ok) {
@@ -289,7 +289,7 @@ export function CustomerAccountDialog({
               <div className="flex items-center gap-2 flex-wrap">
                 {Array.from(selectedStatuses).map((status) => {
                   const option = filterOptions.find(
-                    (opt) => opt.value === status,
+                    (opt) => opt.value === status
                   );
                   return (
                     <Badge

@@ -191,7 +191,7 @@ const stats = useMemo(
     completed: todos.reduce((count, t) => count + (t.completed ? 1 : 0), 0),
     pending: todos.reduce((count, t) => count + (t.completed ? 0 : 1), 0),
   }),
-  [todos],
+  [todos]
 );
 
 // Performance: Solo recalcula cuando `todos` cambia

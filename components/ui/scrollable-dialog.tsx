@@ -51,7 +51,7 @@ function useScrollableDialog() {
   const context = React.useContext(ScrollableDialogContext);
   if (!context) {
     throw new Error(
-      "useScrollableDialog must be used within ScrollableDialogContent",
+      "useScrollableDialog must be used within ScrollableDialogContent"
     );
   }
   return context;
@@ -96,7 +96,7 @@ function ScrollableDialogOverlay({
       data-slot="scrollable-dialog-overlay"
       className={cn(
         "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50",
-        className,
+        className
       )}
       {...props}
     />
@@ -133,7 +133,7 @@ function ScrollableDialogContent({
   ...props
 }: ScrollableDialogContentProps) {
   const [hasScrolledToBottom, setHasScrolledToBottom] = React.useState(
-    !requireScrollToBottom,
+    !requireScrollToBottom
   );
   const contentRef = React.useRef<HTMLDivElement>(null);
 
@@ -149,7 +149,7 @@ function ScrollableDialogContent({
         setHasScrolledToBottom(true);
       }
     },
-    [requireScrollToBottom, hasScrolledToBottom, scrollThreshold],
+    [requireScrollToBottom, hasScrolledToBottom, scrollThreshold]
   );
 
   // Reset state cuando el dialog se cierra/abre
@@ -177,7 +177,7 @@ function ScrollableDialogContent({
         data-slot="scrollable-dialog-content"
         className={cn(
           "bg-background data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 fixed top-[50%] left-[50%] z-50 flex w-full max-w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%] flex-col gap-0 rounded-lg border p-0 shadow-lg duration-200 sm:max-h-[min(640px,80vh)] sm:max-w-lg",
-          className,
+          className
         )}
         {...props}
       >

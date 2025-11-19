@@ -22,7 +22,7 @@ async function populateInstallments() {
     });
 
     console.log(
-      `Total de pagos con cuotas: ${paymentsWithInstallments.length}\n`,
+      `Total de pagos con cuotas: ${paymentsWithInstallments.length}\n`
     );
 
     const installmentsToCreate: Array<{
@@ -42,11 +42,11 @@ async function populateInstallments() {
       console.log(`Procesando pago ${payment.id}:`);
       console.log(`  Cliente: ${payment.customer.razonSocial}`);
       console.log(
-        `  Monto total: $${parseFloat(payment.amount.toString()).toLocaleString("es-CL")}`,
+        `  Monto total: $${parseFloat(payment.amount.toString()).toLocaleString("es-CL")}`
       );
       console.log(`  Cuotas: ${numberOfInstallments}`);
       console.log(
-        `  Monto por cuota: $${amountPerInstallment.toLocaleString("es-CL")}`,
+        `  Monto por cuota: $${amountPerInstallment.toLocaleString("es-CL")}`
       );
 
       // Crear cuotas mensuales
@@ -67,7 +67,7 @@ async function populateInstallments() {
         });
 
         console.log(
-          `    Cuota ${i}/${numberOfInstallments}: vence ${dueDate.toLocaleDateString("es-CL")} - ${isPast ? "PAGADA" : "PENDIENTE"}`,
+          `    Cuota ${i}/${numberOfInstallments}: vence ${dueDate.toLocaleDateString("es-CL")} - ${isPast ? "PAGADA" : "PENDIENTE"}`
         );
       }
       console.log("");
@@ -81,14 +81,14 @@ async function populateInstallments() {
         acc[inst.status] = (acc[inst.status] || 0) + 1;
         return acc;
       },
-      {} as Record<string, number>,
+      {} as Record<string, number>
     );
 
     console.log(`Cuotas pagadas: ${byStatus.paid || 0}`);
     console.log(`Cuotas pendientes: ${byStatus.pending || 0}`);
 
     console.log(
-      "\n⚠️  ¿Deseas continuar con la creación? (comentar línea 83 para confirmar)\n",
+      "\n⚠️  ¿Deseas continuar con la creación? (comentar línea 83 para confirmar)\n"
     );
     // return // ← Comentar esta línea para ejecutar
 
@@ -100,7 +100,7 @@ async function populateInstallments() {
     });
 
     console.log(
-      `✅ ${installmentsToCreate.length} cuotas insertadas exitosamente\n`,
+      `✅ ${installmentsToCreate.length} cuotas insertadas exitosamente\n`
     );
 
     // Verificación final
@@ -129,7 +129,7 @@ async function populateInstallments() {
       console.log(`Cuota ${inst.installmentNumber}:`);
       console.log(`  Cliente: ${inst.payment.customer.razonSocial}`);
       console.log(
-        `  Monto: $${parseFloat(inst.amount.toString()).toLocaleString("es-CL")}`,
+        `  Monto: $${parseFloat(inst.amount.toString()).toLocaleString("es-CL")}`
       );
       console.log(`  Vencimiento: ${inst.dueDate.toLocaleDateString("es-CL")}`);
       console.log(`  Estado: ${inst.status}`);

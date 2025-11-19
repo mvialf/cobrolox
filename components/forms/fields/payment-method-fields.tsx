@@ -55,7 +55,7 @@ export function PaymentMethodFields({
 
   const selectedPaymentMethod = React.useMemo(
     () => paymentMethods.find((m) => m.id === watchedPaymentMethodId),
-    [paymentMethods, watchedPaymentMethodId],
+    [paymentMethods, watchedPaymentMethodId]
   );
 
   return (
@@ -119,7 +119,7 @@ export function PaymentMethodFields({
                     {
                       length: (selectedPaymentMethod?.maxInstallments || 2) - 1,
                     },
-                    (_, i) => i + 2,
+                    (_, i) => i + 2
                   ).map((num) => (
                     <SelectItem key={num} value={num.toString()}>
                       {num} cuotas sin interés

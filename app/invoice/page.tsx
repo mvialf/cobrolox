@@ -25,7 +25,7 @@ export default function InvoicesPage() {
   // El tipo devuelto por la API coincide con el tipo Invoice del DataTable
   const invoices = useMemo(
     () => (data?.invoices || []) as unknown as Invoice[],
-    [data?.invoices],
+    [data?.invoices]
   );
 
   // Obtener el último número de factura
@@ -43,13 +43,13 @@ export default function InvoicesPage() {
             value: inv.customer.id,
             label: inv.customer.razonSocial,
           },
-        ]),
-      ).values(),
+        ])
+      ).values()
     ).sort((a, b) => a.label.localeCompare(b.label));
 
     // Estados de factura únicos (Vigente, Vencida, Completada)
     const uniqueInvoiceStatuses = Array.from(
-      new Set(invoices.map((inv) => inv.invoiceStatus.name)),
+      new Set(invoices.map((inv) => inv.invoiceStatus.name))
     )
       .map((statusName) => ({
         value: statusName,
@@ -59,7 +59,7 @@ export default function InvoicesPage() {
 
     // Estados de pago únicos (Pago Pendiente, Pago Parcial, Pagada)
     const uniquePaymentStatuses = Array.from(
-      new Set(invoices.map((inv) => inv.paymentInvoiceStatus.name)),
+      new Set(invoices.map((inv) => inv.paymentInvoiceStatus.name))
     )
       .map((statusName) => ({
         value: statusName,

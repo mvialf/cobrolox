@@ -40,7 +40,7 @@ export async function GET(request: NextRequest) {
     console.error("Database error:", error);
     return NextResponse.json(
       { error: "Failed to fetch users" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }
@@ -92,13 +92,13 @@ export async function POST(request: NextRequest) {
     if (error instanceof Error && "code" in error && error.code === "P2002") {
       return NextResponse.json(
         { error: "Email already exists" },
-        { status: 409 },
+        { status: 409 }
       );
     }
 
     return NextResponse.json(
       { error: "Failed to create user" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

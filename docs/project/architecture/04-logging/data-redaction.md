@@ -69,7 +69,7 @@ logger.info(
     password: "super-secret-123",
     email: "user@example.com",
   },
-  "User logged in",
+  "User logged in"
 );
 ```
 
@@ -95,7 +95,7 @@ logger.info(
     password: "super-secret-123", // ← Será censurado
     email: "user@example.com",
   },
-  "User logged in",
+  "User logged in"
 );
 ```
 
@@ -129,7 +129,7 @@ logger.info(
       },
     },
   },
-  "User data",
+  "User data"
 );
 ```
 
@@ -162,7 +162,7 @@ logger.info(
       { type: "refresh", token: "xyz-789" },
     ],
   },
-  "Tokens issued",
+  "Tokens issued"
 );
 ```
 
@@ -386,7 +386,7 @@ describe("Logger redaction", () => {
 
     expect(logSpy).toHaveBeenCalledWith(expect.stringContaining("[REDACTED]"));
     expect(logSpy).not.toHaveBeenCalledWith(
-      expect.stringContaining("secret123"),
+      expect.stringContaining("secret123")
     );
   });
 });

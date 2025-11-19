@@ -97,12 +97,12 @@ export interface FIFOAllocation {
  */
 export function calculateFIFO(
   totalAmount: number,
-  invoices: InvoiceWithBalance[],
+  invoices: InvoiceWithBalance[]
 ): FIFOAllocation[] {
   // 1. Ordenar facturas por fecha de vencimiento (vence primero = paga primero)
   // Nota: Implementa FEFO (First-Expired-First-Out) para evitar moras
   const sorted = [...invoices].sort(
-    (a, b) => a.dueDate.getTime() - b.dueDate.getTime(),
+    (a, b) => a.dueDate.getTime() - b.dueDate.getTime()
   );
 
   const allocations: FIFOAllocation[] = [];
@@ -175,7 +175,7 @@ export function calculateFIFO(
  */
 export function validateAllocationsSum(
   totalAmount: number,
-  allocations: Array<{ allocatedAmount: number }>,
+  allocations: Array<{ allocatedAmount: number }>
 ): boolean {
   const sum = allocations.reduce((acc, a) => acc + a.allocatedAmount, 0);
   return Math.abs(sum - totalAmount) < FINANCIAL.TOLERANCE;
@@ -203,7 +203,7 @@ export function validateAllocationsSum(
  * ```
  */
 export function filterInvoicesWithBalance(
-  invoices: InvoiceWithBalance[],
+  invoices: InvoiceWithBalance[]
 ): InvoiceWithBalance[] {
   return invoices.filter((invoice) => invoice.balance > 0);
 }

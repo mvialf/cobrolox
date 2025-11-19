@@ -30,7 +30,7 @@ export const POST = withLogging(async (request, logger) => {
     paymentLogger.warn("Missing customerId");
     return NextResponse.json(
       { error: "customerId is required" },
-      { status: 400 },
+      { status: 400 }
     );
   }
 
@@ -40,7 +40,7 @@ export const POST = withLogging(async (request, logger) => {
 
     paymentLogger.info(
       { paymentId: payment.id },
-      "Payment created successfully",
+      "Payment created successfully"
     );
 
     return NextResponse.json(payment, { status: 201 });
@@ -48,7 +48,7 @@ export const POST = withLogging(async (request, logger) => {
     paymentLogger.error({ err: error }, "Payment creation failed");
     return NextResponse.json(
       { error: "Internal server error" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 });
@@ -147,7 +147,7 @@ export const GET = withLogging(async (request, logger, context) => {
 // Helper function
 async function fetchProjectWithBalance(
   projectId: string,
-  logger: Logger, // ← Pasar logger como parámetro
+  logger: Logger // ← Pasar logger como parámetro
 ) {
   logger.debug("Fetching project");
 
@@ -165,7 +165,7 @@ async function fetchProjectWithBalance(
 
   logger.debug(
     { allocations: project.paymentAllocations.length },
-    "Calculating balance",
+    "Calculating balance"
   );
 
   const balance = calculateBalance(project);
@@ -200,7 +200,7 @@ export const POST = withLogging(async (request, logger) => {
       logger.warn({ errors: validation.error.format() }, "Validation failed");
       return NextResponse.json(
         { error: "Validation failed", details: validation.error },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -217,12 +217,12 @@ export const POST = withLogging(async (request, logger) => {
         requestBody: body,
         userId: body.userId,
       },
-      "Operation failed unexpectedly",
+      "Operation failed unexpectedly"
     );
 
     return NextResponse.json(
       { error: "Internal server error" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 });
@@ -253,7 +253,7 @@ export const POST = withLogging(async (request, logger) => {
 
   logger.info(
     { duration, recordsProcessed: result.count },
-    "Expensive operation completed",
+    "Expensive operation completed"
   );
 
   return NextResponse.json(result);

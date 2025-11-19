@@ -102,7 +102,7 @@ export function useInvoices(params: InvoicesQueryParams = {}) {
         return {
           ...data,
           invoices: parseInvoicesWithBalance(
-            data.invoices as InvoiceWithBalanceSerialized[],
+            data.invoices as InvoiceWithBalanceSerialized[]
           ),
         };
       }
@@ -355,7 +355,7 @@ export function useDeleteInvoice() {
             ...old,
             invoices: old.invoices.filter((inv) => inv.id !== id),
           };
-        },
+        }
       );
 
       return { previousData };

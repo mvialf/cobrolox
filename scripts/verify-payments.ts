@@ -37,10 +37,10 @@ async function verify() {
     for (const payment of payments) {
       console.log(`${index}. Pago ID: ${payment.id}`);
       console.log(
-        `   Monto: $${Number(payment.amount).toLocaleString("es-CL")} ${payment.currency}`,
+        `   Monto: $${Number(payment.amount).toLocaleString("es-CL")} ${payment.currency}`
       );
       console.log(
-        `   Cliente: ${payment.customer.razonSocial} (${payment.customer.phone})`,
+        `   Cliente: ${payment.customer.razonSocial} (${payment.customer.phone})`
       );
       console.log(`   Método: ${payment.paymentMethod.name}`);
       console.log(`   Tipo: ${payment.type}`);
@@ -50,7 +50,7 @@ async function verify() {
         console.log(`   Asignado a facturas:`);
         for (const alloc of payment.allocations) {
           console.log(
-            `     - ${alloc.invoice.invoiceNumber}: Total $${Number(alloc.invoice.total).toLocaleString("es-CL")} | Asignado: $${Number(alloc.allocatedAmount).toLocaleString("es-CL")}`,
+            `     - ${alloc.invoice.invoiceNumber}: Total $${Number(alloc.invoice.total).toLocaleString("es-CL")} | Asignado: $${Number(alloc.allocatedAmount).toLocaleString("es-CL")}`
           );
         }
       }
@@ -76,7 +76,7 @@ async function verify() {
     });
 
     console.log(
-      `Monto total: $${totalAmount._sum.amount ? Number(totalAmount._sum.amount).toLocaleString("es-CL") : 0} CLP`,
+      `Monto total: $${totalAmount._sum.amount ? Number(totalAmount._sum.amount).toLocaleString("es-CL") : 0} CLP`
     );
     console.log("\nPagos por tipo:");
     for (const item of paymentsByType) {

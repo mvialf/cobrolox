@@ -102,11 +102,11 @@ export const paymentToCustomerSchema = z
     (data) => {
       const sum = data.allocations.reduce(
         (acc, a) => acc + a.allocatedAmount,
-        0,
+        0
       );
       return Math.abs(sum - data.amount) <= 0.01; // Tolerancia 1 centavo
     },
-    { message: "Sum of allocations must equal payment amount" },
+    { message: "Sum of allocations must equal payment amount" }
   );
 ```
 
@@ -135,7 +135,7 @@ function validateRutChecksum(rut: string): boolean {
 
 export function calculateProjectBalance(
   projectTotal: number,
-  allocations: { allocatedAmount: number }[],
+  allocations: { allocatedAmount: number }[]
 ): number {
   const totalPaid = allocations.reduce((sum, a) => sum + a.allocatedAmount, 0);
   return projectTotal - totalPaid;
@@ -155,7 +155,7 @@ export function calculateProjectBalance(
 
 export function allocatePaymentFIFO(
   paymentAmount: number,
-  projects: Array<{ id: string; balance: number }>,
+  projects: Array<{ id: string; balance: number }>
 ): Array<{ projectId: string; allocatedAmount: number }> {
   const allocations: Array<{ projectId: string; allocatedAmount: number }> = [];
   let remaining = paymentAmount;

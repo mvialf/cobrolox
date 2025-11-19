@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
     if (!file) {
       return NextResponse.json(
         { error: "No se proporcionó ningún archivo" },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
     if (!file.name.endsWith(".xlsx") && !file.name.endsWith(".xls")) {
       return NextResponse.json(
         { error: "El archivo debe ser Excel (.xlsx o .xls)" },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -39,14 +39,14 @@ export async function POST(request: NextRequest) {
           error: "Error al parsear el archivo Excel",
           details: parseResult.errors,
         },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
     if (parseResult.data.length === 0) {
       return NextResponse.json(
         { error: "El archivo Excel está vacío" },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -62,7 +62,7 @@ export async function POST(request: NextRequest) {
             errors: validation.errors,
           },
         },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -82,7 +82,7 @@ export async function POST(request: NextRequest) {
           error: "Hay RUTs duplicados en el archivo Excel",
           duplicates: duplicatesInCSV,
         },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -109,7 +109,7 @@ export async function POST(request: NextRequest) {
           message:
             "Por favor, elimine estos clientes del archivo Excel o actualice los existentes manualmente",
         },
-        { status: 409 },
+        { status: 409 }
       );
     }
 
@@ -133,7 +133,7 @@ export async function POST(request: NextRequest) {
         error: "Error interno del servidor",
         details: error instanceof Error ? error.message : "Unknown error",
       },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

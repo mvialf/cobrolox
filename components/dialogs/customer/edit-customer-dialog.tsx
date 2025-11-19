@@ -28,7 +28,7 @@ export function EditCustomerDialog({
 }: EditCustomerDialogProps) {
   // ✅ React Query hook para fetch customer
   const { data: customerData, isLoading: isFetching } = useCustomer(
-    customerId || undefined,
+    customerId || undefined
   );
 
   // ✅ React Query hook para update customer

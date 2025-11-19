@@ -68,7 +68,7 @@ export const invoiceSchema = z
       message:
         "El total no coincide con la suma de subtotal + IVA. Verifique los cálculos.",
       path: ["total"],
-    },
+    }
   )
   .refine(
     (data) => {
@@ -79,7 +79,7 @@ export const invoiceSchema = z
       message:
         "La fecha de vencimiento debe ser mayor o igual a la fecha de emisión",
       path: ["dueDate"],
-    },
+    }
   )
   .refine(
     (data) => {
@@ -90,19 +90,19 @@ export const invoiceSchema = z
       const issueDateOnly = new Date(
         data.issueDate.getFullYear(),
         data.issueDate.getMonth(),
-        data.issueDate.getDate(),
+        data.issueDate.getDate()
       );
       const nowDateOnly = new Date(
         now.getFullYear(),
         now.getMonth(),
-        now.getDate(),
+        now.getDate()
       );
       return issueDateOnly <= nowDateOnly;
     },
     {
       message: "La fecha de emisión no puede ser futura",
       path: ["issueDate"],
-    },
+    }
   );
 
 /**
@@ -139,19 +139,19 @@ export const updateInvoiceSchema = z
       const issueDateOnly = new Date(
         data.issueDate.getFullYear(),
         data.issueDate.getMonth(),
-        data.issueDate.getDate(),
+        data.issueDate.getDate()
       );
       const nowDateOnly = new Date(
         now.getFullYear(),
         now.getMonth(),
-        now.getDate(),
+        now.getDate()
       );
       return issueDateOnly <= nowDateOnly;
     },
     {
       message: "La fecha de emisión no puede ser futura",
       path: ["issueDate"],
-    },
+    }
   );
 
 /**

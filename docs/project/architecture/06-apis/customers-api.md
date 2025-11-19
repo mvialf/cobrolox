@@ -168,7 +168,7 @@ export const POST = withLogging(async (request, logger) => {
       logger.warn({ errors: error.errors }, "Validation failed");
       return NextResponse.json(
         { error: "Validation failed", details: error.errors },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -227,7 +227,7 @@ export const GET = withLogging(async (request, logger, context) => {
   if (!id) {
     return NextResponse.json(
       { error: "Customer ID is required" },
-      { status: 400 },
+      { status: 400 }
     );
   }
 
@@ -308,7 +308,7 @@ export const PUT = withLogging(async (request, logger, context) => {
       logger.warn({ errors: error.errors }, "Validation failed");
       return NextResponse.json(
         { error: "Validation failed", details: error.errors },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -316,7 +316,7 @@ export const PUT = withLogging(async (request, logger, context) => {
       logger.warn({ customerId: id }, "Customer not found");
       return NextResponse.json(
         { error: "Customer not found" },
-        { status: 404 },
+        { status: 404 }
       );
     }
 
@@ -381,7 +381,7 @@ export const DELETE = withLogging(async (request, logger, context) => {
       logger.warn({ customerId: id }, "Customer not found");
       return NextResponse.json(
         { error: "Customer not found" },
-        { status: 404 },
+        { status: 404 }
       );
     }
 

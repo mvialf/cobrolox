@@ -19,13 +19,13 @@ async function main() {
   });
 
   console.log(
-    "┌─────────────┬────────────────────────┬──────────────┬────────────────┬────────────────┐",
+    "┌─────────────┬────────────────────────┬──────────────┬────────────────┬────────────────┐"
   );
   console.log(
-    "│ RUT         │ Razón Social           │ Total        │ Vigente        │ Vencido        │",
+    "│ RUT         │ Razón Social           │ Total        │ Vigente        │ Vencido        │"
   );
   console.log(
-    "├─────────────┼────────────────────────┼──────────────┼────────────────┼────────────────┤",
+    "├─────────────┼────────────────────────┼──────────────┼────────────────┼────────────────┤"
   );
 
   for (const customer of customers) {
@@ -35,20 +35,20 @@ async function main() {
       `$${Number(customer.balanceTotal).toLocaleString("es-CL")}`.padStart(12);
     const vigente =
       `$${Number(customer.balanceVigente).toLocaleString("es-CL")}`.padStart(
-        14,
+        14
       );
     const vencido =
       `$${Number(customer.balanceVencido).toLocaleString("es-CL")}`.padStart(
-        14,
+        14
       );
 
     console.log(
-      `│ ${rut} │ ${razonSocial} │ ${total} │ ${vigente} │ ${vencido} │`,
+      `│ ${rut} │ ${razonSocial} │ ${total} │ ${vigente} │ ${vencido} │`
     );
   }
 
   console.log(
-    "└─────────────┴────────────────────────┴──────────────┴────────────────┴────────────────┘",
+    "└─────────────┴────────────────────────┴──────────────┴────────────────┴────────────────┘"
   );
   console.log(`\nTotal clientes: ${customers.length}`);
 

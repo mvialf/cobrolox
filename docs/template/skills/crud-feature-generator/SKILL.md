@@ -352,7 +352,7 @@ const existingEntity = await prisma.entity.findFirst({
 if (existingEntity) {
   return NextResponse.json(
     { error: "Ya existe un entity con ese email" },
-    { status: 409 },
+    { status: 409 }
   );
 }
 ```

@@ -28,7 +28,7 @@ async function verifyInstallments() {
     });
 
     console.log(
-      `Total de pagos con cuotas en DB: ${paymentsWithInstallments.length}\n`,
+      `Total de pagos con cuotas en DB: ${paymentsWithInstallments.length}\n`
     );
 
     // Agrupar por número de cuotas
@@ -41,7 +41,7 @@ async function verifyInstallments() {
 
     console.log("📈 DISTRIBUCIÓN POR NÚMERO DE CUOTAS:\n");
     const sortedInstallments = Array.from(byInstallments.entries()).sort(
-      (a, b) => a[0] - b[0],
+      (a, b) => a[0] - b[0]
     );
     for (const [installments, count] of sortedInstallments) {
       console.log(`${installments} cuota(s): ${count} pago(s)`);
@@ -52,7 +52,7 @@ async function verifyInstallments() {
       console.log(`Pago ID: ${payment.id}`);
       console.log(`  Cuotas: ${payment.selectedInstallments}`);
       console.log(
-        `  Monto: $${Number(payment.amount).toLocaleString("es-CL")} ${payment.currency}`,
+        `  Monto: $${Number(payment.amount).toLocaleString("es-CL")} ${payment.currency}`
       );
       console.log(`  Método: ${payment.paymentMethod.name}`);
       console.log(`  Cliente: ${payment.customer.razonSocial}`);
@@ -63,14 +63,14 @@ async function verifyInstallments() {
     // Verificar si todos son tarjeta de crédito
     console.log("🔍 VERIFICACIÓN DE MÉTODO DE PAGO:\n");
     const notCreditCard = paymentsWithInstallments.filter(
-      (p) => !p.paymentMethod.name.toLowerCase().includes("tarjeta"),
+      (p) => !p.paymentMethod.name.toLowerCase().includes("tarjeta")
     );
 
     if (notCreditCard.length === 0) {
       console.log("✅ Todos los pagos con cuotas son tarjeta de crédito");
     } else {
       console.log(
-        `⚠️  Hay ${notCreditCard.length} pago(s) con cuotas que NO son tarjeta de crédito:`,
+        `⚠️  Hay ${notCreditCard.length} pago(s) con cuotas que NO son tarjeta de crédito:`
       );
       for (const payment of notCreditCard) {
         console.log(`  - ${payment.id}: ${payment.paymentMethod.name}`);
@@ -80,10 +80,10 @@ async function verifyInstallments() {
     // Comparar con el archivo
     console.log("\n📊 COMPARACIÓN CON ARCHIVO ORIGINAL:\n");
     console.log(
-      "Esperado (payment.txt): 10 pagos con cuotas (9 con 6 cuotas, 1 con 3 cuotas)",
+      "Esperado (payment.txt): 10 pagos con cuotas (9 con 6 cuotas, 1 con 3 cuotas)"
     );
     console.log(
-      `Encontrado (DB): ${paymentsWithInstallments.length} pagos con cuotas`,
+      `Encontrado (DB): ${paymentsWithInstallments.length} pagos con cuotas`
     );
 
     if (paymentsWithInstallments.length === 10) {

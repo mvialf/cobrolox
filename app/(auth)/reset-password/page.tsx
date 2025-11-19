@@ -70,7 +70,7 @@ function ResetPasswordForm() {
       if (error) {
         setError(
           error.message ||
-            "Error al restablecer la contraseña. El token puede haber expirado.",
+            "Error al restablecer la contraseña. El token puede haber expirado."
         );
         setLoading(false);
         return;

@@ -545,7 +545,7 @@ export function createMockCustomers(count: number, baseOverrides = {}) {
       name: `Customer ${i + 1}`,
       rut: VALID_RUTS_ARRAY[i % VALID_RUTS_ARRAY.length],
       ...baseOverrides,
-    }),
+    })
   );
 }
 
@@ -554,7 +554,7 @@ export function createMockInvoices(count: number, baseOverrides = {}) {
     createMockInvoice({
       number: `F-${String(i + 1).padStart(3, "0")}`,
       ...baseOverrides,
-    }),
+    })
   );
 }
 

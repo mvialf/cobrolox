@@ -1187,10 +1187,10 @@ export function useRutInput() {
 ```typescript
 export function usePayments() {
   const [paymentType, setPaymentType] = useState<"Invoice" | "Customer">(
-    "Invoice",
+    "Invoice"
   );
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(
-    null,
+    null
   );
   const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
 
@@ -1339,7 +1339,7 @@ export const GET = withLogging(async (request, logger) => {
       limit: limit ?? "unlimited",
       search: search || undefined,
     },
-    "Fetching customers",
+    "Fetching customers"
   );
 
   try {
@@ -1372,7 +1372,7 @@ export const GET = withLogging(async (request, logger) => {
         total,
         page,
       },
-      "Customers fetched successfully",
+      "Customers fetched successfully"
     );
 
     return NextResponse.json({
@@ -1388,7 +1388,7 @@ export const GET = withLogging(async (request, logger) => {
     logger.error({ err: error }, "Error fetching customers");
     return NextResponse.json(
       { error: "Error al obtener clientes" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 });
@@ -1432,14 +1432,14 @@ export const POST = withLogging(async (request, logger) => {
       logger.warn({ errors: error.errors }, "Validation error");
       return NextResponse.json(
         { error: "Validación fallida", errors: error.errors },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
     logger.error({ err: error }, "Error creating customer");
     return NextResponse.json(
       { error: "Error al crear cliente" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 });
@@ -1476,7 +1476,7 @@ export const POST = withLogging(async (request, logger) => {
 
 ```typescript
 export function withLogging(
-  handler: (request: NextRequest, logger: Logger) => Promise<NextResponse>,
+  handler: (request: NextRequest, logger: Logger) => Promise<NextResponse>
 ) {
   return async (request: NextRequest) => {
     const requestId = generateRequestId();
@@ -1499,7 +1499,7 @@ export function withLogging(
           method,
           pathname,
         },
-        "Request completed",
+        "Request completed"
       );
 
       return response;
@@ -1508,12 +1508,12 @@ export function withLogging(
 
       requestLogger.error(
         { err: error, duration, method, pathname },
-        "Request failed",
+        "Request failed"
       );
 
       return NextResponse.json(
         { error: "Internal server error" },
-        { status: 500 },
+        { status: 500 }
       );
     }
   };
@@ -1688,7 +1688,7 @@ const { mutate, isPending } = useCreateCustomer();
 // Lógica de distribución de pagos
 export function calculateFIFO(totalAmount: number, invoices: Invoice[]) {
   const sorted = [...invoices].sort(
-    (a, b) => a.issueDate.getTime() - b.issueDate.getTime(),
+    (a, b) => a.issueDate.getTime() - b.issueDate.getTime()
   );
 
   const allocations: FIFOAllocation[] = [];
@@ -1929,7 +1929,7 @@ export const paymentMethodSchema = z.object({
 
 ```typescript
 export async function recalculateCustomerBalances(
-  customerId: string,
+  customerId: string
 ): Promise<CustomerBalanceResult> {
   // 1. Verificar existencia
   const customer = await prisma.customer.findUnique({
@@ -1958,7 +1958,7 @@ export async function recalculateCustomerBalances(
     const total = Number(invoice.total);
     const paidAmount = invoice.allocations.reduce(
       (sum, alloc) => sum + Number(alloc.allocatedAmount),
-      0,
+      0
     );
     const balance = total - paidAmount;
 
@@ -2014,11 +2014,11 @@ Results:
 ```typescript
 export function calculateFIFO(
   totalAmount: number,
-  invoices: InvoiceWithBalance[],
+  invoices: InvoiceWithBalance[]
 ): FIFOAllocation[] {
   // 1. Ordenar por fecha de emisión (más vieja primero)
   const sorted = [...invoices].sort(
-    (a, b) => a.issueDate.getTime() - b.issueDate.getTime(),
+    (a, b) => a.issueDate.getTime() - b.issueDate.getTime()
   );
 
   const allocations: FIFOAllocation[] = [];
@@ -2080,7 +2080,7 @@ export function generateInstallments(
   paymentAmount: number,
   numberOfInstallments: number,
   paymentDate: Date,
-  installmentDays: number = 30,
+  installmentDays: number = 30
 ): Installment[] {
   const installmentAmount = paymentAmount / numberOfInstallments;
   const installments: Installment[] = [];
@@ -2116,7 +2116,7 @@ export function generateInstallments(
 ```typescript
 export function calculateInvoiceTotals(
   subtotal: number,
-  taxRate: number = 0.19, // IVA Chile
+  taxRate: number = 0.19 // IVA Chile
 ): { subtotal: number; taxAmount: number; total: number } {
   const taxAmount = subtotal * taxRate;
   const total = subtotal + taxAmount;
@@ -2155,7 +2155,7 @@ export const PAYMENT_STATUSES = {
 export function canTransitionStatus(
   from: string,
   to: string,
-  statusConfig: InvoiceStatus[],
+  statusConfig: InvoiceStatus[]
 ): boolean {
   const fromStatus = statusConfig.find((s) => s.name === from);
   const toStatus = statusConfig.find((s) => s.name === to);
@@ -2875,7 +2875,7 @@ export async function getCustomersSafe(userId: string) {
 export async function updateCustomerSafe(
   customerId: string,
   userId: string,
-  data: CustomerFormData,
+  data: CustomerFormData
 ) {
   const customer = await prisma.customer.findUnique({
     where: { id: customerId },

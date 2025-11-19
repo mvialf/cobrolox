@@ -45,7 +45,7 @@ test.describe("Flujo Crítico: Proyecto → Pago → Balance", () => {
     // PASO 1.1: Navegar a página de proyectos
     await page.goto("/projects");
     await expect(
-      page.getByRole("heading", { name: /proyectos/i, level: 1 }),
+      page.getByRole("heading", { name: /proyectos/i, level: 1 })
     ).toBeVisible();
 
     // PASO 1.2: Abrir dialog de nuevo proyecto
@@ -53,7 +53,7 @@ test.describe("Flujo Crítico: Proyecto → Pago → Balance", () => {
 
     const projectDialog = page.getByRole("dialog");
     await expect(
-      projectDialog.getByRole("heading", { name: /nuevo proyecto/i }),
+      projectDialog.getByRole("heading", { name: /nuevo proyecto/i })
     ).toBeVisible();
 
     // PASO 1.3: Seleccionar cliente
@@ -72,7 +72,7 @@ test.describe("Flujo Crítico: Proyecto → Pago → Balance", () => {
     // Verificar que hay clientes disponibles
     if (customerCount === 0) {
       throw new Error(
-        "❌ No hay clientes en la base de datos. Ejecutar: npm run db:seed",
+        "❌ No hay clientes en la base de datos. Ejecutar: npm run db:seed"
       );
     }
 
@@ -109,7 +109,7 @@ test.describe("Flujo Crítico: Proyecto → Pago → Balance", () => {
 
     if (statusCount === 0) {
       throw new Error(
-        "❌ No hay estados de proyecto. Crear al menos uno en Settings.",
+        "❌ No hay estados de proyecto. Crear al menos uno en Settings."
       );
     }
 
@@ -139,7 +139,7 @@ test.describe("Flujo Crítico: Proyecto → Pago → Balance", () => {
     await page.waitForTimeout(500);
 
     console.log(
-      "✅ Montos ingresados (subtotal = $4,201,681 → total ≈ $5,000,000)",
+      "✅ Montos ingresados (subtotal = $4,201,681 → total ≈ $5,000,000)"
     );
 
     // PASO 1.6: Tomar screenshot antes de guardar
@@ -158,7 +158,7 @@ test.describe("Flujo Crítico: Proyecto → Pago → Balance", () => {
 
     // Verificar toast de éxito
     await expect(
-      page.locator("text=/proyecto creado|éxito|exitoso/i"),
+      page.locator("text=/proyecto creado|éxito|exitoso/i")
     ).toBeVisible({
       timeout: 5000,
     });
@@ -189,7 +189,7 @@ test.describe("Flujo Crítico: Proyecto → Pago → Balance", () => {
     // PASO 2.1: Navegar a página de pagos
     await page.goto("/payments");
     await expect(
-      page.getByRole("heading", { name: /pagos/i, level: 1 }),
+      page.getByRole("heading", { name: /pagos/i, level: 1 })
     ).toBeVisible();
 
     // PASO 2.2: Abrir dialog de pago a proyecto (1:1)
@@ -200,7 +200,7 @@ test.describe("Flujo Crítico: Proyecto → Pago → Balance", () => {
 
     const paymentDialog = page.getByRole("dialog");
     await expect(
-      paymentDialog.getByRole("heading", { name: /pago a proyecto/i }),
+      paymentDialog.getByRole("heading", { name: /pago a proyecto/i })
     ).toBeVisible();
 
     // PASO 2.3: Seleccionar el proyecto recién creado
@@ -218,7 +218,7 @@ test.describe("Flujo Crítico: Proyecto → Pago → Balance", () => {
 
     if (projectOptionCount === 0) {
       throw new Error(
-        `❌ No se encontró el proyecto ${projectNumber} en el combobox`,
+        `❌ No se encontró el proyecto ${projectNumber} en el combobox`
       );
     }
 
@@ -234,7 +234,7 @@ test.describe("Flujo Crítico: Proyecto → Pago → Balance", () => {
     await amountInput.fill(paymentAmount.toString());
 
     console.log(
-      `✅ Monto ingresado: $${paymentAmount.toLocaleString("es-CL")}`,
+      `✅ Monto ingresado: $${paymentAmount.toLocaleString("es-CL")}`
     );
 
     // PASO 2.5: Seleccionar método de pago
@@ -248,7 +248,7 @@ test.describe("Flujo Crítico: Proyecto → Pago → Balance", () => {
 
     if (paymentMethodCount === 0) {
       throw new Error(
-        "❌ No hay métodos de pago. Verificar seeder o crear manualmente.",
+        "❌ No hay métodos de pago. Verificar seeder o crear manualmente."
       );
     }
 
@@ -265,7 +265,7 @@ test.describe("Flujo Crítico: Proyecto → Pago → Balance", () => {
     const notesTextarea = paymentDialog.getByLabel(/notas/i);
     if (await notesTextarea.isVisible()) {
       await notesTextarea.fill(
-        "Pago de prueba del test E2E crítico - Verificación de balance",
+        "Pago de prueba del test E2E crítico - Verificación de balance"
       );
     }
 
@@ -285,7 +285,7 @@ test.describe("Flujo Crítico: Proyecto → Pago → Balance", () => {
 
     // Verificar toast de éxito
     await expect(
-      page.locator("text=/pago registrado|éxito|exitoso/i"),
+      page.locator("text=/pago registrado|éxito|exitoso/i")
     ).toBeVisible({
       timeout: 5000,
     });
@@ -301,7 +301,7 @@ test.describe("Flujo Crítico: Proyecto → Pago → Balance", () => {
     // PASO 3.1: Volver a la página de proyectos
     await page.goto("/projects");
     await expect(
-      page.getByRole("heading", { name: /proyectos/i, level: 1 }),
+      page.getByRole("heading", { name: /proyectos/i, level: 1 })
     ).toBeVisible();
 
     // PASO 3.2: Buscar el proyecto en la tabla
@@ -375,13 +375,13 @@ test.describe("Flujo Crítico: Proyecto → Pago → Balance", () => {
     console.log(`📊 Resumen:`);
     console.log(`   Proyecto: ${projectNumber} - ${projectName}`);
     console.log(
-      `   Total del proyecto: $${projectTotal.toLocaleString("es-CL")}`,
+      `   Total del proyecto: $${projectTotal.toLocaleString("es-CL")}`
     );
     console.log(
-      `   Pago registrado: $${paymentAmount.toLocaleString("es-CL")}`,
+      `   Pago registrado: $${paymentAmount.toLocaleString("es-CL")}`
     );
     console.log(
-      `   Balance esperado: $${expectedBalance.toLocaleString("es-CL")}`,
+      `   Balance esperado: $${expectedBalance.toLocaleString("es-CL")}`
     );
     console.log("=".repeat(60));
 

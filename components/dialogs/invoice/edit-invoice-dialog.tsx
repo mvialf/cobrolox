@@ -61,7 +61,7 @@ export function EditInvoiceDialog({
   onInvoiceUpdated,
 }: EditInvoiceDialogProps) {
   const [invoiceData, setInvoiceData] = useState<InvoiceWithPayments | null>(
-    null,
+    null
   );
   const [isLoading, setIsLoading] = useState(false);
   const [isFetching, setIsFetching] = useState(false);
@@ -137,7 +137,7 @@ export function EditInvoiceDialog({
     } catch (error) {
       console.error("Error:", error);
       toast.error(
-        error instanceof Error ? error.message : "Error al actualizar factura",
+        error instanceof Error ? error.message : "Error al actualizar factura"
       );
     } finally {
       setIsLoading(false);
@@ -175,7 +175,7 @@ export function EditInvoiceDialog({
                   termsDay: Math.ceil(
                     (new Date(invoiceData.dueDate).getTime() -
                       new Date(invoiceData.issueDate).getTime()) /
-                      (1000 * 60 * 60 * 24),
+                      (1000 * 60 * 60 * 24)
                   ),
                 }}
                 preselectedCustomerId={invoiceData.customerId}

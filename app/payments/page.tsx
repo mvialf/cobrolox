@@ -27,13 +27,13 @@ export default function PaymentsPage() {
   // Extraer data del hook (con fallbacks) y cast a tipo local
   const payments = useMemo(
     () => (data?.payments || []) as Payment[],
-    [data?.payments],
+    [data?.payments]
   );
 
   // Calcular métodos de pago únicos para filtros (movido del hook viejo)
   const uniquePaymentMethods = useMemo(() => {
     const methods = new Set(
-      payments.filter((p) => p.paymentMethod).map((p) => p.paymentMethod!.name),
+      payments.filter((p) => p.paymentMethod).map((p) => p.paymentMethod!.name)
     );
     return Array.from(methods).map((method) => ({
       label: method,
@@ -62,7 +62,7 @@ export default function PaymentsPage() {
       createColumns({
         onViewDetails: handleViewDetails,
       }),
-    [],
+    []
   );
 
   return (

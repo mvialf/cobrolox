@@ -10,7 +10,7 @@ import { logger as baseLogger } from "@/lib/logger";
  */
 export async function GET(
   request: Request,
-  { params }: { params: Promise<{ id: string }> },
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
   const logger = baseLogger.child({ invoiceId: id });
@@ -62,14 +62,14 @@ export async function GET(
       logger.warn({ invoiceId: id }, "Invoice not found");
       return NextResponse.json(
         { error: "Factura no encontrada" },
-        { status: 404 },
+        { status: 404 }
       );
     }
 
     // Calcular monto total asignado de pagos
     const allocatedAmount = invoice.allocations.reduce(
       (sum, alloc) => sum + Number(alloc.allocatedAmount),
-      0,
+      0
     );
 
     // Calcular balance pendiente
@@ -82,7 +82,7 @@ export async function GET(
         allocatedAmount,
         balance,
       },
-      "Invoice fetched successfully",
+      "Invoice fetched successfully"
     );
 
     // Retornar factura con campos calculados
@@ -95,7 +95,7 @@ export async function GET(
     logger.error({ err: error, invoiceId: id }, "Error fetching invoice");
     return NextResponse.json(
       { error: "Error al obtener factura" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }
@@ -115,7 +115,7 @@ export async function GET(
  */
 export async function PUT(
   request: Request,
-  { params }: { params: Promise<{ id: string }> },
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
   const body = await request.json();
@@ -155,27 +155,27 @@ export async function PUT(
       invoiceLogger.warn("Invoice not found");
       return NextResponse.json(
         { error: "Factura no encontrada" },
-        { status: 404 },
+        { status: 404 }
       );
     }
 
     // 2. Verificar que no tenga pagos aplicados
     const allocatedAmount = existingInvoice.allocations.reduce(
       (sum, alloc) => sum + Number(alloc.allocatedAmount),
-      0,
+      0
     );
 
     if (allocatedAmount > 0) {
       invoiceLogger.warn(
         { allocatedAmount },
-        "Cannot edit invoice with payments",
+        "Cannot edit invoice with payments"
       );
       return NextResponse.json(
         {
           error:
             "No se puede editar una factura que tiene pagos aplicados. Elimine los pagos primero.",
         },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -183,13 +183,13 @@ export async function PUT(
     if (existingInvoice.paymentInvoiceStatus.isFinal) {
       invoiceLogger.warn(
         { statusName: existingInvoice.paymentInvoiceStatus.name },
-        "Cannot edit invoice in final payment status",
+        "Cannot edit invoice in final payment status"
       );
       return NextResponse.json(
         {
           error: `No se puede editar una factura que está completamente pagada`,
         },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -197,7 +197,7 @@ export async function PUT(
     if (invoiceNumber && invoiceNumber !== existingInvoice.invoiceNumber) {
       invoiceLogger.debug(
         { newInvoiceNumber: invoiceNumber },
-        "Checking for duplicate invoice number",
+        "Checking for duplicate invoice number"
       );
       const duplicate = await prisma.invoice.findFirst({
         where: {
@@ -210,7 +210,7 @@ export async function PUT(
         invoiceLogger.warn({ invoiceNumber }, "Invoice number already exists");
         return NextResponse.json(
           { error: "Ya existe otra factura con ese número" },
-          { status: 409 },
+          { status: 409 }
         );
       }
     }
@@ -225,14 +225,14 @@ export async function PUT(
       if (Math.abs(total - expectedTotal) > 0.01) {
         invoiceLogger.warn(
           { subtotal, taxAmount, total, expectedTotal },
-          "Total does not match subtotal + taxAmount",
+          "Total does not match subtotal + taxAmount"
         );
         return NextResponse.json(
           {
             error:
               "El total no coincide con la suma de subtotal + IVA. Verifique los cálculos.",
           },
-          { status: 400 },
+          { status: 400 }
         );
       }
     }
@@ -246,7 +246,7 @@ export async function PUT(
         invoiceLogger.warn({ customerId }, "Customer not found");
         return NextResponse.json(
           { error: "Cliente no encontrado" },
-          { status: 404 },
+          { status: 404 }
         );
       }
     }
@@ -294,7 +294,7 @@ export async function PUT(
         invoiceId: id,
         invoiceNumber: updatedInvoice.invoiceNumber,
       },
-      "Invoice updated successfully",
+      "Invoice updated successfully"
     );
 
     return NextResponse.json(updatedInvoice);
@@ -302,7 +302,7 @@ export async function PUT(
     invoiceLogger.error({ err: error }, "Error updating invoice");
     return NextResponse.json(
       { error: "Error al actualizar factura" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }
@@ -317,7 +317,7 @@ export async function PUT(
  */
 export async function DELETE(
   request: Request,
-  { params }: { params: Promise<{ id: string }> },
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
   const logger = baseLogger.child({ invoiceId: id });
@@ -337,27 +337,27 @@ export async function DELETE(
       logger.warn({ invoiceId: id }, "Invoice not found");
       return NextResponse.json(
         { error: "Factura no encontrada" },
-        { status: 404 },
+        { status: 404 }
       );
     }
 
     // Verificar que no tenga pagos aplicados
     const allocatedAmount = existingInvoice.allocations.reduce(
       (sum, alloc) => sum + Number(alloc.allocatedAmount),
-      0,
+      0
     );
 
     if (allocatedAmount > 0) {
       logger.warn(
         { invoiceId: id, allocatedAmount },
-        "Cannot delete invoice with payments",
+        "Cannot delete invoice with payments"
       );
       return NextResponse.json(
         {
           error:
             "No se puede eliminar una factura que tiene pagos aplicados. Elimine los pagos primero.",
         },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -376,7 +376,7 @@ export async function DELETE(
     logger.error({ err: error, invoiceId: id }, "Error deleting invoice");
     return NextResponse.json(
       { error: "Error al eliminar factura" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

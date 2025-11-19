@@ -38,7 +38,7 @@ export const badgeColorSchema = z.object({
     .toLowerCase()
     .regex(
       /^[a-z0-9-_]+$/,
-      "La clave solo puede contener letras minúsculas, números, guiones y guiones bajos",
+      "La clave solo puede contener letras minúsculas, números, guiones y guiones bajos"
     ),
 
   // Clase CSS de fondo (obligatoria)
@@ -49,7 +49,7 @@ export const badgeColorSchema = z.object({
     .trim()
     .refine(
       (val) => val.startsWith("bg-") || val.includes("background"),
-      "La clase de fondo debe ser una clase CSS válida (ej: bg-blue-500)",
+      "La clase de fondo debe ser una clase CSS válida (ej: bg-blue-500)"
     ),
 
   // Clase CSS de texto (opcional, default "text-white")
@@ -98,7 +98,7 @@ export type UpdateBadgeColorPayload = Partial<CreateBadgeColorPayload>;
  * Helper para convertir form values a API payload
  */
 export function formValuesToPayload(
-  values: BadgeColorFormValues,
+  values: BadgeColorFormValues
 ): CreateBadgeColorPayload {
   return {
     name: values.name,
@@ -114,7 +114,7 @@ export function formValuesToPayload(
  * Helper para convertir BadgeColor a form values
  */
 export function badgeColorToFormValues(
-  badgeColor: BadgeColor,
+  badgeColor: BadgeColor
 ): BadgeColorFormValues {
   return {
     name: badgeColor.name,

@@ -23,7 +23,7 @@ export async function GET(req: NextRequest) {
     if (!token) {
       return NextResponse.json(
         { valid: false, error: "Token no proporcionado" },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -36,7 +36,7 @@ export async function GET(req: NextRequest) {
       logger.warn(`Token de invitación inválido: ${token}`);
       return NextResponse.json(
         { valid: false, error: "Token inválido" },
-        { status: 404 },
+        { status: 404 }
       );
     }
 
@@ -57,7 +57,7 @@ export async function GET(req: NextRequest) {
 
       return NextResponse.json(
         { valid: false, error: errorMessage, status },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -72,7 +72,7 @@ export async function GET(req: NextRequest) {
     logger.error({ err: error }, "Error al validar token de invitación");
     return NextResponse.json(
       { valid: false, error: "Error al validar invitación" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

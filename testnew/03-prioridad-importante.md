@@ -37,14 +37,14 @@ describe("useInvoices", () => {
   it("debe construir query params correctamente", async () => {
     const { result } = renderHook(
       () => useInvoices({ status: "overdue", customerId: "123" }),
-      { wrapper: createQueryWrapper() },
+      { wrapper: createQueryWrapper() }
     );
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
     // Verificar que fetch fue llamado con URL correcta
     expect(global.fetch).toHaveBeenCalledWith(
-      expect.stringContaining("status=overdue&customerId=123"),
+      expect.stringContaining("status=overdue&customerId=123")
     );
   });
 

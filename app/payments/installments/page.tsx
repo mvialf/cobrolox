@@ -30,7 +30,7 @@ export default function InstallmentsPage() {
 
   const installments = useMemo(
     () => (data?.installments || []) as Installment[],
-    [data?.installments],
+    [data?.installments]
   );
 
   const columns = useMemo(
@@ -38,7 +38,7 @@ export default function InstallmentsPage() {
       createColumns({
         locale: configuration.locale,
       }),
-    [configuration.locale],
+    [configuration.locale]
   );
 
   // Obtener estadísticas

@@ -153,7 +153,7 @@ export default function PaymentMethodsSettingsPage() {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [selectedMethod, setSelectedMethod] = useState<PaymentMethod | null>(
-    null,
+    null
   );
 
   // Sensors para drag & drop (soporte mouse, touch y teclado)
@@ -165,7 +165,7 @@ export default function PaymentMethodsSettingsPage() {
     }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
-    }),
+    })
   );
 
   // IDs para SortableContext
@@ -252,7 +252,7 @@ export default function PaymentMethodsSettingsPage() {
         `/api/payment-methods/${selectedMethod.id}`,
         {
           method: "DELETE",
-        },
+        }
       );
 
       const data = await response.json();

@@ -63,7 +63,7 @@ describe("useTodoList - No controlado", () => {
     const { result } = renderHook(() =>
       useTodoList({
         initialTodos: [{ id: "1", text: "Tarea", completed: false }],
-      }),
+      })
     );
 
     act(() => {
@@ -83,7 +83,7 @@ describe("useTodoList - No controlado", () => {
     const { result } = renderHook(() =>
       useTodoList({
         initialTodos: [{ id: "1", text: "Tarea" }],
-      }),
+      })
     );
 
     act(() => {
@@ -105,7 +105,7 @@ describe("useTodoList - Controlado", () => {
       useTodoList({
         todos: [],
         onTodosChange,
-      }),
+      })
     );
 
     act(() => {
@@ -113,9 +113,7 @@ describe("useTodoList - Controlado", () => {
     });
 
     expect(onTodosChange).toHaveBeenCalledWith(
-      expect.arrayContaining([
-        expect.objectContaining({ text: "Nueva tarea" }),
-      ]),
+      expect.arrayContaining([expect.objectContaining({ text: "Nueva tarea" })])
     );
   });
 
@@ -125,7 +123,7 @@ describe("useTodoList - Controlado", () => {
       useTodoList({
         todos: [{ id: "1", text: "Tarea externa" }],
         onTodosChange,
-      }),
+      })
     );
 
     expect(result.current.todos).toEqual([{ id: "1", text: "Tarea externa" }]);
@@ -151,7 +149,7 @@ describe("useTodoList - Estadísticas", () => {
           { id: "1", text: "A", completed: false },
           { id: "2", text: "B", completed: true },
         ],
-      }),
+      })
     );
 
     expect(result.current.stats.total).toBe(2);
@@ -165,7 +163,7 @@ describe("useTodoList - Estadísticas", () => {
           { id: "2", text: "B", completed: true },
           { id: "3", text: "C", completed: true },
         ],
-      }),
+      })
     );
 
     expect(result.current.stats.completed).toBe(2);
@@ -178,7 +176,7 @@ describe("useTodoList - Estadísticas", () => {
           { id: "1", text: "A", completed: false },
           { id: "2", text: "B", completed: true },
         ],
-      }),
+      })
     );
 
     expect(result.current.stats.pending).toBe(1);
@@ -253,7 +251,7 @@ describe("sendSlackAlert", () => {
       expect.objectContaining({
         method: "POST",
         body: expect.stringContaining("Test message"),
-      }),
+      })
     );
   });
 
@@ -288,10 +286,10 @@ describe("getComunasByRegionId", () => {
   it("debe filtrar comunas por región", () => {
     const comunas = getComunasByRegionId("13");
     expect(comunas).toContainEqual(
-      expect.objectContaining({ nombre: "Santiago" }),
+      expect.objectContaining({ nombre: "Santiago" })
     );
     expect(comunas).toContainEqual(
-      expect.objectContaining({ nombre: "Providencia" }),
+      expect.objectContaining({ nombre: "Providencia" })
     );
   });
 

@@ -184,7 +184,7 @@ logger.info(
     userId: "123",
     action: "create_payment",
   },
-  "User action logged",
+  "User action logged"
 );
 ```
 

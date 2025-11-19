@@ -162,7 +162,7 @@ describe("calculateInstallments", () => {
     const result = calculateInstallments(
       999_999.99,
       12,
-      new Date("2025-01-01"),
+      new Date("2025-01-01")
     );
 
     // Verificar que tiene 12 cuotas
@@ -206,7 +206,7 @@ describe("calculateInstallments", () => {
       const result = calculateInstallments(
         amount,
         installments,
-        new Date("2025-01-01"),
+        new Date("2025-01-01")
       );
 
       // Verificar que la suma es exacta

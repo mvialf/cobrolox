@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
           error: "Datos inválidos",
           details: validation.error.errors,
         },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -47,7 +47,7 @@ export async function POST(req: NextRequest) {
       logger.warn(`Token de invitación no encontrado: ${token}`);
       return NextResponse.json(
         { error: "Invitación no encontrada" },
-        { status: 404 },
+        { status: 404 }
       );
     }
 
@@ -56,7 +56,7 @@ export async function POST(req: NextRequest) {
 
     if (status !== "PENDING") {
       logger.warn(
-        `Intento de aceptar invitación no válida (${status}): ${token}`,
+        `Intento de aceptar invitación no válida (${status}): ${token}`
       );
 
       let errorMessage = "Invitación no válida";
@@ -78,11 +78,11 @@ export async function POST(req: NextRequest) {
 
     if (existingUser) {
       logger.warn(
-        `Intento de aceptar invitación pero usuario ya existe: ${invitation.email}`,
+        `Intento de aceptar invitación pero usuario ya existe: ${invitation.email}`
       );
       return NextResponse.json(
         { error: "Ya existe un usuario con ese correo electrónico" },
-        { status: 409 },
+        { status: 409 }
       );
     }
 
@@ -123,7 +123,7 @@ export async function POST(req: NextRequest) {
     });
 
     logger.info(
-      `Usuario ${invitation.email} creado exitosamente desde invitación`,
+      `Usuario ${invitation.email} creado exitosamente desde invitación`
     );
 
     return NextResponse.json(
@@ -136,13 +136,13 @@ export async function POST(req: NextRequest) {
           role: result.role,
         },
       },
-      { status: 201 },
+      { status: 201 }
     );
   } catch (error) {
     logger.error({ err: error }, "Error al aceptar invitación");
     return NextResponse.json(
       { error: "Error al aceptar invitación" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

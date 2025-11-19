@@ -131,7 +131,7 @@ export const GET = withLogging(async (request, logger) => {
 
   logger.info(
     { page, limit, status, paymentId, customerId, startDate, endDate },
-    "Listing installments",
+    "Listing installments"
   );
 
   // Build filters

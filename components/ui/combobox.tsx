@@ -166,7 +166,7 @@ export function Combobox<T>({
   // Encontrar opción seleccionada
   const selectedOption = React.useMemo(
     () => options.find((option) => getOptionValue(option) === value),
-    [options, value, getOptionValue],
+    [options, value, getOptionValue]
   );
 
   // Handler para cambio de open state
@@ -211,7 +211,7 @@ export function Combobox<T>({
             // Estilos específicos de Combobox
             "justify-between items-center text-left",
             !value && "text-muted-foreground",
-            className,
+            className
           )}
         >
           <span className="truncate">{triggerLabel}</span>
@@ -241,7 +241,7 @@ export function Combobox<T>({
                     <Check
                       className={cn(
                         "mr-2 h-4 w-4",
-                        isSelected ? "opacity-100" : "opacity-0",
+                        isSelected ? "opacity-100" : "opacity-0"
                       )}
                     />
                     {renderOption

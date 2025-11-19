@@ -100,7 +100,7 @@ export default async function ProductsPage() {
 function ProductsList({ products }) {
   const [search, setSearch] = useState("");
   const filtered = products.filter((p) =>
-    p.name.toLowerCase().includes(search.toLowerCase()),
+    p.name.toLowerCase().includes(search.toLowerCase())
   );
 
   return (

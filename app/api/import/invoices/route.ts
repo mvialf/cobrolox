@@ -47,7 +47,7 @@ export async function POST(request: NextRequest) {
     if (!file) {
       return NextResponse.json(
         { error: "No se proporcionó ningún archivo" },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -55,7 +55,7 @@ export async function POST(request: NextRequest) {
     if (!file.name.endsWith(".xlsx") && !file.name.endsWith(".xls")) {
       return NextResponse.json(
         { error: "El archivo debe ser Excel (.xlsx o .xls)" },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -68,14 +68,14 @@ export async function POST(request: NextRequest) {
           error: "Error al parsear el archivo Excel",
           details: parseResult.errors,
         },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
     if (parseResult.data.length === 0) {
       return NextResponse.json(
         { error: "El archivo Excel está vacío" },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -91,7 +91,7 @@ export async function POST(request: NextRequest) {
             errors: validation.errors,
           },
         },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -100,7 +100,7 @@ export async function POST(request: NextRequest) {
     validation.validInvoices.forEach((invoice) => {
       invoiceNumberCounts.set(
         invoice.invoiceNumber,
-        (invoiceNumberCounts.get(invoice.invoiceNumber) || 0) + 1,
+        (invoiceNumberCounts.get(invoice.invoiceNumber) || 0) + 1
       );
     });
 
@@ -114,7 +114,7 @@ export async function POST(request: NextRequest) {
           error: "Hay números de factura duplicados en el archivo Excel",
           duplicates: duplicatesInCSV,
         },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -130,8 +130,8 @@ export async function POST(request: NextRequest) {
 
     const existingNumbers = new Set(
       existingInvoices.map(
-        (inv: { invoiceNumber: string }) => inv.invoiceNumber,
-      ),
+        (inv: { invoiceNumber: string }) => inv.invoiceNumber
+      )
     );
     const duplicatesInDB = validation.validInvoices
       .filter((inv) => existingNumbers.has(inv.invoiceNumber))
@@ -145,7 +145,7 @@ export async function POST(request: NextRequest) {
           message:
             "Por favor, elimine estas facturas del archivo Excel o actualice las existentes manualmente",
         },
-        { status: 409 },
+        { status: 409 }
       );
     }
 
@@ -156,9 +156,7 @@ export async function POST(request: NextRequest) {
     // IMPORTANTE: Los RUTs en la DB están SIN FORMATO, por eso usamos clean() en vez de format()
     const uniqueRuts = [
       ...new Set(
-        validation.validInvoices.map((inv) =>
-          rutHelpers.clean(inv.customerRut),
-        ),
+        validation.validInvoices.map((inv) => rutHelpers.clean(inv.customerRut))
       ),
     ];
 
@@ -168,7 +166,7 @@ export async function POST(request: NextRequest) {
     });
 
     const customerMap = new Map(
-      customers.map((c: { rut: string; id: string }) => [c.rut, c.id]),
+      customers.map((c: { rut: string; id: string }) => [c.rut, c.id])
     );
 
     // Validar que todos los RUTs existan
@@ -189,7 +187,7 @@ export async function POST(request: NextRequest) {
           message:
             "Por favor, importe primero los clientes o verifique los RUTs",
         },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -238,7 +236,7 @@ export async function POST(request: NextRequest) {
         error: "Error interno del servidor",
         details: error instanceof Error ? error.message : "Unknown error",
       },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

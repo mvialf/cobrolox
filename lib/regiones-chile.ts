@@ -58,7 +58,7 @@ export function getComunaByCodigo(codigoComuna: string): Comuna | undefined {
  */
 export function getRegionByComuna(codigoComuna: string): Region | undefined {
   return REGIONES_CHILE.regiones.find((region) =>
-    region.comunas.some((comuna) => comuna.codigo === codigoComuna),
+    region.comunas.some((comuna) => comuna.codigo === codigoComuna)
   );
 }
 

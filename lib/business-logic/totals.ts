@@ -49,7 +49,7 @@ import { FINANCIAL } from "../constants/financial-constants";
  */
 export function calculateProjectTotal(
   subtotal: number,
-  taxRate: number = FINANCIAL.DEFAULT_TAX_RATE,
+  taxRate: number = FINANCIAL.DEFAULT_TAX_RATE
 ): number {
   // Validaciones
   if (subtotal < 0) {
@@ -58,7 +58,7 @@ export function calculateProjectTotal(
 
   if (taxRate < FINANCIAL.MIN_TAX_RATE || taxRate > FINANCIAL.MAX_TAX_RATE) {
     throw new Error(
-      `La tasa de impuesto debe estar entre ${FINANCIAL.MIN_TAX_RATE}% y ${FINANCIAL.MAX_TAX_RATE}%`,
+      `La tasa de impuesto debe estar entre ${FINANCIAL.MIN_TAX_RATE}% y ${FINANCIAL.MAX_TAX_RATE}%`
     );
   }
 
@@ -84,7 +84,7 @@ export function calculateProjectTotal(
  */
 export function calculateTax(
   subtotal: number,
-  taxRate: number = FINANCIAL.DEFAULT_TAX_RATE,
+  taxRate: number = FINANCIAL.DEFAULT_TAX_RATE
 ): number {
   if (subtotal < 0) {
     throw new Error("El subtotal no puede ser negativo");
@@ -92,7 +92,7 @@ export function calculateTax(
 
   if (taxRate < FINANCIAL.MIN_TAX_RATE || taxRate > FINANCIAL.MAX_TAX_RATE) {
     throw new Error(
-      `La tasa de impuesto debe estar entre ${FINANCIAL.MIN_TAX_RATE}% y ${FINANCIAL.MAX_TAX_RATE}%`,
+      `La tasa de impuesto debe estar entre ${FINANCIAL.MIN_TAX_RATE}% y ${FINANCIAL.MAX_TAX_RATE}%`
     );
   }
 
@@ -124,7 +124,7 @@ export function calculateTax(
 export function validateProjectTotal(
   subtotal: number,
   taxRate: number,
-  receivedTotal: number,
+  receivedTotal: number
 ): boolean {
   const expectedTotal = calculateProjectTotal(subtotal, taxRate);
   return Math.abs(expectedTotal - receivedTotal) < FINANCIAL.TOLERANCE;
@@ -153,7 +153,7 @@ export function validateProjectTotal(
  */
 export function calculateSubtotalFromTotal(
   total: number,
-  taxRate: number = FINANCIAL.DEFAULT_TAX_RATE,
+  taxRate: number = FINANCIAL.DEFAULT_TAX_RATE
 ): number {
   if (total < 0) {
     throw new Error("El total no puede ser negativo");
@@ -161,7 +161,7 @@ export function calculateSubtotalFromTotal(
 
   if (taxRate < FINANCIAL.MIN_TAX_RATE || taxRate > FINANCIAL.MAX_TAX_RATE) {
     throw new Error(
-      `La tasa de impuesto debe estar entre ${FINANCIAL.MIN_TAX_RATE}% y ${FINANCIAL.MAX_TAX_RATE}%`,
+      `La tasa de impuesto debe estar entre ${FINANCIAL.MIN_TAX_RATE}% y ${FINANCIAL.MAX_TAX_RATE}%`
     );
   }
 

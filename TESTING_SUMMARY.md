@@ -230,7 +230,7 @@ describe("useDebounce", () => {
   it("debe debounce con delay", () => {
     const { result, rerender } = renderHook(
       ({ value }) => useDebounce(value, 300),
-      { initialProps: { value: "initial" } },
+      { initialProps: { value: "initial" } }
     );
 
     rerender({ value: "changed" });
@@ -360,7 +360,7 @@ it("debe hacer optimistic update", async () => {
     .fn()
     .mockImplementation(
       () =>
-        new Promise((resolve) => setTimeout(() => resolve({ ok: true }), 100)),
+        new Promise((resolve) => setTimeout(() => resolve({ ok: true }), 100))
     );
 
   const { result } = renderHook(() => useDeletePayment(), { wrapper });

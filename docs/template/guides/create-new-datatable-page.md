@@ -307,7 +307,7 @@ function ProductActionsCell({
     } catch (error) {
       console.error("Error al eliminar producto:", error);
       toast.error(
-        error instanceof Error ? error.message : "Error al eliminar producto",
+        error instanceof Error ? error.message : "Error al eliminar producto"
       );
     }
   };
@@ -548,7 +548,7 @@ import { Row } from "@tanstack/react-table";
 const globalFilterFn = (
   row: Row<Product>,
   _columnId: string,
-  filterValue: string,
+  filterValue: string
 ) => {
   const product = row.original;
   const searchValue = filterValue.toLowerCase();

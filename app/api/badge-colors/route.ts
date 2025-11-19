@@ -50,7 +50,7 @@ export async function GET(request: Request) {
     console.error("Error fetching badge colors:", error);
     return NextResponse.json(
       { error: "Error al obtener los colores de badge" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

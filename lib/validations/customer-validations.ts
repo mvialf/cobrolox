@@ -11,7 +11,7 @@ export const customerSchema = z.object({
     .min(1, "El RUT es requerido")
     .refine(
       (val) => rutHelpers.validate(val),
-      "RUT inválido. Formato: 12.345.678-9",
+      "RUT inválido. Formato: 12.345.678-9"
     ),
 
   // Razón Social - Obligatorio

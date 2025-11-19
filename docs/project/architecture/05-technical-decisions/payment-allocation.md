@@ -182,13 +182,13 @@ LEFT JOIN payments ON payments.project_id = p.id
 // app/api/payments/route.ts
 const totalAllocated = allocations.reduce(
   (sum, a) => sum + a.allocatedAmount,
-  0,
+  0
 );
 
 if (Math.abs(totalAllocated - amount) > 0.01) {
   return NextResponse.json(
     { error: "Sum of allocations must equal payment amount" },
-    { status: 400 },
+    { status: 400 }
   );
 }
 ```
@@ -199,7 +199,7 @@ if (Math.abs(totalAllocated - amount) > 0.01) {
 // lib/business-logic/payment-fifo.ts
 export function allocatePaymentFIFO(
   amount: number,
-  projects: Array<{ id: string; balance: number }>,
+  projects: Array<{ id: string; balance: number }>
 ): Array<{ projectId: string; allocatedAmount: number }> {
   // FIFO allocation logic
 }

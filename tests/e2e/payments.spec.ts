@@ -27,19 +27,19 @@ test.describe("Sistema de Pagos", () => {
 
     // Esperar a que la página cargue completamente
     await expect(
-      page.getByRole("heading", { name: /pagos/i, level: 1 }),
+      page.getByRole("heading", { name: /pagos/i, level: 1 })
     ).toBeVisible();
   });
 
   test("debe cargar la página de pagos correctamente", async ({ page }) => {
     // Verificar título de la página (CardTitle, no es un heading semántico)
     await expect(
-      page.getByText("Todos los Pagos", { exact: true }),
+      page.getByText("Todos los Pagos", { exact: true })
     ).toBeVisible();
 
     // Verificar que el botón "Nuevo Pago" existe
     await expect(
-      page.getByRole("button", { name: /nuevo pago/i }),
+      page.getByRole("button", { name: /nuevo pago/i })
     ).toBeVisible();
 
     // Verificar que el área de contenido está presente (tabla, skeleton o mensaje de vacío)
@@ -62,10 +62,10 @@ test.describe("Sistema de Pagos", () => {
 
     // Verificar que se abre el dropdown con las 2 opciones
     await expect(
-      page.getByRole("menuitem", { name: /pago a proyecto \(1:1\)/i }),
+      page.getByRole("menuitem", { name: /pago a proyecto \(1:1\)/i })
     ).toBeVisible();
     await expect(
-      page.getByRole("menuitem", { name: /pago a cliente \(1:N\)/i }),
+      page.getByRole("menuitem", { name: /pago a cliente \(1:N\)/i })
     ).toBeVisible();
   });
 
@@ -81,12 +81,12 @@ test.describe("Sistema de Pagos", () => {
     // Verificar que se abre el dialog
     const dialog = page.getByRole("dialog");
     await expect(
-      dialog.getByRole("heading", { name: /pago a proyecto/i }),
+      dialog.getByRole("heading", { name: /pago a proyecto/i })
     ).toBeVisible();
 
     // Verificar campos iniciales (antes de seleccionar proyecto/método)
     await expect(
-      dialog.getByRole("combobox", { name: /proyecto/i }),
+      dialog.getByRole("combobox", { name: /proyecto/i })
     ).toBeVisible();
     await expect(dialog.getByLabel(/monto/i)).toBeVisible(); // Existe pero está disabled
     await expect(dialog.getByLabel(/fecha/i)).toBeVisible();
@@ -95,7 +95,7 @@ test.describe("Sistema de Pagos", () => {
 
     // Verificar botón de submit
     await expect(
-      dialog.getByRole("button", { name: /registrar pago/i }),
+      dialog.getByRole("button", { name: /registrar pago/i })
     ).toBeVisible();
   });
 
@@ -131,7 +131,7 @@ test.describe("Sistema de Pagos", () => {
 
       const dialog = page.getByRole("dialog");
       await expect(
-        dialog.getByRole("heading", { name: /pago a proyecto/i }),
+        dialog.getByRole("heading", { name: /pago a proyecto/i })
       ).toBeVisible();
 
       // PASO 2: Seleccionar proyecto
@@ -185,7 +185,7 @@ test.describe("Sistema de Pagos", () => {
       const notesTextarea = dialog.getByLabel(/notas/i);
       if (await notesTextarea.isVisible()) {
         await notesTextarea.fill(
-          "Pago de prueba creado por test E2E de Playwright",
+          "Pago de prueba creado por test E2E de Playwright"
         );
       }
 
@@ -204,7 +204,7 @@ test.describe("Sistema de Pagos", () => {
 
       // Verificar toast o mensaje de éxito
       await expect(
-        page.locator("text=/pago registrado|éxito|exitoso/i"),
+        page.locator("text=/pago registrado|éxito|exitoso/i")
       ).toBeVisible({
         timeout: 5000,
       });
@@ -225,7 +225,7 @@ test.describe("Sistema de Pagos", () => {
 
       const dialog = page.getByRole("dialog");
       await expect(
-        dialog.getByRole("heading", { name: /pago a proyecto/i }),
+        dialog.getByRole("heading", { name: /pago a proyecto/i })
       ).toBeVisible();
 
       // Cerrar el dialog con Escape
@@ -289,7 +289,7 @@ test.describe("Sistema de Pagos", () => {
 
         // Verificar que se abre el dialog de detalles
         await expect(
-          page.getByRole("heading", { name: /detalles del pago/i }),
+          page.getByRole("heading", { name: /detalles del pago/i })
         ).toBeVisible({
           timeout: 3000,
         });

@@ -252,11 +252,11 @@ model Payment {
    // lib/business-logic/project-balance.ts
    export function calculateProjectBalance(
      project: { total: Decimal },
-     allocations: { allocatedAmount: Decimal }[],
+     allocations: { allocatedAmount: Decimal }[]
    ): Decimal {
      const totalPaid = allocations.reduce(
        (sum, a) => sum + a.allocatedAmount,
-       new Decimal(0),
+       new Decimal(0)
      );
      return project.total.minus(totalPaid);
    }

@@ -270,13 +270,13 @@ describe("invoiceSchema", () => {
 
     it("debe validar termsDay entre 1-365", () => {
       expect(() =>
-        invoiceSchema.parse({ ...validInvoice, termsDay: 0 }),
+        invoiceSchema.parse({ ...validInvoice, termsDay: 0 })
       ).toThrow();
       expect(() =>
-        invoiceSchema.parse({ ...validInvoice, termsDay: 366 }),
+        invoiceSchema.parse({ ...validInvoice, termsDay: 366 })
       ).toThrow();
       expect(() =>
-        invoiceSchema.parse({ ...validInvoice, termsDay: 30 }),
+        invoiceSchema.parse({ ...validInvoice, termsDay: 30 })
       ).not.toThrow();
     });
   });
@@ -310,22 +310,22 @@ describe("invoiceSchema", () => {
         total: 1191, // diferencia 1.00
       };
       expect(() => invoiceSchema.parse(invalid)).toThrow(
-        /total debe ser igual/,
+        /total debe ser igual/
       );
     });
 
     it("debe validar subtotal > 0", () => {
       expect(() =>
-        invoiceSchema.parse({ ...validInvoice, subtotal: 0 }),
+        invoiceSchema.parse({ ...validInvoice, subtotal: 0 })
       ).toThrow();
       expect(() =>
-        invoiceSchema.parse({ ...validInvoice, subtotal: -100 }),
+        invoiceSchema.parse({ ...validInvoice, subtotal: -100 })
       ).toThrow();
     });
 
     it("debe validar IVA >= 0", () => {
       expect(() =>
-        invoiceSchema.parse({ ...validInvoice, IVA: -10 }),
+        invoiceSchema.parse({ ...validInvoice, IVA: -10 })
       ).toThrow();
     });
   });
@@ -355,19 +355,19 @@ describe("invoiceSchema", () => {
   describe("monedas", () => {
     it("debe aceptar CLP, USD, EUR", () => {
       expect(() =>
-        invoiceSchema.parse({ ...validInvoice, currency: "CLP" }),
+        invoiceSchema.parse({ ...validInvoice, currency: "CLP" })
       ).not.toThrow();
       expect(() =>
-        invoiceSchema.parse({ ...validInvoice, currency: "USD" }),
+        invoiceSchema.parse({ ...validInvoice, currency: "USD" })
       ).not.toThrow();
       expect(() =>
-        invoiceSchema.parse({ ...validInvoice, currency: "EUR" }),
+        invoiceSchema.parse({ ...validInvoice, currency: "EUR" })
       ).not.toThrow();
     });
 
     it("debe rechazar moneda inválida", () => {
       expect(() =>
-        invoiceSchema.parse({ ...validInvoice, currency: "ARS" }),
+        invoiceSchema.parse({ ...validInvoice, currency: "ARS" })
       ).toThrow();
     });
   });
@@ -857,7 +857,7 @@ describe("validateInvoiceBatch", () => {
 
     const result = validateInvoiceBatch(batch);
     expect(result.warnings).toContainEqual(
-      expect.stringMatching(/múltiples monedas/),
+      expect.stringMatching(/múltiples monedas/)
     );
   });
 });

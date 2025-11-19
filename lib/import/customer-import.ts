@@ -47,7 +47,7 @@ export interface CustomerValidationResult {
  */
 export function validateCustomerRow(
   row: CustomerCSVRow,
-  rowIndex: number,
+  rowIndex: number
 ): CustomerValidationResult {
   const errors: ParseError[] = [];
 

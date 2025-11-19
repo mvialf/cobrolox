@@ -18,7 +18,7 @@
  */
 export function formatCurrency(
   amount: number,
-  currency: string = "CLP",
+  currency: string = "CLP"
 ): string {
   // Configuración por moneda
   const currencyConfig: Record<string, { locale: string; decimals: number }> = {
@@ -83,7 +83,7 @@ export function formatNumber(num: number, decimals: number = 2): string {
 export function formatDate(
   dateString: string | Date,
   variant: "short" | "long" | "full" = "short",
-  locale: string = "es-CL",
+  locale: string = "es-CL"
 ): string {
   const date = new Date(dateString);
 

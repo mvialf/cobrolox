@@ -106,7 +106,7 @@ const buttonVariants = cva(
         brand: "bg-gradient-to-r from-purple-500 to-pink-500 text-white",
       },
     },
-  },
+  }
 );
 ```
 

@@ -98,7 +98,7 @@ export function useTodoList(options: UseTodoListOptions = {}) {
    */
   const toggleTodo = (id: string): TodoItem[] => {
     const newTodos = todos.map((todo) =>
-      todo.id === id ? { ...todo, completed: !todo.completed } : todo,
+      todo.id === id ? { ...todo, completed: !todo.completed } : todo
     );
 
     updateTodos(newTodos);
@@ -126,14 +126,14 @@ export function useTodoList(options: UseTodoListOptions = {}) {
       total: todos.length,
       completed: todos.reduce(
         (count, todo) => count + (todo.completed ? 1 : 0),
-        0,
+        0
       ),
       pending: todos.reduce(
         (count, todo) => count + (todo.completed ? 0 : 1),
-        0,
+        0
       ),
     }),
-    [todos],
+    [todos]
   );
 
   return {

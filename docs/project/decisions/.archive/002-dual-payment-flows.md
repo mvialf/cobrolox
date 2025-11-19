@@ -86,7 +86,7 @@ export const paymentToCustomerSchema = z
         z.object({
           projectId: z.string().cuid(),
           allocatedAmount: z.number().positive(),
-        }),
+        })
       )
       .min(1),
   })
@@ -95,7 +95,7 @@ export const paymentToCustomerSchema = z
       const sum = data.allocations.reduce((s, a) => s + a.allocatedAmount, 0);
       return Math.abs(sum - data.amount) < 0.01; // Tolerance para floats
     },
-    { message: "Sum of allocations must equal payment amount" },
+    { message: "Sum of allocations must equal payment amount" }
   );
 
 // Componente: components/forms/payments/payment-to-customer-form.tsx
@@ -116,7 +116,7 @@ export const paymentToCustomerSchema = z
 // lib/business-logic/payment-fifo.ts
 export function distributeFIFO(
   projects: Array<{ id: string; balance: Decimal; date: Date }>,
-  totalAmount: Decimal,
+  totalAmount: Decimal
 ): Array<{ projectId: string; allocatedAmount: Decimal }> {
   const sorted = projects.sort((a, b) => a.date.getTime() - b.date.getTime());
   const allocations = [];
@@ -273,13 +273,13 @@ UI mockup:
   ```typescript
   // lib/validations/payment-validations.ts
   export function paymentToProjectToPayload(
-    data: PaymentToProjectForm,
+    data: PaymentToProjectForm
   ): PaymentCreatePayload {
     // Convierte form 1:1 a payload API con 1 allocation automática
   }
 
   export function paymentToCustomerToPayload(
-    data: PaymentToCustomerForm,
+    data: PaymentToCustomerForm
   ): PaymentCreatePayload {
     // Convierte form 1:N a payload API con N allocations
   }
@@ -471,14 +471,14 @@ const { type, allocations } = validatedData;
 if (type === "Project" && allocations.length !== 1) {
   return NextResponse.json(
     { error: "Project payment must have exactly 1 allocation" },
-    { status: 400 },
+    { status: 400 }
   );
 }
 
 if (type === "Customer" && allocations.length < 1) {
   return NextResponse.json(
     { error: "Customer payment must have at least 1 allocation" },
-    { status: 400 },
+    { status: 400 }
   );
 }
 
@@ -487,7 +487,7 @@ const sum = allocations.reduce((s, a) => s + a.allocatedAmount, 0);
 if (Math.abs(sum - amount) > 0.01) {
   return NextResponse.json(
     { error: `Allocations sum (${sum}) must equal payment amount (${amount})` },
-    { status: 400 },
+    { status: 400 }
   );
 }
 ```

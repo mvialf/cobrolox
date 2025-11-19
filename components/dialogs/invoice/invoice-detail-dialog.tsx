@@ -233,7 +233,7 @@ export function InvoiceDetailDialog({
                       {formatDate(
                         invoice.issueDate,
                         "full",
-                        configuration.locale,
+                        configuration.locale
                       )}
                     </span>
                   </div>
@@ -245,7 +245,7 @@ export function InvoiceDetailDialog({
                       {formatDate(
                         invoice.dueDate,
                         "full",
-                        configuration.locale,
+                        configuration.locale
                       )}
                     </span>
                   </div>
@@ -317,7 +317,7 @@ export function InvoiceDetailDialog({
                         <span className="font-medium">
                           {formatCurrency(
                             invoice.allocatedAmount,
-                            invoice.currency,
+                            invoice.currency
                           )}
                         </span>
                       </div>
@@ -353,7 +353,7 @@ export function InvoiceDetailDialog({
                               {formatDate(
                                 alloc.payment.date,
                                 "full",
-                                configuration.locale,
+                                configuration.locale
                               )}
                             </div>
                             {alloc.payment.reference && (
@@ -365,7 +365,7 @@ export function InvoiceDetailDialog({
                           <div className="font-semibold text-green-600 dark:text-green-400">
                             {formatCurrency(
                               alloc.allocatedAmount,
-                              invoice.currency,
+                              invoice.currency
                             )}
                           </div>
                         </div>

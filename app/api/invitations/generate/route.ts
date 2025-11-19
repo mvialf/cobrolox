@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
     if (!session?.user) {
       return NextResponse.json(
         { error: "No autenticado. Inicia sesión primero." },
-        { status: 401 },
+        { status: 401 }
       );
     }
 
@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
           error:
             "No autorizado. Solo administradores pueden generar invitaciones.",
         },
-        { status: 403 },
+        { status: 403 }
       );
     }
 
@@ -57,7 +57,7 @@ export async function POST(request: NextRequest) {
     if (!validation.success) {
       return NextResponse.json(
         { error: validation.error.errors[0].message },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -71,7 +71,7 @@ export async function POST(request: NextRequest) {
     if (existingUser) {
       return NextResponse.json(
         { error: "Este email ya tiene una cuenta en el sistema." },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -103,7 +103,7 @@ export async function POST(request: NextRequest) {
           message:
             "Ya existe una invitación válida para este email. Se retornó la invitación existente.",
         },
-        { status: 200 },
+        { status: 200 }
       );
     }
 
@@ -139,13 +139,13 @@ export async function POST(request: NextRequest) {
         },
         message: "Invitación generada exitosamente.",
       },
-      { status: 201 },
+      { status: 201 }
     );
   } catch (error) {
     console.error("Error generating invitation:", error);
     return NextResponse.json(
       { error: "Error al generar la invitación. Intenta nuevamente." },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

@@ -151,7 +151,7 @@ export function calculateOrderTotals(order: OrderWithItems): OrderTotals {
  * Group order items by product category
  */
 export function groupItemsByCategory(
-  items: OrderItem[],
+  items: OrderItem[]
 ): Record<string, OrderItem[]> {
   return items.reduce(
     (acc, item) => {
@@ -162,7 +162,7 @@ export function groupItemsByCategory(
       acc[category].push(item);
       return acc;
     },
-    {} as Record<string, OrderItem[]>,
+    {} as Record<string, OrderItem[]>
   );
 }
 ```

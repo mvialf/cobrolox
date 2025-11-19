@@ -26,7 +26,7 @@ export async function GET() {
     console.error("Error al obtener lista de clientes:", error);
     return NextResponse.json(
       { error: "Error al obtener lista de clientes" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

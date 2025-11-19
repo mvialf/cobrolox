@@ -20,7 +20,7 @@ describe("Card", () => {
       render(
         <Card>
           <div data-testid="child">Child content</div>
-        </Card>,
+        </Card>
       );
       expect(screen.getByTestId("child")).toBeInTheDocument();
     });
@@ -36,7 +36,7 @@ describe("Card", () => {
       render(
         <Card className="custom-class" data-testid="card">
           Content
-        </Card>,
+        </Card>
       );
       const card = screen.getByTestId("card");
       expect(card).toHaveClass("custom-class");
@@ -108,7 +108,7 @@ describe("Card", () => {
       render(
         <CardContent>
           <p data-testid="paragraph">Paragraph content</p>
-        </CardContent>,
+        </CardContent>
       );
       expect(screen.getByTestId("paragraph")).toBeInTheDocument();
     });
@@ -141,14 +141,14 @@ describe("Card", () => {
           <CardFooter>
             <button>Action</button>
           </CardFooter>
-        </Card>,
+        </Card>
       );
 
       expect(screen.getByText("Card Title")).toBeInTheDocument();
       expect(screen.getByText("Card Description")).toBeInTheDocument();
       expect(screen.getByText("Main content here")).toBeInTheDocument();
       expect(
-        screen.getByRole("button", { name: /action/i }),
+        screen.getByRole("button", { name: /action/i })
       ).toBeInTheDocument();
     });
 
@@ -159,7 +159,7 @@ describe("Card", () => {
             <CardTitle>Only Title</CardTitle>
           </CardHeader>
           <CardContent>Content without footer</CardContent>
-        </Card>,
+        </Card>
       );
 
       expect(screen.getByText("Only Title")).toBeInTheDocument();
@@ -170,7 +170,7 @@ describe("Card", () => {
       render(
         <Card>
           <CardContent>Direct content</CardContent>
-        </Card>,
+        </Card>
       );
 
       expect(screen.getByText("Direct content")).toBeInTheDocument();

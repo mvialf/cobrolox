@@ -33,11 +33,11 @@ export async function GET(req: NextRequest) {
 
     if (currentUser?.role !== "admin") {
       logger.warn(
-        `Usuario ${session.user.id} intentó acceder a invitaciones sin ser admin`,
+        `Usuario ${session.user.id} intentó acceder a invitaciones sin ser admin`
       );
       return NextResponse.json(
         { error: "Solo administradores pueden ver invitaciones" },
-        { status: 403 },
+        { status: 403 }
       );
     }
 
@@ -61,7 +61,7 @@ export async function GET(req: NextRequest) {
     logger.error({ err: error }, "Error al obtener invitaciones");
     return NextResponse.json(
       { error: "Error al obtener invitaciones" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }
@@ -95,11 +95,11 @@ export async function POST(req: NextRequest) {
 
     if (currentUser?.role !== "admin") {
       logger.warn(
-        `Usuario ${currentUser?.email} intentó crear invitación sin ser admin`,
+        `Usuario ${currentUser?.email} intentó crear invitación sin ser admin`
       );
       return NextResponse.json(
         { error: "Solo administradores pueden crear invitaciones" },
-        { status: 403 },
+        { status: 403 }
       );
     }
 
@@ -113,7 +113,7 @@ export async function POST(req: NextRequest) {
           error: "Datos inválidos",
           details: validation.error.errors,
         },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -128,7 +128,7 @@ export async function POST(req: NextRequest) {
       logger.warn(`Intento de invitar usuario existente: ${email}`);
       return NextResponse.json(
         { error: "Ya existe un usuario con ese correo electrónico" },
-        { status: 409 },
+        { status: 409 }
       );
     }
 
@@ -148,7 +148,7 @@ export async function POST(req: NextRequest) {
       logger.warn(`Invitación pendiente ya existe para: ${email}`);
       return NextResponse.json(
         { error: "Ya existe una invitación pendiente para este correo" },
-        { status: 409 },
+        { status: 409 }
       );
     }
 
@@ -176,7 +176,7 @@ export async function POST(req: NextRequest) {
     });
 
     logger.info(
-      `Admin ${currentUser.email} creó invitación para ${email} con rol ${role}`,
+      `Admin ${currentUser.email} creó invitación para ${email} con rol ${role}`
     );
 
     return NextResponse.json(invitation, { status: 201 });
@@ -184,7 +184,7 @@ export async function POST(req: NextRequest) {
     logger.error({ err: error }, "Error al crear invitación");
     return NextResponse.json(
       { error: "Error al crear invitación" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

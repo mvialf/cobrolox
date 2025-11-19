@@ -142,7 +142,7 @@ export function calculateProjectBalance(project: {
   const totalPaid =
     project.allocations?.reduce(
       (sum, alloc) => sum + alloc.allocatedAmount,
-      0,
+      0
     ) || 0;
 
   // 2. Calcular balance restante
@@ -246,11 +246,11 @@ const result = calculateProjectBalance({
 ```typescript
 export function calculateFIFO(
   projects: ProjectWithBalance[],
-  totalAmount: number,
+  totalAmount: number
 ): Array<{ projectId: string; allocatedAmount: number }> {
   // 1. Ordenar proyectos por fecha de creación (más antiguo primero)
   const sorted = [...projects].sort(
-    (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+    (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
   );
 
   let remaining = totalAmount;
@@ -697,7 +697,7 @@ const receivedTotal = body.total;
 if (Math.abs(expectedTotal - receivedTotal) >= 0.01) {
   return NextResponse.json(
     { error: "El total calculado no coincide con el esperado" },
-    { status: 400 },
+    { status: 400 }
   );
 }
 ```
@@ -824,7 +824,7 @@ Math.max(0, -100000) = 0 ✅
 ```typescript
 export function validateAllocationsSum(
   totalAmount: number,
-  allocations: Array<{ allocatedAmount: number }>,
+  allocations: Array<{ allocatedAmount: number }>
 ): boolean {
   // Sumar todos los allocatedAmount
   const sum = allocations.reduce((acc, a) => acc + a.allocatedAmount, 0);
@@ -905,7 +905,7 @@ validateAllocationsSum(1000, [
 // payment-to-customer-form.tsx
 const totalAllocated = allocations.reduce(
   (sum, a) => sum + a.allocatedAmount,
-  0,
+  0
 );
 const difference = watchedAmount - totalAllocated;
 const isValidSum = Math.abs(difference) < 0.01;
@@ -939,7 +939,7 @@ export const paymentToCustomerSchema = basePaymentSchema
       // Sumar allocations
       const totalAllocated = data.allocations.reduce(
         (sum, a) => sum + a.allocatedAmount,
-        0,
+        0
       );
 
       // Validar con tolerancia
@@ -949,7 +949,7 @@ export const paymentToCustomerSchema = basePaymentSchema
       message:
         "La suma de los montos asignados debe ser igual al monto total del pago",
       path: ["allocations"],
-    },
+    }
   );
 ```
 
@@ -1014,7 +1014,7 @@ onSubmit({ projectId: "P1", amount: 250000 });
 // Validar que la suma de allocations sea exacta
 const totalAllocated = allocations.reduce(
   (sum: number, a: AllocationInput) => sum + a.allocatedAmount,
-  0,
+  0
 );
 
 if (Math.abs(totalAllocated - amount) >= 0.01) {
@@ -1023,7 +1023,7 @@ if (Math.abs(totalAllocated - amount) >= 0.01) {
       error:
         "La suma de los montos asignados debe ser igual al monto total del pago",
     },
-    { status: 400 },
+    { status: 400 }
   );
 }
 ```
@@ -1056,7 +1056,7 @@ for (const allocation of allocations) {
   if (!project) {
     return NextResponse.json(
       { error: `Proyecto ${allocation.projectId} no encontrado` },
-      { status: 404 },
+      { status: 404 }
     );
   }
 
@@ -1072,7 +1072,7 @@ for (const allocation of allocations) {
       {
         error: `El monto asignado al proyecto ${project.name} excede su balance pendiente`,
       },
-      { status: 400 },
+      { status: 400 }
     );
   }
 }
@@ -1184,7 +1184,7 @@ Funciones para convertir números en strings legibles.
 ```typescript
 export function formatCurrency(
   amount: number,
-  currency: string = "CLP",
+  currency: string = "CLP"
 ): string {
   // Configuración por moneda
   const currencyConfig: Record<string, { locale: string; decimals: number }> = {

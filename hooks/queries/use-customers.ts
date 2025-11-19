@@ -346,7 +346,7 @@ export function useDeleteCustomer() {
             ...old,
             customers: old.customers.filter((c) => c.id !== id),
           };
-        },
+        }
       );
 
       return { previousData };

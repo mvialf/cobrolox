@@ -75,7 +75,7 @@ export const paymentAllocationSchema = z.object({
     .positive("El monto debe ser mayor a 0")
     .multipleOf(
       FINANCIAL.DECIMAL_PRECISION,
-      "El monto debe tener máximo 2 decimales",
+      "El monto debe tener máximo 2 decimales"
     ),
 });
 
@@ -127,7 +127,7 @@ export const paymentToInvoiceSchema = z.object({
     .positive("El monto debe ser mayor a 0")
     .multipleOf(
       FINANCIAL.DECIMAL_PRECISION,
-      "El monto debe tener máximo 2 decimales",
+      "El monto debe tener máximo 2 decimales"
     ),
 
   // Fecha del pago
@@ -229,7 +229,7 @@ export type InvoiceWithBalanceSerialized = Omit<
  * ```
  */
 export function parseInvoicesWithBalance(
-  invoices: InvoiceWithBalanceSerialized[],
+  invoices: InvoiceWithBalanceSerialized[]
 ): InvoiceWithBalance[] {
   return invoices.map((inv) => ({
     ...inv,
@@ -245,7 +245,7 @@ export function parseInvoicesWithBalance(
  */
 export function paymentToInvoiceToPayload(
   values: PaymentToInvoiceFormValues,
-  invoice: InvoiceWithBalance,
+  invoice: InvoiceWithBalance
 ): CreatePaymentPayload {
   return {
     type: "Invoice", // ← Tipo 1:1 (pago directo a factura)
@@ -297,7 +297,7 @@ export const paymentToCustomerSchema = z
       .positive("El monto debe ser mayor a 0")
       .multipleOf(
         FINANCIAL.DECIMAL_PRECISION,
-        "El monto debe tener máximo 2 decimales",
+        "El monto debe tener máximo 2 decimales"
       ),
 
     // Fecha del pago
@@ -339,9 +339,9 @@ export const paymentToCustomerSchema = z
             .nonnegative("El monto asignado no puede ser negativo")
             .multipleOf(
               FINANCIAL.DECIMAL_PRECISION,
-              "El monto debe tener máximo 2 decimales",
+              "El monto debe tener máximo 2 decimales"
             ),
-        }),
+        })
       )
       .min(1, "Debe asignar el pago a al menos una factura")
       .refine(
@@ -350,7 +350,7 @@ export const paymentToCustomerSchema = z
           const invoiceIds = allocations.map((a) => a.invoiceId);
           return new Set(invoiceIds).size === invoiceIds.length;
         },
-        { message: "No puede asignar la misma factura dos veces" },
+        { message: "No puede asignar la misma factura dos veces" }
       )
       .refine(
         (allocations) => {
@@ -360,7 +360,7 @@ export const paymentToCustomerSchema = z
         {
           message:
             "Debe asignar el pago a al menos una factura con valor mayor a 0",
-        },
+        }
       ),
   })
   .refine(
@@ -368,7 +368,7 @@ export const paymentToCustomerSchema = z
       // Suma de allocations debe ser igual al monto total
       const totalAllocated = data.allocations.reduce(
         (sum, a) => sum + a.allocatedAmount,
-        0,
+        0
       );
       return Math.abs(totalAllocated - data.amount) < FINANCIAL.TOLERANCE;
     },
@@ -376,7 +376,7 @@ export const paymentToCustomerSchema = z
       message:
         "La suma de los montos asignados debe ser igual al monto total del pago",
       path: ["allocations"],
-    },
+    }
   );
 
 /**
@@ -393,7 +393,7 @@ export type PaymentToCustomerFormValues = z.infer<
  */
 export function paymentToCustomerToPayload(
   values: PaymentToCustomerFormValues,
-  currency: string, // ← Derivado de las facturas (todas deben tener la misma moneda)
+  currency: string // ← Derivado de las facturas (todas deben tener la misma moneda)
 ): CreatePaymentPayload {
   return {
     type: "Customer", // ← Tipo 1:N (distribución a múltiples facturas)

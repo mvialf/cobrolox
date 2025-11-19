@@ -36,13 +36,13 @@ async function main() {
   // 2. Mostrar balances actuales (almacenados)
   console.log("📊 BALANCES ALMACENADOS (potencialmente incorrectos):");
   console.log(
-    `   Total:   $${Number(customer.balanceTotal).toLocaleString("es-CL")}`,
+    `   Total:   $${Number(customer.balanceTotal).toLocaleString("es-CL")}`
   );
   console.log(
-    `   Vigente: $${Number(customer.balanceVigente).toLocaleString("es-CL")}`,
+    `   Vigente: $${Number(customer.balanceVigente).toLocaleString("es-CL")}`
   );
   console.log(
-    `   Vencido: $${Number(customer.balanceVencido).toLocaleString("es-CL")}`,
+    `   Vencido: $${Number(customer.balanceVencido).toLocaleString("es-CL")}`
   );
   console.log();
 
@@ -52,13 +52,13 @@ async function main() {
 
   console.log("✓ BALANCES CALCULADOS (correctos):");
   console.log(
-    `   Total:   $${calculated.balanceTotal.toLocaleString("es-CL")}`,
+    `   Total:   $${calculated.balanceTotal.toLocaleString("es-CL")}`
   );
   console.log(
-    `   Vigente: $${calculated.balanceVigente.toLocaleString("es-CL")}`,
+    `   Vigente: $${calculated.balanceVigente.toLocaleString("es-CL")}`
   );
   console.log(
-    `   Vencido: $${calculated.balanceVencido.toLocaleString("es-CL")}`,
+    `   Vencido: $${calculated.balanceVencido.toLocaleString("es-CL")}`
   );
   console.log();
 
@@ -87,13 +87,13 @@ async function main() {
 
     console.log("✅ BALANCES CORREGIDOS:");
     console.log(
-      `   Total:   $${Number(customerAfter!.balanceTotal).toLocaleString("es-CL")}`,
+      `   Total:   $${Number(customerAfter!.balanceTotal).toLocaleString("es-CL")}`
     );
     console.log(
-      `   Vigente: $${Number(customerAfter!.balanceVigente).toLocaleString("es-CL")}`,
+      `   Vigente: $${Number(customerAfter!.balanceVigente).toLocaleString("es-CL")}`
     );
     console.log(
-      `   Vencido: $${Number(customerAfter!.balanceVencido).toLocaleString("es-CL")}`,
+      `   Vencido: $${Number(customerAfter!.balanceVencido).toLocaleString("es-CL")}`
     );
     console.log();
     console.log("✅ Corrección completada exitosamente");

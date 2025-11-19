@@ -57,7 +57,7 @@ interface ResetUserPasswordDialogProps {
 export function ResetUserPasswordDialog() {
   const [open, setOpen] = useState(false);
   const [userData, setUserData] = useState<ResetUserPasswordDialogProps | null>(
-    null,
+    null
   );
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [generatedPassword, setGeneratedPassword] = useState("");
@@ -155,7 +155,7 @@ export function ResetUserPasswordDialog() {
       }
 
       toast.success(
-        `Contraseña reseteada exitosamente para ${userData.userName}`,
+        `Contraseña reseteada exitosamente para ${userData.userName}`
       );
       toast.info("Usuario deberá hacer login nuevamente", {
         description: "Todas sus sesiones han sido cerradas",
@@ -166,7 +166,7 @@ export function ResetUserPasswordDialog() {
       setGeneratedPassword("");
     } catch (error) {
       toast.error(
-        error instanceof Error ? error.message : "Error al resetear contraseña",
+        error instanceof Error ? error.message : "Error al resetear contraseña"
       );
     } finally {
       setIsSubmitting(false);

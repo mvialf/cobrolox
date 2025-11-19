@@ -94,7 +94,7 @@ if (projectsUsingStatus > 0) {
     {
       error: `No se puede eliminar. Hay ${projectsUsingStatus} proyectos usando este estado`,
     },
-    { status: 400 },
+    { status: 400 }
   );
 }
 ```
@@ -127,8 +127,8 @@ await prisma.$transaction(
     prisma.projectStatus.update({
       where: { id },
       data: { order },
-    }),
-  ),
+    })
+  )
 );
 ```
 

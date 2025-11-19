@@ -78,7 +78,7 @@ export function InvoiceForm({
     if (issueDate && termsDay !== undefined) {
       // Calcular dueDate = issueDate + termsDay días
       const calculatedDueDate = new Date(
-        issueDate.getTime() + termsDay * 24 * 60 * 60 * 1000,
+        issueDate.getTime() + termsDay * 24 * 60 * 60 * 1000
       );
       form.setValue("dueDate", calculatedDueDate, { shouldValidate: false });
     }

@@ -28,7 +28,7 @@ test.describe("Pago a Cliente (1:N)", () => {
 
     // Esperar a que la página cargue completamente
     await expect(
-      page.getByRole("heading", { name: /pagos/i, level: 1 }),
+      page.getByRole("heading", { name: /pagos/i, level: 1 })
     ).toBeVisible();
   });
 
@@ -44,19 +44,19 @@ test.describe("Pago a Cliente (1:N)", () => {
     // Verificar que se abre el dialog
     const dialog = page.getByRole("dialog");
     await expect(
-      dialog.getByRole("heading", { name: /registrar pago a cliente/i }),
+      dialog.getByRole("heading", { name: /registrar pago a cliente/i })
     ).toBeVisible();
 
     // Verificar descripción del dialog
     await expect(
       dialog.getByText(
-        /registre un pago y distribúyalo entre múltiples proyectos/i,
-      ),
+        /registre un pago y distribúyalo entre múltiples proyectos/i
+      )
     ).toBeVisible();
 
     // Verificar campos iniciales
     await expect(
-      dialog.getByRole("combobox", { name: /cliente/i }),
+      dialog.getByRole("combobox", { name: /cliente/i })
     ).toBeVisible();
     await expect(dialog.getByLabel(/monto total del pago/i)).toBeVisible();
     await expect(dialog.getByLabel(/fecha del pago/i)).toBeVisible();
@@ -99,7 +99,7 @@ test.describe("Pago a Cliente (1:N)", () => {
 
     if (optionsCount === 0) {
       console.log(
-        "⚠️  No se encontraron clientes - verifica que existan clientes en la DB",
+        "⚠️  No se encontraron clientes - verifica que existan clientes en la DB"
       );
       return;
     }
@@ -141,7 +141,7 @@ test.describe("Pago a Cliente (1:N)", () => {
 
       const dialog = page.getByRole("dialog");
       await expect(
-        dialog.getByRole("heading", { name: /registrar pago a cliente/i }),
+        dialog.getByRole("heading", { name: /registrar pago a cliente/i })
       ).toBeVisible();
 
       // PASO 2: Seleccionar cliente
@@ -176,7 +176,7 @@ test.describe("Pago a Cliente (1:N)", () => {
 
       if (!hasProjects) {
         console.log(
-          "⚠️  El cliente no tiene proyectos con balance - skipping test",
+          "⚠️  El cliente no tiene proyectos con balance - skipping test"
         );
         return;
       }
@@ -210,7 +210,7 @@ test.describe("Pago a Cliente (1:N)", () => {
       // PASO 7: Calcular distribución FIFO
       // Verificar que el tab FIFO está seleccionado por defecto
       await expect(
-        dialog.getByRole("tab", { name: /fifo automático/i }),
+        dialog.getByRole("tab", { name: /fifo automático/i })
       ).toHaveAttribute("data-state", "active");
 
       // Click en botón "Calcular Distribución FIFO"
@@ -228,13 +228,13 @@ test.describe("Pago a Cliente (1:N)", () => {
 
       // Verificar headers de la tabla
       await expect(
-        dialog.getByRole("columnheader", { name: /proyecto/i }),
+        dialog.getByRole("columnheader", { name: /proyecto/i })
       ).toBeVisible();
       await expect(
-        dialog.getByRole("columnheader", { name: /balance/i }),
+        dialog.getByRole("columnheader", { name: /balance/i })
       ).toBeVisible();
       await expect(
-        dialog.getByRole("columnheader", { name: /monto asignado/i }),
+        dialog.getByRole("columnheader", { name: /monto asignado/i })
       ).toBeVisible();
 
       // PASO 9: Verificar validación visual (debe estar en verde)
@@ -249,7 +249,7 @@ test.describe("Pago a Cliente (1:N)", () => {
       const notesTextarea = dialog.getByLabel(/notas/i);
       if (await notesTextarea.isVisible()) {
         await notesTextarea.fill(
-          "Pago distribuido automáticamente con FIFO - Test E2E Playwright",
+          "Pago distribuido automáticamente con FIFO - Test E2E Playwright"
         );
       }
 
@@ -273,7 +273,7 @@ test.describe("Pago a Cliente (1:N)", () => {
 
       // Verificar toast de éxito
       await expect(
-        page.locator("text=/pago registrado|éxito|exitoso|distribuido/i"),
+        page.locator("text=/pago registrado|éxito|exitoso|distribuido/i")
       ).toBeVisible({
         timeout: 5000,
       });
@@ -423,7 +423,7 @@ test.describe("Pago a Cliente (1:N)", () => {
 
       // Buscar el card de validación (debería estar verde si la suma es correcta)
       const validationCard = dialog.locator(
-        ".border-green-500, .border-red-500",
+        ".border-green-500, .border-red-500"
       );
       await expect(validationCard).toBeVisible();
 
@@ -445,7 +445,7 @@ test.describe("Pago a Cliente (1:N)", () => {
 
       if (!isValid) {
         console.log(
-          "⚠️  La suma de allocations no es válida - test parcial completado",
+          "⚠️  La suma de allocations no es válida - test parcial completado"
         );
         return;
       }
@@ -460,7 +460,7 @@ test.describe("Pago a Cliente (1:N)", () => {
       await expect(dialog).not.toBeVisible({ timeout: 10000 });
 
       await expect(
-        page.locator("text=/pago registrado|éxito|exitoso|distribuido/i"),
+        page.locator("text=/pago registrado|éxito|exitoso|distribuido/i")
       ).toBeVisible({
         timeout: 5000,
       });
@@ -541,7 +541,7 @@ test.describe("Pago a Cliente (1:N)", () => {
 
       // Verificar que muestra mensaje de diferencia
       await expect(
-        dialog.locator("text=/falta asignar|sobrepasado/i"),
+        dialog.locator("text=/falta asignar|sobrepasado/i")
       ).toBeVisible();
 
       // Verificar que el botón submit está DESHABILITADO

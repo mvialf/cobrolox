@@ -78,13 +78,13 @@ export interface UseRutInputReturn {
  * ```
  */
 export function useRutInput(
-  options: UseRutInputOptions = {},
+  options: UseRutInputOptions = {}
 ): UseRutInputReturn {
   const { initialValue = "", onChange, formatOnChange = true } = options;
 
   // Estado interno: siempre guardamos el valor formateado para display
   const [formattedValue, setFormattedValue] = useState(() =>
-    initialValue ? rutHelpers.format(initialValue) : "",
+    initialValue ? rutHelpers.format(initialValue) : ""
   );
 
   // Valor limpio (sin puntos ni guión)
@@ -122,7 +122,7 @@ export function useRutInput(
         }
       }
     },
-    [formatOnChange, onChange],
+    [formatOnChange, onChange]
   );
 
   /**

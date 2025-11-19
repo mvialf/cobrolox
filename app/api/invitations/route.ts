@@ -22,7 +22,7 @@ export async function GET(request: NextRequest) {
     if (!session?.user) {
       return NextResponse.json(
         { error: "No autenticado. Inicia sesión primero." },
-        { status: 401 },
+        { status: 401 }
       );
     }
 
@@ -37,7 +37,7 @@ export async function GET(request: NextRequest) {
         {
           error: "No autorizado. Solo administradores pueden ver invitaciones.",
         },
-        { status: 403 },
+        { status: 403 }
       );
     }
 
@@ -83,13 +83,13 @@ export async function GET(request: NextRequest) {
         expired: invitationsWithMetadata.filter((i) => i.status === "expired")
           .length,
       },
-      { status: 200 },
+      { status: 200 }
     );
   } catch (error) {
     console.error("Error fetching invitations:", error);
     return NextResponse.json(
       { error: "Error al obtener las invitaciones. Intenta nuevamente." },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

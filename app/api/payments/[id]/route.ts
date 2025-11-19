@@ -14,7 +14,7 @@ import { updateInvoicesBalance } from "@/lib/business-logic/invoice-balance";
  */
 export async function PUT(
   request: Request,
-  { params }: { params: Promise<{ id: string }> },
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { id } = await params;
@@ -32,7 +32,7 @@ export async function PUT(
     if (!existingPayment) {
       return NextResponse.json(
         { error: "Pago no encontrado" },
-        { status: 404 },
+        { status: 404 }
       );
     }
 
@@ -46,7 +46,7 @@ export async function PUT(
           error:
             "No se puede editar un pago con cuotas. Para modificar, debe cancelar el pago y crear uno nuevo.",
         },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -57,7 +57,7 @@ export async function PUT(
     if (amount !== undefined && (typeof amount !== "number" || amount <= 0)) {
       return NextResponse.json(
         { error: "El monto debe ser mayor a 0" },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -113,7 +113,7 @@ export async function PUT(
     console.error("Error updating payment:", error);
     return NextResponse.json(
       { error: "Error al actualizar pago" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }
@@ -129,7 +129,7 @@ export async function PUT(
  */
 export async function DELETE(
   request: Request,
-  { params }: { params: Promise<{ id: string }> },
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { id } = await params;
@@ -151,7 +151,7 @@ export async function DELETE(
     if (!existingPayment) {
       return NextResponse.json(
         { error: "Pago no encontrado" },
-        { status: 404 },
+        { status: 404 }
       );
     }
 
@@ -174,13 +174,13 @@ export async function DELETE(
         message: "Pago eliminado correctamente",
         deletedPaymentId: id,
       },
-      { status: 200 },
+      { status: 200 }
     );
   } catch (error) {
     console.error("Error deleting payment:", error);
     return NextResponse.json(
       { error: "Error al eliminar pago" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

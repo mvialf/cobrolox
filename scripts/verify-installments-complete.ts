@@ -60,7 +60,7 @@ async function verifyComplete() {
 
       if (expected !== actual) {
         console.log(
-          `⚠️  ${payment.customer.razonSocial}: esperado ${expected} cuotas, encontrado ${actual}`,
+          `⚠️  ${payment.customer.razonSocial}: esperado ${expected} cuotas, encontrado ${actual}`
         );
         allCorrect = false;
       }
@@ -78,7 +78,7 @@ async function verifyComplete() {
       const paymentAmount = parseFloat(payment.amount.toString());
       const installmentsSum = payment.installments.reduce(
         (sum, inst) => sum + parseFloat(inst.amount.toString()),
-        0,
+        0
       );
 
       const difference = Math.abs(paymentAmount - installmentsSum);
@@ -86,7 +86,7 @@ async function verifyComplete() {
       if (difference > 0.01) {
         // Tolerancia de 1 centavo por redondeo
         console.log(
-          `⚠️  ${payment.customer.razonSocial}: Pago $${paymentAmount.toLocaleString("es-CL")}, Cuotas suman $${installmentsSum.toLocaleString("es-CL")} (diff: $${difference.toFixed(2)})`,
+          `⚠️  ${payment.customer.razonSocial}: Pago $${paymentAmount.toLocaleString("es-CL")}, Cuotas suman $${installmentsSum.toLocaleString("es-CL")} (diff: $${difference.toFixed(2)})`
         );
         amountCorrect = false;
       }
@@ -94,7 +94,7 @@ async function verifyComplete() {
 
     if (amountCorrect) {
       console.log(
-        "✅ La suma de cuotas coincide con el monto del pago (tolerancia de redondeo)",
+        "✅ La suma de cuotas coincide con el monto del pago (tolerancia de redondeo)"
       );
     }
 
@@ -125,7 +125,7 @@ async function verifyComplete() {
     if (examplePayment) {
       console.log(`Cliente: ${examplePayment.customer.razonSocial}`);
       console.log(
-        `Monto total: $${parseFloat(examplePayment.amount.toString()).toLocaleString("es-CL")} ${examplePayment.currency}`,
+        `Monto total: $${parseFloat(examplePayment.amount.toString()).toLocaleString("es-CL")} ${examplePayment.currency}`
       );
       console.log(`Método: ${examplePayment.paymentMethod.name}`);
       console.log(`Número de cuotas: ${examplePayment.selectedInstallments}`);
@@ -133,7 +133,7 @@ async function verifyComplete() {
 
       for (const inst of examplePayment.installments) {
         console.log(
-          `  Cuota ${inst.installmentNumber}/${examplePayment.selectedInstallments}: $${parseFloat(inst.amount.toString()).toLocaleString("es-CL")} - Vence: ${inst.dueDate.toLocaleDateString("es-CL")} - ${inst.status.toUpperCase()}`,
+          `  Cuota ${inst.installmentNumber}/${examplePayment.selectedInstallments}: $${parseFloat(inst.amount.toString()).toLocaleString("es-CL")} - Vence: ${inst.dueDate.toLocaleDateString("es-CL")} - ${inst.status.toUpperCase()}`
         );
       }
     }

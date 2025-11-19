@@ -29,7 +29,7 @@ export const GET = withLogging(async (request, logger) => {
       limit: limit ?? "unlimited",
       search: search || undefined,
     },
-    "Fetching customers with filters",
+    "Fetching customers with filters"
   );
 
   const skip = limit ? (page - 1) * limit : 0;
@@ -67,7 +67,7 @@ export const GET = withLogging(async (request, logger) => {
         total,
         page,
       },
-      "Customers fetched successfully",
+      "Customers fetched successfully"
     );
 
     return NextResponse.json({
@@ -83,7 +83,7 @@ export const GET = withLogging(async (request, logger) => {
     logger.error({ err: error }, "Error fetching customers");
     return NextResponse.json(
       { error: "Error al obtener clientes" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 });
@@ -136,7 +136,7 @@ export const POST = withLogging(async (request, logger) => {
       customerLogger.warn("Missing required fields");
       return NextResponse.json(
         { error: "Faltan campos requeridos" },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -149,7 +149,7 @@ export const POST = withLogging(async (request, logger) => {
       customerLogger.warn({ rut }, "RUT already exists");
       return NextResponse.json(
         { error: "Ya existe un cliente con ese RUT" },
-        { status: 409 },
+        { status: 409 }
       );
     }
 
@@ -177,7 +177,7 @@ export const POST = withLogging(async (request, logger) => {
       {
         customerId: customer.id,
       },
-      "Customer created successfully",
+      "Customer created successfully"
     );
 
     return NextResponse.json(customer, { status: 201 });
@@ -185,7 +185,7 @@ export const POST = withLogging(async (request, logger) => {
     customerLogger.error({ err: error }, "Error creating customer");
     return NextResponse.json(
       { error: "Error al crear cliente" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 });

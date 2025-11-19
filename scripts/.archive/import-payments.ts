@@ -79,7 +79,7 @@ async function importPayments() {
     }
 
     console.log(
-      `✅ Mapeo oldProjectId → projectNumber: ${oldProjectIdToNumberMap.size}`,
+      `✅ Mapeo oldProjectId → projectNumber: ${oldProjectIdToNumberMap.size}`
     );
 
     // Leer proyectos nuevos de DB
@@ -265,7 +265,7 @@ async function importPayments() {
 
     // Pedir confirmación
     console.log(
-      "\n⚠️  ¿Deseas continuar con la importación? (comentar esta línea si sí)",
+      "\n⚠️  ¿Deseas continuar con la importación? (comentar esta línea si sí)"
     );
     // return
 

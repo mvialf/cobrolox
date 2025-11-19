@@ -186,5 +186,5 @@ logger.info(
     env: process.env.NODE_ENV || "development",
     prettyPrint: process.env.NODE_ENV !== "production",
   },
-  "Logger initialized",
+  "Logger initialized"
 );

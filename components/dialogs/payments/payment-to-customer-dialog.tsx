@@ -47,7 +47,7 @@ export function PaymentToCustomerDialog({
 
   const handleSubmit = async (
     values: PaymentToCustomerFormValues,
-    currency: string,
+    currency: string
   ) => {
     try {
       // Convertir form values a payload del API

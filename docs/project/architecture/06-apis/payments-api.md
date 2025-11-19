@@ -104,7 +104,7 @@ export const GET = withLogging(async (request, logger) => {
 
   logger.info(
     { page, limit, customerId, projectId, startDate, endDate },
-    "Listing payments",
+    "Listing payments"
   );
 
   // Build filters
@@ -248,7 +248,7 @@ export const paymentToProjectSchema = z.object({
       z.object({
         projectId: z.string().min(1),
         allocatedAmount: z.number().positive(),
-      }),
+      })
     )
     .length(1, "Pago a proyecto debe tener exactamente 1 allocation"),
 });
@@ -261,7 +261,7 @@ export const paymentToCustomerSchema = z.object({
       z.object({
         projectId: z.string().min(1),
         allocatedAmount: z.number().positive(),
-      }),
+      })
     )
     .min(1, "Pago a cliente debe tener al menos 1 allocation"),
 });
@@ -273,13 +273,13 @@ export const paymentToCustomerSchema = z.object({
 // 1. Suma de allocations === amount (tolerancia 0.01)
 const totalAllocated = allocations.reduce(
   (sum, a) => sum + a.allocatedAmount,
-  0,
+  0
 );
 
 if (Math.abs(totalAllocated - amount) > 0.01) {
   return NextResponse.json(
     { error: "La suma de allocations debe ser igual al monto del pago" },
-    { status: 400 },
+    { status: 400 }
   );
 }
 
@@ -295,14 +295,14 @@ const uniqueCustomers = new Set(projects.map((p) => p.customerId));
 if (uniqueCustomers.size > 1) {
   return NextResponse.json(
     { error: "Todos los proyectos deben pertenecer al mismo cliente" },
-    { status: 400 },
+    { status: 400 }
   );
 }
 
 if (!uniqueCustomers.has(customerId)) {
   return NextResponse.json(
     { error: "Los proyectos no pertenecen al cliente especificado" },
-    { status: 400 },
+    { status: 400 }
   );
 }
 
@@ -311,14 +311,14 @@ const uniqueCurrencies = new Set(projects.map((p) => p.currency));
 if (uniqueCurrencies.size > 1) {
   return NextResponse.json(
     { error: "Todos los proyectos deben tener la misma moneda" },
-    { status: 400 },
+    { status: 400 }
   );
 }
 
 if (![...uniqueCurrencies][0] === currency) {
   return NextResponse.json(
     { error: "La moneda del pago debe coincidir con la de los proyectos" },
-    { status: 400 },
+    { status: 400 }
   );
 }
 
@@ -328,7 +328,7 @@ const uniqueIds = new Set(projectIds);
 if (uniqueIds.size !== projectIds.length) {
   return NextResponse.json(
     { error: "No se permiten proyectos duplicados en allocations" },
-    { status: 400 },
+    { status: 400 }
   );
 }
 ```
@@ -372,7 +372,7 @@ export const POST = withLogging(async (request, logger) => {
 
   logger.info(
     { type: body.type, customerId: body.customerId, amount: body.amount },
-    "Creating payment",
+    "Creating payment"
   );
 
   try {
@@ -475,7 +475,7 @@ export const POST = withLogging(async (request, logger) => {
         allocationsCount: payment.allocations.length,
         installmentsCount: payment.installments.length,
       },
-      "Payment created",
+      "Payment created"
     );
 
     return NextResponse.json(payment, { status: 201 });
@@ -484,7 +484,7 @@ export const POST = withLogging(async (request, logger) => {
       logger.warn({ errors: error.errors }, "Validation failed");
       return NextResponse.json(
         { error: "Validation failed", details: error.errors },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -623,7 +623,7 @@ export const GET = withLogging(async (request, logger) => {
     .map((project) => {
       const totalPaid = project.paymentAllocations.reduce(
         (sum, a) => sum + Number(a.allocatedAmount),
-        0,
+        0
       );
       const balance = Number(project.total) - totalPaid;
 
@@ -777,11 +777,11 @@ Sistema crea:
 // lib/business-logic/payment-fifo.ts
 export function allocatePaymentFIFO(
   amount: number,
-  projects: Array<{ id: string; balance: number; date: Date }>,
+  projects: Array<{ id: string; balance: number; date: Date }>
 ): Array<{ projectId: string; allocatedAmount: number }> {
   // Ordenar proyectos por fecha (más viejos primero)
   const sorted = [...projects].sort(
-    (a, b) => a.date.getTime() - b.date.getTime(),
+    (a, b) => a.date.getTime() - b.date.getTime()
   );
 
   const allocations: Array<{ projectId: string; allocatedAmount: number }> = [];

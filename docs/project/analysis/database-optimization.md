@@ -520,7 +520,7 @@ CREATE INDEX idx_allocation_project_payment
 export async function getProjectsCursor(
   cursor: string | null,
   limit: number = 10,
-  where: ProjectWhereInput = {},
+  where: ProjectWhereInput = {}
 ) {
   const projects = await prisma.project.findMany({
     where,

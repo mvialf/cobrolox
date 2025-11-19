@@ -258,7 +258,7 @@ const buttonVariants = cva(
       },
       // ...
     },
-  },
+  }
 );
 ```
 

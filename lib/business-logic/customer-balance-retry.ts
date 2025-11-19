@@ -43,7 +43,7 @@ export interface RecalculateBalancesOptions {
 export async function recalculateCustomerBalancesWithRetry(
   customerId: string,
   logger: RetryLogger,
-  options: RecalculateBalancesOptions = {},
+  options: RecalculateBalancesOptions = {}
 ): Promise<boolean> {
   const { maxRetries = 3, baseDelayMs = 1000 } = options;
 
@@ -54,7 +54,7 @@ export async function recalculateCustomerBalancesWithRetry(
       if (attempt > 1) {
         logger.debug(
           { customerId, attempt },
-          `Customer balances recalculated successfully after ${attempt} attempts`,
+          `Customer balances recalculated successfully after ${attempt} attempts`
         );
       } else {
         logger.debug({ customerId }, "Customer balances recalculated");
@@ -72,7 +72,7 @@ export async function recalculateCustomerBalancesWithRetry(
             customerId,
             attempts: maxRetries,
           },
-          "❌ CRITICAL: Failed to recalculate customer balances after all retries. Customer balance data may be INCONSISTENT.",
+          "❌ CRITICAL: Failed to recalculate customer balances after all retries. Customer balance data may be INCONSISTENT."
         );
 
         // Enviar alertas por todos los canales configurados
@@ -98,7 +98,7 @@ export async function recalculateCustomerBalancesWithRetry(
           attempt,
           nextRetryInMs: delayMs,
         },
-        `Failed to recalculate customer balances, retrying in ${delayMs}ms... (attempt ${attempt}/${maxRetries})`,
+        `Failed to recalculate customer balances, retrying in ${delayMs}ms... (attempt ${attempt}/${maxRetries})`
       );
 
       // Esperar antes del siguiente intento

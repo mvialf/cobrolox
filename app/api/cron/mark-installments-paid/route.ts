@@ -41,7 +41,7 @@ export async function POST(request: Request) {
       cronLogger.error("CRON_SECRET is not configured");
       return NextResponse.json(
         { error: "CRON_SECRET no está configurado en el servidor" },
-        { status: 500 },
+        { status: 500 }
       );
     }
 
@@ -49,13 +49,13 @@ export async function POST(request: Request) {
     if (authHeader !== `Bearer ${cronSecret}`) {
       cronLogger.warn(
         { authHeader: authHeader ? "present" : "missing" },
-        "Unauthorized access attempt",
+        "Unauthorized access attempt"
       );
       return NextResponse.json(
         {
           error: "No autorizado. Este endpoint es solo para Vercel Cron Jobs.",
         },
-        { status: 401 },
+        { status: 401 }
       );
     }
 
@@ -67,7 +67,7 @@ export async function POST(request: Request) {
 
     cronLogger.debug(
       { today: today.toISOString() },
-      "Fetching pending installments",
+      "Fetching pending installments"
     );
 
     // Buscar todas las cuotas pendientes cuya fecha de vencimiento ya pasó o es hoy
@@ -100,7 +100,7 @@ export async function POST(request: Request) {
 
     cronLogger.info(
       { found: installmentsToPay.length },
-      "Pending installments found",
+      "Pending installments found"
     );
 
     // Si no hay cuotas para marcar como pagadas
@@ -131,7 +131,7 @@ export async function POST(request: Request) {
         acc[customerId].total += Number(i.amount);
         return acc;
       },
-      {} as Record<string, { name: string; count: number; total: number }>,
+      {} as Record<string, { name: string; count: number; total: number }>
     );
 
     cronLogger.debug(
@@ -142,13 +142,13 @@ export async function POST(request: Request) {
           totalAmount: c.total,
         })),
       },
-      "Installments grouped by customer",
+      "Installments grouped by customer"
     );
 
     // Marcar todas las cuotas como pagadas (batch update)
     cronLogger.info(
       { count: installmentsToPay.length },
-      "Updating installments to paid status",
+      "Updating installments to paid status"
     );
     const installmentIds = installmentsToPay.map((i) => i.id);
     const result = await prisma.installment.updateMany({
@@ -177,7 +177,7 @@ export async function POST(request: Request) {
             dueDate: installment.dueDate.toISOString(),
             amount: Number(installment.amount),
           },
-          "Installment marked as paid",
+          "Installment marked as paid"
         );
       });
     }
@@ -188,11 +188,11 @@ export async function POST(request: Request) {
         customerCount: Object.keys(byCustomer).length,
         totalAmount: Object.values(byCustomer).reduce(
           (sum, c) => sum + c.total,
-          0,
+          0
         ),
         duration,
       },
-      "Cron job completed successfully",
+      "Cron job completed successfully"
     );
 
     return NextResponse.json({
@@ -215,7 +215,7 @@ export async function POST(request: Request) {
         err: error,
         duration,
       },
-      "Cron job failed",
+      "Cron job failed"
     );
 
     return NextResponse.json(
@@ -223,7 +223,7 @@ export async function POST(request: Request) {
         error: "Error al marcar cuotas como pagadas",
         details: error instanceof Error ? error.message : "Error desconocido",
       },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

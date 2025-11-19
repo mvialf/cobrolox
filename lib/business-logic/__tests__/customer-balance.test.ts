@@ -175,7 +175,7 @@ describe("customer-balance", () => {
 
     it("debe lanzar error si el customer no existe", async () => {
       await expect(
-        calculateCustomerBalances("non-existent-id"),
+        calculateCustomerBalances("non-existent-id")
       ).rejects.toThrow("Customer not found");
     });
   });
@@ -269,7 +269,7 @@ describe("customer-balance", () => {
 
     it("debe lanzar error si el customer no existe", async () => {
       await expect(
-        recalculateCustomerBalances("non-existent-id"),
+        recalculateCustomerBalances("non-existent-id")
       ).rejects.toThrow("Customer not found");
     });
   });

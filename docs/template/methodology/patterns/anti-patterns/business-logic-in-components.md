@@ -81,7 +81,7 @@ export function calculateProjectBalance(project: Project): number {
 
 export function getProjectPaymentStatus(
   balance: number,
-  total: number,
+  total: number
 ): string {
   if (balance === 0) return "Pagado";
   if (balance > total * 0.5) return "Poco Pagado";
@@ -90,7 +90,7 @@ export function getProjectPaymentStatus(
 }
 
 export function getProjectPriority(
-  project: Project,
+  project: Project
 ): "high" | "medium" | "low" {
   if (project.windowsCount > 20) return "high";
   if (project.windowsCount > 10) return "medium";
@@ -105,7 +105,7 @@ const PRIORITY_COLORS = {
 } as const;
 
 export function getPriorityColor(
-  priority: ReturnType<typeof getProjectPriority>,
+  priority: ReturnType<typeof getProjectPriority>
 ): string {
   return PRIORITY_COLORS[priority];
 }

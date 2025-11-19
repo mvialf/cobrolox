@@ -194,7 +194,7 @@ if (projectStatusId) {
   if (!status || !status.isActive) {
     return NextResponse.json(
       { error: "Estado no válido o inactivo" },
-      { status: 400 },
+      { status: 400 }
     );
   }
 }

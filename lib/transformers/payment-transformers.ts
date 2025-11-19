@@ -33,7 +33,7 @@ import type {
  */
 export function extractProjectAllocations(
   payments: PaymentFromAPI[],
-  projectId: string,
+  projectId: string
 ): PaymentAllocation[] {
   return payments.flatMap((payment) =>
     payment.allocations
@@ -51,7 +51,7 @@ export function extractProjectAllocations(
           paymentMethod: payment.paymentMethod,
           customer: payment.customer,
         },
-      })),
+      }))
   );
 }
 
@@ -70,7 +70,7 @@ export function extractProjectAllocations(
  */
 export function sortAllocationsByDate(
   allocations: PaymentAllocation[],
-  order: SortOrder = "asc",
+  order: SortOrder = "asc"
 ): PaymentAllocation[] {
   return [...allocations].sort((a, b) => {
     const dateA = new Date(a.payment.date).getTime();
@@ -100,7 +100,7 @@ export function sortAllocationsByDate(
 export function processProjectPayments(
   payments: PaymentFromAPI[],
   projectId: string,
-  order: SortOrder = "asc",
+  order: SortOrder = "asc"
 ): PaymentAllocation[] {
   const allocations = extractProjectAllocations(payments, projectId);
   return sortAllocationsByDate(allocations, order);

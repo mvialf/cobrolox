@@ -58,7 +58,7 @@ export interface InvoiceValidationResult {
  */
 export function validateInvoiceRow(
   row: InvoiceCSVRow,
-  rowIndex: number,
+  rowIndex: number
 ): InvoiceValidationResult {
   const errors: ParseError[] = [];
 

@@ -42,7 +42,7 @@ type ProjectFormData = z.infer<typeof projectFormSchema>;
 
 export default function TodoFormExamplePage() {
   const [submittedData, setSubmittedData] = useState<ProjectFormData | null>(
-    null,
+    null
   );
 
   const form = useForm<ProjectFormData>({

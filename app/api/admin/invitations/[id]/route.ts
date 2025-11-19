@@ -10,7 +10,7 @@ import { logger } from "@/lib/logger";
  */
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: Promise<{ id: string }> },
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // 1. Verificar autenticación
@@ -31,11 +31,11 @@ export async function DELETE(
 
     if (currentUser?.role !== "admin") {
       logger.warn(
-        `Usuario ${currentUser?.email} intentó cancelar invitación sin ser admin`,
+        `Usuario ${currentUser?.email} intentó cancelar invitación sin ser admin`
       );
       return NextResponse.json(
         { error: "Solo administradores pueden cancelar invitaciones" },
-        { status: 403 },
+        { status: 403 }
       );
     }
 
@@ -50,7 +50,7 @@ export async function DELETE(
       logger.warn(`Invitación no encontrada: ${id}`);
       return NextResponse.json(
         { error: "Invitación no encontrada" },
-        { status: 404 },
+        { status: 404 }
       );
     }
 
@@ -59,7 +59,7 @@ export async function DELETE(
       logger.warn(`Intento de cancelar invitación ya aceptada: ${id}`);
       return NextResponse.json(
         { error: "No se puede cancelar una invitación ya aceptada" },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -67,7 +67,7 @@ export async function DELETE(
       logger.warn(`Intento de cancelar invitación ya cancelada: ${id}`);
       return NextResponse.json(
         { error: "La invitación ya fue cancelada" },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -88,7 +88,7 @@ export async function DELETE(
     });
 
     logger.info(
-      `Admin ${currentUser.email} canceló invitación para ${invitation.email}`,
+      `Admin ${currentUser.email} canceló invitación para ${invitation.email}`
     );
 
     return NextResponse.json(updatedInvitation);
@@ -96,7 +96,7 @@ export async function DELETE(
     logger.error({ err: error }, "Error al cancelar invitación");
     return NextResponse.json(
       { error: "Error al cancelar invitación" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

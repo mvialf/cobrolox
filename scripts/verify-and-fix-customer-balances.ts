@@ -119,14 +119,14 @@ async function main() {
       // Progress log cada 10 clientes
       if (processedCount % 10 === 0) {
         console.log(
-          `⏳ Progreso: ${processedCount}/${customers.length} (${Math.round((processedCount / customers.length) * 100)}%)`,
+          `⏳ Progreso: ${processedCount}/${customers.length} (${Math.round((processedCount / customers.length) * 100)}%)`
         );
       }
     } catch (error) {
       errorCount++;
       console.error(
         `❌ Error verificando cliente ${customer.rut} (${customer.razonSocial}):`,
-        error,
+        error
       );
     }
   }
@@ -134,7 +134,7 @@ async function main() {
   console.log();
   console.log("─".repeat(80));
   console.log(
-    `✅ Verificación completada: ${processedCount} clientes procesados`,
+    `✅ Verificación completada: ${processedCount} clientes procesados`
   );
 
   if (errorCount > 0) {
@@ -152,13 +152,13 @@ async function main() {
     for (const inc of inconsistencies) {
       console.log(`❌ ${inc.rut} - ${inc.razonSocial}`);
       console.log(
-        `   Diff Total:   $${inc.diff.total.toLocaleString("es-CL")}`,
+        `   Diff Total:   $${inc.diff.total.toLocaleString("es-CL")}`
       );
       console.log(
-        `   Diff Vigente: $${inc.diff.vigente.toLocaleString("es-CL")}`,
+        `   Diff Vigente: $${inc.diff.vigente.toLocaleString("es-CL")}`
       );
       console.log(
-        `   Diff Vencido: $${inc.diff.vencido.toLocaleString("es-CL")}`,
+        `   Diff Vencido: $${inc.diff.vencido.toLocaleString("es-CL")}`
       );
       console.log();
     }
@@ -177,22 +177,22 @@ async function main() {
         fixErrorCount++;
         console.error(
           `✗ Error corrigiendo ${inc.rut} - ${inc.razonSocial}:`,
-          error,
+          error
         );
       }
     }
 
     console.log();
     console.log(
-      `✅ Correcciones completadas: ${fixedCount}/${inconsistencies.length}`,
+      `✅ Correcciones completadas: ${fixedCount}/${inconsistencies.length}`
     );
 
     if (fixErrorCount > 0) {
       console.error(
-        `❌ CRITICAL: ${fixErrorCount} clientes NO pudieron ser corregidos`,
+        `❌ CRITICAL: ${fixErrorCount} clientes NO pudieron ser corregidos`
       );
       console.error(
-        "   → Se requiere intervención manual o reintentar más tarde",
+        "   → Se requiere intervención manual o reintentar más tarde"
       );
     }
   }
@@ -235,7 +235,7 @@ async function main() {
       console.log("✓ Reporte enviado");
     } else {
       console.warn(
-        "⚠️  No se pudo enviar el reporte (verifica configuración de SLACK_WEBHOOK_URL)",
+        "⚠️  No se pudo enviar el reporte (verifica configuración de SLACK_WEBHOOK_URL)"
       );
     }
   }

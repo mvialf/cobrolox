@@ -134,7 +134,7 @@ function ActionsDropdown({ project }: { project: MockProject }) {
 
   const handleCopy = () => {
     navigator.clipboard.writeText(
-      `${project.customerName} - ${project.projectNumber}`,
+      `${project.customerName} - ${project.projectNumber}`
     );
     toast.success("Información copiada");
   };

@@ -109,7 +109,7 @@ export const GET = withLogging(async (request, logger) => {
 
   logger.info(
     { page, limit, customerId, projectStatusId, startDate, endDate },
-    "Listing projects",
+    "Listing projects"
   );
 
   // Build filters
@@ -156,7 +156,7 @@ export const GET = withLogging(async (request, logger) => {
   const projectsWithBalance = projects.map((project) => {
     const totalPaid = project.paymentAllocations.reduce(
       (sum, allocation) => sum + Number(allocation.allocatedAmount),
-      0,
+      0
     );
     const balance = Number(project.total) - totalPaid;
 
@@ -307,7 +307,7 @@ export const POST = withLogging(async (request, logger) => {
       logger.warn({ errors: error.errors }, "Validation failed");
       return NextResponse.json(
         { error: "Validation failed", details: error.errors },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -440,7 +440,7 @@ export const GET = withLogging(async (request, logger, context) => {
   // Calcular balance
   const totalPaid = project.paymentAllocations.reduce(
     (sum, allocation) => sum + Number(allocation.allocatedAmount),
-    0,
+    0
   );
   const balance = Number(project.total) - totalPaid;
 
@@ -503,7 +503,7 @@ export const PUT = withLogging(async (request, logger, context) => {
       logger.warn({ errors: error.errors }, "Validation failed");
       return NextResponse.json(
         { error: "Validation failed", details: error.errors },
-        { status: 400 },
+        { status: 400 }
       );
     }
 

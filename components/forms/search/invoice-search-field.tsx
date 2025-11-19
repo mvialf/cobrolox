@@ -94,7 +94,7 @@ export function InvoiceSearchField({
     queryFn: async () => {
       if (!preselectedInvoiceId) return null;
       const res = await fetch(
-        `/api/invoices?id=${preselectedInvoiceId}&withBalance=true`,
+        `/api/invoices?id=${preselectedInvoiceId}&withBalance=true`
       );
       if (!res.ok) return null;
       const data = await res.json();
@@ -143,7 +143,7 @@ export function InvoiceSearchField({
                   disabled={disabled || !!preselectedInvoiceId}
                   className={cn(
                     "justify-between",
-                    !field.value && "text-muted-foreground",
+                    !field.value && "text-muted-foreground"
                   )}
                 >
                   {selectedInvoice ? (
@@ -152,7 +152,7 @@ export function InvoiceSearchField({
                       {selectedInvoice.customer.razonSocial} |{" "}
                       {formatCurrency(
                         selectedInvoice.balance,
-                        selectedInvoice.currency,
+                        selectedInvoice.currency
                       )}
                     </span>
                   ) : (
@@ -189,7 +189,7 @@ export function InvoiceSearchField({
                             "mr-2 h-4 w-4",
                             invoice.id === field.value
                               ? "opacity-100"
-                              : "opacity-0",
+                              : "opacity-0"
                           )}
                         />
                         <div className="flex flex-col flex-1">

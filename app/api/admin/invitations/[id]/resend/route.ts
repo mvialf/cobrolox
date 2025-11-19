@@ -12,7 +12,7 @@ import { randomUUID } from "crypto";
  */
 export async function POST(
   req: NextRequest,
-  { params }: { params: Promise<{ id: string }> },
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // 1. Verificar autenticación
@@ -33,11 +33,11 @@ export async function POST(
 
     if (currentUser?.role !== "admin") {
       logger.warn(
-        `Usuario ${currentUser?.email} intentó reenviar invitación sin ser admin`,
+        `Usuario ${currentUser?.email} intentó reenviar invitación sin ser admin`
       );
       return NextResponse.json(
         { error: "Solo administradores pueden reenviar invitaciones" },
-        { status: 403 },
+        { status: 403 }
       );
     }
 
@@ -52,7 +52,7 @@ export async function POST(
       logger.warn(`Invitación no encontrada: ${id}`);
       return NextResponse.json(
         { error: "Invitación no encontrada" },
-        { status: 404 },
+        { status: 404 }
       );
     }
 
@@ -61,7 +61,7 @@ export async function POST(
       logger.warn(`Intento de reenviar invitación ya aceptada: ${id}`);
       return NextResponse.json(
         { error: "No se puede reenviar una invitación ya aceptada" },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -69,7 +69,7 @@ export async function POST(
       logger.warn(`Intento de reenviar invitación cancelada: ${id}`);
       return NextResponse.json(
         { error: "No se puede reenviar una invitación cancelada" },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -95,7 +95,7 @@ export async function POST(
     });
 
     logger.info(
-      `Admin ${currentUser.email} reenvió invitación para ${invitation.email}`,
+      `Admin ${currentUser.email} reenvió invitación para ${invitation.email}`
     );
 
     return NextResponse.json(updatedInvitation);
@@ -103,7 +103,7 @@ export async function POST(
     logger.error({ err: error }, "Error al reenviar invitación");
     return NextResponse.json(
       { error: "Error al reenviar invitación" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

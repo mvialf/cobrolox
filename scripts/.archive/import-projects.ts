@@ -29,7 +29,7 @@ function parseAddress(address: string): {
 
   // Buscar patrones: "depto", "dpto", "casa", "d-", etc.
   const match = address.match(
-    /^(.+?),?\s*(depto?\.?\s*\d+[\w-]*|casa\s*\d+|d[\s-]*\d+)/i,
+    /^(.+?),?\s*(depto?\.?\s*\d+[\w-]*|casa\s*\d+|d[\s-]*\d+)/i
   );
 
   if (match) {
@@ -280,7 +280,7 @@ async function importProjects() {
 
     // Pedir confirmación
     console.log(
-      "\n⚠️  ¿Deseas continuar con la importación? (comentar esta línea si sí)",
+      "\n⚠️  ¿Deseas continuar con la importación? (comentar esta línea si sí)"
     );
     // return
 

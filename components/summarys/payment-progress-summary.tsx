@@ -33,7 +33,7 @@ function getCurrencyDecimals(currency: string): number {
  * Usa los umbrales definidos en PAYMENT_PROGRESS_THRESHOLDS
  */
 function determineVariant(
-  percentPaid: number,
+  percentPaid: number
 ): "success" | "default" | "secondary" | "destructive" {
   if (percentPaid >= PAYMENT_PROGRESS_THRESHOLDS.COMPLETE) {
     return "success"; // Verde - Completamente pagado
@@ -52,7 +52,7 @@ function determineVariant(
 function formatCurrency(
   amount: number,
   currency: string,
-  locale: string,
+  locale: string
 ): string {
   const decimals = getCurrencyDecimals(currency);
 
@@ -104,7 +104,7 @@ export function PaymentProgressSummary({
   const formattedAmount = formatCurrency(
     totalPaid,
     effectiveCurrency,
-    effectiveLocale,
+    effectiveLocale
   );
 
   return (

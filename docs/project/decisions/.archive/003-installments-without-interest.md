@@ -33,7 +33,7 @@ Implementar un sistema de **cuotas SIN interés** con las siguientes caracterís
 function generateInstallments(
   amount: Decimal,
   selectedInstallments: number,
-  paymentDate: Date,
+  paymentDate: Date
 ): Installment[] {
   const installments = [];
 

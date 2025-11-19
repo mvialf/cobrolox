@@ -61,7 +61,7 @@ export function InvitationsPageClient({
       refreshInvitations();
     } catch (error) {
       toast.error(
-        error instanceof Error ? error.message : "Error al reenviar invitación",
+        error instanceof Error ? error.message : "Error al reenviar invitación"
       );
     }
   };
@@ -81,7 +81,7 @@ export function InvitationsPageClient({
       refreshInvitations();
     } catch (error) {
       toast.error(
-        error instanceof Error ? error.message : "Error al cancelar invitación",
+        error instanceof Error ? error.message : "Error al cancelar invitación"
       );
     }
   };

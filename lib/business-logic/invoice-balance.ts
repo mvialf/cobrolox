@@ -51,7 +51,7 @@ export async function updateInvoiceBalance(invoiceId: string): Promise<void> {
     // Calcular paidAmount (suma de allocations)
     const paidAmount = invoice.allocations.reduce(
       (sum, alloc) => sum + Number(alloc.allocatedAmount),
-      0,
+      0
     );
 
     // Calcular balance (total - pagado)
@@ -84,7 +84,7 @@ export async function updateInvoiceBalance(invoiceId: string): Promise<void> {
  * ```
  */
 export async function updateInvoicesBalance(
-  invoiceIds: string[],
+  invoiceIds: string[]
 ): Promise<void> {
   await Promise.all(invoiceIds.map((id) => updateInvoiceBalance(id)));
 }
@@ -117,7 +117,7 @@ export function calculateInvoiceBalance(invoice: {
 }): number {
   const paidAmount = invoice.allocations.reduce(
     (sum, alloc) => sum + Number(alloc.allocatedAmount),
-    0,
+    0
   );
 
   return Number(invoice.total) - paidAmount;

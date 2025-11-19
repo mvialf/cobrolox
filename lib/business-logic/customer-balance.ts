@@ -78,7 +78,7 @@ export interface CustomerBalanceResult {
  * @throws Error si el cliente no existe
  */
 export async function recalculateCustomerBalances(
-  customerId: string,
+  customerId: string
 ): Promise<CustomerBalanceResult> {
   // 1. Verificar que el cliente existe
   const customer = await prisma.customer.findUnique({
@@ -115,7 +115,7 @@ export async function recalculateCustomerBalances(
     const total = Number(invoice.total);
     const paidAmount = invoice.allocations.reduce(
       (sum, alloc) => sum + Number(alloc.allocatedAmount),
-      0,
+      0
     );
     const balance = total - paidAmount;
 
@@ -167,7 +167,7 @@ export async function recalculateCustomerBalances(
  * ```
  */
 export async function calculateCustomerBalances(
-  customerId: string,
+  customerId: string
 ): Promise<CustomerBalanceResult> {
   // Verificar que el cliente existe
   const customer = await prisma.customer.findUnique({
@@ -203,7 +203,7 @@ export async function calculateCustomerBalances(
     const total = Number(invoice.total);
     const paidAmount = invoice.allocations.reduce(
       (sum, alloc) => sum + Number(alloc.allocatedAmount),
-      0,
+      0
     );
     const balance = total - paidAmount;
 
@@ -246,7 +246,7 @@ export async function calculateCustomerBalances(
  * ```
  */
 export async function recalculateMultipleCustomers(
-  customerIds: string[],
+  customerIds: string[]
 ): Promise<CustomerBalanceResult[]> {
   const results: CustomerBalanceResult[] = [];
 

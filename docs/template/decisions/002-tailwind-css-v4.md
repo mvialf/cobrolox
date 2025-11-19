@@ -49,7 +49,7 @@ import { cn } from "@/lib/utils";
   className={cn(
     "rounded-lg p-4",
     isActive && "bg-primary text-primary-foreground",
-    className,
+    className
   )}
 />;
 ```

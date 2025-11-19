@@ -132,7 +132,7 @@ export async function GET(request: Request) {
     console.error("Error fetching installments:", error);
     return NextResponse.json(
       { error: "Error al obtener cuotas" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

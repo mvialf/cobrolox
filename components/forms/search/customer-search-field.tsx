@@ -67,7 +67,7 @@ export function CustomerSearchField({
         return res.json() as Promise<Customer>;
       },
       enabled: !!preselectedCustomerId,
-    },
+    }
   );
 
   // Fetch clientes (server-side search) - solo si NO hay cliente pre-seleccionado
@@ -75,7 +75,7 @@ export function CustomerSearchField({
     queryKey: ["customers-search", debouncedCustomerSearch],
     queryFn: async () => {
       const res = await fetch(
-        `/api/customers?search=${debouncedCustomerSearch}&limit=20`,
+        `/api/customers?search=${debouncedCustomerSearch}&limit=20`
       );
       if (!res.ok) throw new Error("Error al buscar clientes");
       const data = await res.json();

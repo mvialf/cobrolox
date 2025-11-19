@@ -87,7 +87,7 @@ export interface CalculatedInstallment {
 export function calculateInstallments(
   amount: number,
   installments: number,
-  paymentDate: Date,
+  paymentDate: Date
 ): CalculatedInstallment[] {
   // Validaciones
   if (
@@ -95,7 +95,7 @@ export function calculateInstallments(
     installments > FINANCIAL.MAX_INSTALLMENTS
   ) {
     throw new Error(
-      `Número de cuotas inválido. Debe estar entre ${FINANCIAL.MIN_INSTALLMENTS} y ${FINANCIAL.MAX_INSTALLMENTS}`,
+      `Número de cuotas inválido. Debe estar entre ${FINANCIAL.MIN_INSTALLMENTS} y ${FINANCIAL.MAX_INSTALLMENTS}`
     );
   }
 
@@ -131,7 +131,7 @@ export function calculateInstallments(
     // Cuota N: +(N-1)*30 días
     const dueDate = new Date(paymentDate);
     dueDate.setDate(
-      dueDate.getDate() + (i - 1) * FINANCIAL.DAYS_PER_INSTALLMENT,
+      dueDate.getDate() + (i - 1) * FINANCIAL.DAYS_PER_INSTALLMENT
     );
 
     result.push({
@@ -162,7 +162,7 @@ export function calculateInstallments(
  */
 export function validateInstallmentsSum(
   installments: CalculatedInstallment[],
-  expectedTotal: number,
+  expectedTotal: number
 ): boolean {
   const sum = installments.reduce((acc, inst) => acc + inst.amount, 0);
   return Math.abs(sum - expectedTotal) < FINANCIAL.TOLERANCE;
@@ -186,7 +186,7 @@ export function validateInstallmentsSum(
  * ```
  */
 export function getTotalPendingInstallments(
-  installments: Array<{ amount: number; status: string }>,
+  installments: Array<{ amount: number; status: string }>
 ): number {
   return installments
     .filter((inst) => inst.status === "pending")

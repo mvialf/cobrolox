@@ -394,7 +394,7 @@ describe("useDebounce", () => {
   it("debe debouncer valor", () => {
     const { result, rerender } = renderHook(
       ({ value, delay }) => useDebounce(value, delay),
-      { initialProps: { value: "initial", delay: 500 } },
+      { initialProps: { value: "initial", delay: 500 } }
     );
 
     expect(result.current).toBe("initial");

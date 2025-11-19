@@ -67,7 +67,7 @@ export function StatusBadge({ status, priority, isUrgent }: StatusBadgeProps) {
           : "px-3 py-1.5 text-xs rounded",
 
         // Urgent modifier
-        isUrgent && "border-2 border-red-600 font-bold",
+        isUrgent && "border-2 border-red-600 font-bold"
       )}
     >
       {status}
@@ -116,7 +116,7 @@ const badgeVariants = cva(
       priority: "normal",
       urgent: false,
     },
-  },
+  }
 );
 
 interface StatusBadgeProps extends VariantProps<typeof badgeVariants> {

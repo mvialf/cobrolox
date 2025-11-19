@@ -34,7 +34,7 @@ export default function TodoExamplesPage() {
     setControlledTodos(newTodos);
     console.log(
       "📝 Todos actualizados (listo para sincronizar con backend):",
-      newTodos,
+      newTodos
     );
   };
 
@@ -44,7 +44,7 @@ export default function TodoExamplesPage() {
     // Simular delay de red
     await new Promise((resolve) => setTimeout(resolve, 500));
     alert(
-      `✅ ${controlledTodos.length} tareas guardadas en backend (simulado)`,
+      `✅ ${controlledTodos.length} tareas guardadas en backend (simulado)`
     );
   };
 

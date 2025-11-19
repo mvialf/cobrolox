@@ -8,7 +8,7 @@ import { prisma } from "@/lib/db";
  */
 export async function GET(
   request: Request,
-  { params }: { params: Promise<{ id: string }> },
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { id } = await params;
@@ -20,7 +20,7 @@ export async function GET(
     if (!customer) {
       return NextResponse.json(
         { error: "Cliente no encontrado" },
-        { status: 404 },
+        { status: 404 }
       );
     }
 
@@ -29,7 +29,7 @@ export async function GET(
     console.error("Error fetching customer:", error);
     return NextResponse.json(
       { error: "Error al obtener cliente" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }
@@ -43,7 +43,7 @@ export async function GET(
  */
 export async function PUT(
   request: Request,
-  { params }: { params: Promise<{ id: string }> },
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { id } = await params;
@@ -70,7 +70,7 @@ export async function PUT(
     if (!existingCustomer) {
       return NextResponse.json(
         { error: "Cliente no encontrado" },
-        { status: 404 },
+        { status: 404 }
       );
     }
 
@@ -85,7 +85,7 @@ export async function PUT(
       if (duplicateRut) {
         return NextResponse.json(
           { error: "Ya existe otro cliente con ese RUT" },
-          { status: 409 },
+          { status: 409 }
         );
       }
     }
@@ -119,7 +119,7 @@ export async function PUT(
     console.error("Error updating customer:", error);
     return NextResponse.json(
       { error: "Error al actualizar cliente" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }
@@ -131,7 +131,7 @@ export async function PUT(
  */
 export async function DELETE(
   request: Request,
-  { params }: { params: Promise<{ id: string }> },
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { id } = await params;
@@ -144,7 +144,7 @@ export async function DELETE(
     if (!existingCustomer) {
       return NextResponse.json(
         { error: "Cliente no encontrado" },
-        { status: 404 },
+        { status: 404 }
       );
     }
 
@@ -158,7 +158,7 @@ export async function DELETE(
     console.error("Error deleting customer:", error);
     return NextResponse.json(
       { error: "Error al eliminar cliente" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

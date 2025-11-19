@@ -52,13 +52,13 @@ export function AddressFields({
 
   // Watch región para filtrar comunas
   const [selectedRegion, setSelectedRegion] = React.useState(
-    defaultRegion || "",
+    defaultRegion || ""
   );
 
   // Extraer código de región del texto seleccionado
   const regionCodigo =
     regiones.find(
-      (r) => `${r.nombre_corto} (${r.numero_romano})` === selectedRegion,
+      (r) => `${r.nombre_corto} (${r.numero_romano})` === selectedRegion
     )?.codigo || "";
 
   const comunasDisponibles = regionCodigo

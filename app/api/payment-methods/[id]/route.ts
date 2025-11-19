@@ -8,7 +8,7 @@ import { paymentMethodSchema } from "@/lib/validations/payment-method-validation
  */
 export async function PUT(
   request: Request,
-  { params }: { params: Promise<{ id: string }> },
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { id } = await params;
@@ -23,7 +23,7 @@ export async function PUT(
           error: "Datos inválidos",
           details: validation.error.errors,
         },
-        { status: 400 },
+        { status: 400 }
       );
     }
 
@@ -37,7 +37,7 @@ export async function PUT(
     if (!existing) {
       return NextResponse.json(
         { error: "Método de pago no encontrado" },
-        { status: 404 },
+        { status: 404 }
       );
     }
 
@@ -50,7 +50,7 @@ export async function PUT(
       if (duplicate) {
         return NextResponse.json(
           { error: `El método de pago "${name}" ya existe` },
-          { status: 409 },
+          { status: 409 }
         );
       }
     }
@@ -76,7 +76,7 @@ export async function PUT(
     console.error("Error updating payment method:", error);
     return NextResponse.json(
       { error: "Error al actualizar el método de pago" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }
@@ -87,7 +87,7 @@ export async function PUT(
  */
 export async function DELETE(
   request: Request,
-  { params }: { params: Promise<{ id: string }> },
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { id } = await params;
@@ -105,7 +105,7 @@ export async function DELETE(
     if (!method) {
       return NextResponse.json(
         { error: "Método de pago no encontrado" },
-        { status: 404 },
+        { status: 404 }
       );
     }
 
@@ -115,7 +115,7 @@ export async function DELETE(
         {
           error: `No se puede eliminar el método "${method.name}" porque tiene ${method._count.payments} pago(s) asociado(s)`,
         },
-        { status: 409 },
+        { status: 409 }
       );
     }
 
@@ -131,7 +131,7 @@ export async function DELETE(
     console.error("Error deleting payment method:", error);
     return NextResponse.json(
       { error: "Error al eliminar el método de pago" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

@@ -175,7 +175,7 @@ try {
 } catch (error) {
   logger.error(
     { err: error, customerId: data.customerId, amount: data.amount },
-    "Payment creation failed",
+    "Payment creation failed"
   );
 }
 ```

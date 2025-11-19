@@ -37,7 +37,7 @@ export interface ParseOptions {
  */
 export async function parseExcel<T>(
   file: File,
-  options: ParseOptions = {},
+  options: ParseOptions = {}
 ): Promise<ParseResult<T>> {
   return new Promise((resolve) => {
     const errors: ParseError[] = [];

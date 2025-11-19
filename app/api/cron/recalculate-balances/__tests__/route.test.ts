@@ -79,7 +79,7 @@ describe("POST /api/cron/recalculate-balances", () => {
       expect(data.error).toBe("Unauthorized");
       expect(mockLogger.warn).toHaveBeenCalledWith(
         { receivedAuth: "missing" },
-        "Unauthorized cron job attempt",
+        "Unauthorized cron job attempt"
       );
     });
 
@@ -94,7 +94,7 @@ describe("POST /api/cron/recalculate-balances", () => {
       expect(data.error).toBe("Unauthorized");
       expect(mockLogger.warn).toHaveBeenCalledWith(
         { receivedAuth: "present" },
-        "Unauthorized cron job attempt",
+        "Unauthorized cron job attempt"
       );
     });
 
@@ -135,14 +135,14 @@ describe("POST /api/cron/recalculate-balances", () => {
 
       expect(customerBalance.recalculateAllCustomers).toHaveBeenCalledTimes(1);
       expect(mockLogger.info).toHaveBeenCalledWith(
-        "Starting scheduled customer balance recalculation",
+        "Starting scheduled customer balance recalculation"
       );
     });
 
     it("debe retornar stats correctos en response", async () => {
       const mockCount = 42;
       vi.mocked(customerBalance.recalculateAllCustomers).mockResolvedValue(
-        mockCount,
+        mockCount
       );
 
       const mockRequest = createMockRequest("Bearer test-secret-key");
@@ -173,7 +173,7 @@ describe("POST /api/cron/recalculate-balances", () => {
           durationMs: expect.any(Number),
           durationSeconds: expect.any(Number),
         }),
-        "Customer balance recalculation completed successfully",
+        "Customer balance recalculation completed successfully"
       );
     });
 
@@ -183,7 +183,7 @@ describe("POST /api/cron/recalculate-balances", () => {
         async () => {
           await new Promise((resolve) => setTimeout(resolve, 50));
           return 5;
-        },
+        }
       );
 
       const mockRequest = createMockRequest("Bearer test-secret-key");
@@ -202,7 +202,7 @@ describe("POST /api/cron/recalculate-balances", () => {
     it("debe manejar error de recalculateAllCustomers", async () => {
       const errorMessage = "Database connection failed";
       vi.mocked(customerBalance.recalculateAllCustomers).mockRejectedValue(
-        new Error(errorMessage),
+        new Error(errorMessage)
       );
 
       const mockRequest = createMockRequest("Bearer test-secret-key");
@@ -216,13 +216,13 @@ describe("POST /api/cron/recalculate-balances", () => {
       expect(data.message).toBe(errorMessage);
       expect(mockLogger.error).toHaveBeenCalledWith(
         { err: expect.any(Error) },
-        "Error during scheduled balance recalculation",
+        "Error during scheduled balance recalculation"
       );
     });
 
     it("debe manejar error desconocido (no Error object)", async () => {
       vi.mocked(customerBalance.recalculateAllCustomers).mockRejectedValue(
-        "String error",
+        "String error"
       );
 
       const mockRequest = createMockRequest("Bearer test-secret-key");
@@ -293,7 +293,7 @@ describe("POST /api/cron/recalculate-balances", () => {
       vi.mocked(customerBalance.recalculateAllCustomers).mockResolvedValue(3);
 
       const mockRequest = createMockRequest(
-        `Bearer ${process.env.CRON_SECRET}`,
+        `Bearer ${process.env.CRON_SECRET}`
       );
       const mockLogger = createMockLogger();
 

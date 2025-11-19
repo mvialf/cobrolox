@@ -37,7 +37,7 @@ describe("invoice-validations", () => {
       if (!result.success) {
         expect(result.error.issues[0].path).toContain("invoiceNumber");
         expect(result.error.issues[0].message).toMatch(
-          /número de factura es requerido/i,
+          /número de factura es requerido/i
         );
       }
     });
@@ -50,7 +50,7 @@ describe("invoice-validations", () => {
       if (!result.success) {
         expect(result.error.issues[0].path).toContain("customerId");
         expect(result.error.issues[0].message).toMatch(
-          /seleccionar un cliente/i,
+          /seleccionar un cliente/i
         );
       }
     });
@@ -121,7 +121,7 @@ describe("invoice-validations", () => {
       expect(result.success).toBe(false);
       if (!result.success) {
         expect(result.error.issues[0].message).toMatch(
-          /total no coincide.*subtotal.*IVA/i,
+          /total no coincide.*subtotal.*IVA/i
         );
       }
     });
@@ -146,7 +146,7 @@ describe("invoice-validations", () => {
       expect(resultNegative.success).toBe(false);
       if (!resultNegative.success) {
         expect(resultNegative.error.issues[0].message).toMatch(
-          /subtotal debe ser mayor a 0|subtotal mínimo es/i,
+          /subtotal debe ser mayor a 0|subtotal mínimo es/i
         );
       }
     });
@@ -163,7 +163,7 @@ describe("invoice-validations", () => {
       expect(result.success).toBe(false);
       if (!result.success) {
         expect(result.error.issues[0].message).toMatch(
-          /IVA no puede ser negativo/i,
+          /IVA no puede ser negativo/i
         );
       }
 
@@ -209,7 +209,7 @@ describe("invoice-validations", () => {
       expect(result.success).toBe(false);
       if (!result.success) {
         expect(result.error.issues[0].message).toMatch(
-          /fecha de emisión no puede ser futura/i,
+          /fecha de emisión no puede ser futura/i
         );
       }
     });
@@ -247,7 +247,7 @@ describe("invoice-validations", () => {
       expect(result.success).toBe(false);
       if (!result.success) {
         expect(result.error.issues[0].message).toMatch(
-          /fecha de vencimiento debe ser mayor o igual/i,
+          /fecha de vencimiento debe ser mayor o igual/i
         );
       }
 
@@ -306,7 +306,7 @@ describe("invoice-validations", () => {
       expect(result.success).toBe(false);
       if (!result.success) {
         expect(result.error.issues[0].message).toMatch(
-          /ID de factura inválido/i,
+          /ID de factura inválido/i
         );
       }
     });

@@ -107,7 +107,7 @@ export const columns: ColumnDef<UserRow>[] = [
                 window.dispatchEvent(
                   new CustomEvent("reset-user-password", {
                     detail: { userId: user.id, userName: user.name },
-                  }),
+                  })
                 );
               }}
             >

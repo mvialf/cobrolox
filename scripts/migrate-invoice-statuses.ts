@@ -61,7 +61,7 @@ async function migrateInvoiceStatuses() {
     !paidPayment
   ) {
     throw new Error(
-      "Estados no encontrados. Ejecuta `npm run db:seed` primero.",
+      "Estados no encontrados. Ejecuta `npm run db:seed` primero."
     );
   }
 
@@ -101,7 +101,7 @@ async function migrateInvoiceStatuses() {
       // Calcular balance y paidAmount
       const paidAmount = invoice.allocations.reduce(
         (sum, a) => sum + Number(a.allocatedAmount),
-        0,
+        0
       );
       const balance = Number(invoice.total) - paidAmount;
 
@@ -112,7 +112,7 @@ async function migrateInvoiceStatuses() {
           paidAmount,
           dueDate: invoice.dueDate,
         },
-        availableStatuses,
+        availableStatuses
       );
 
       // Actualizar factura
@@ -125,7 +125,7 @@ async function migrateInvoiceStatuses() {
       });
 
       console.log(
-        `✅ ${invoice.invoiceNumber.padEnd(10)} → InvoiceStatus: ${newStatuses.invoiceStatus.name.padEnd(15)} | PaymentStatus: ${newStatuses.paymentInvoiceStatus.name.padEnd(20)} | Balance: $${balance.toLocaleString()}`,
+        `✅ ${invoice.invoiceNumber.padEnd(10)} → InvoiceStatus: ${newStatuses.invoiceStatus.name.padEnd(15)} | PaymentStatus: ${newStatuses.paymentInvoiceStatus.name.padEnd(20)} | Balance: $${balance.toLocaleString()}`
       );
       updated++;
     } catch (error) {

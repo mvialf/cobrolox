@@ -7,7 +7,7 @@ import { prisma } from "@/lib/db";
  */
 export async function PATCH(
   request: Request,
-  { params }: { params: Promise<{ id: string }> },
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { id } = await params;
@@ -20,7 +20,7 @@ export async function PATCH(
     if (!method) {
       return NextResponse.json(
         { error: "Método de pago no encontrado" },
-        { status: 404 },
+        { status: 404 }
       );
     }
 
@@ -45,7 +45,7 @@ export async function PATCH(
     console.error("Error toggling payment method:", error);
     return NextResponse.json(
       { error: "Error al cambiar el estado del método de pago" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

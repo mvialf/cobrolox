@@ -163,7 +163,7 @@ export function useSearchProjects(params: SearchProjectsParams = {}) {
       if (params.limit) searchParams.set("limit", String(params.limit));
 
       const response = await fetch(
-        `/api/payments/search-projects?${searchParams}`,
+        `/api/payments/search-projects?${searchParams}`
       );
 
       if (!response.ok) {
@@ -204,7 +204,7 @@ export function useCustomerProjects(customerId?: string) {
       if (!customerId) throw new Error("customerId requerido");
 
       const response = await fetch(
-        `/api/payments/customer-projects?customerId=${customerId}`,
+        `/api/payments/customer-projects?customerId=${customerId}`
       );
 
       if (!response.ok) {
@@ -273,7 +273,7 @@ export function useCreatePayment() {
       // ========================================================================
       if (data.type === "Invoice" && data.allocations.length !== 1) {
         throw new Error(
-          "Pago tipo Invoice debe tener exactamente 1 asignación",
+          "Pago tipo Invoice debe tener exactamente 1 asignación"
         );
       }
 
@@ -286,13 +286,13 @@ export function useCreatePayment() {
       // ========================================================================
       const totalAllocated = data.allocations.reduce(
         (sum, a) => sum + a.allocatedAmount,
-        0,
+        0
       );
       const difference = Math.abs(totalAllocated - data.amount);
 
       if (difference > 0.01) {
         throw new Error(
-          `Las asignaciones ($${totalAllocated.toFixed(2)}) no suman el monto total ($${data.amount.toFixed(2)})`,
+          `Las asignaciones ($${totalAllocated.toFixed(2)}) no suman el monto total ($${data.amount.toFixed(2)})`
         );
       }
 
@@ -520,7 +520,7 @@ export function useDeletePayment() {
               total: old.pagination.total - 1,
             },
           };
-        },
+        }
       );
 
       return { previousData };

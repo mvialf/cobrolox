@@ -58,7 +58,7 @@ async function main() {
     console.log(`📧 Email: ${adminEmail}`);
     console.log(`🔑 Password: ${adminPassword}`);
     console.log(
-      "⚠️  IMPORTANTE: Cambia esta contraseña después del primer login",
+      "⚠️  IMPORTANTE: Cambia esta contraseña después del primer login"
     );
   } else {
     console.log("✅ Admin user already exists");

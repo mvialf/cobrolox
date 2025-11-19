@@ -61,13 +61,13 @@ async function main() {
 
     console.log("📊 Balances ANTES del recálculo:");
     console.log(
-      `   Total:   $${customer.balanceTotal.toLocaleString("es-CL")}`,
+      `   Total:   $${customer.balanceTotal.toLocaleString("es-CL")}`
     );
     console.log(
-      `   Vigente: $${customer.balanceVigente.toLocaleString("es-CL")}`,
+      `   Vigente: $${customer.balanceVigente.toLocaleString("es-CL")}`
     );
     console.log(
-      `   Vencido: $${customer.balanceVencido.toLocaleString("es-CL")}\n`,
+      `   Vencido: $${customer.balanceVencido.toLocaleString("es-CL")}\n`
     );
 
     console.log("🔄 Recalculando balances...\n");
@@ -77,10 +77,10 @@ async function main() {
     console.log("📊 Balances DESPUÉS del recálculo:");
     console.log(`   Total:   $${result.balanceTotal.toLocaleString("es-CL")}`);
     console.log(
-      `   Vigente: $${result.balanceVigente.toLocaleString("es-CL")}`,
+      `   Vigente: $${result.balanceVigente.toLocaleString("es-CL")}`
     );
     console.log(
-      `   Vencido: $${result.balanceVencido.toLocaleString("es-CL")}\n`,
+      `   Vencido: $${result.balanceVencido.toLocaleString("es-CL")}\n`
     );
 
     console.log("✅ Balances actualizados exitosamente en la base de datos");

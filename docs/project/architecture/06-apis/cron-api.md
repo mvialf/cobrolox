@@ -93,7 +93,7 @@ export async function POST(request: NextRequest) {
     cronLogger.error("CRON_SECRET not configured");
     return NextResponse.json(
       { error: "Server configuration error" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 
@@ -123,7 +123,7 @@ export async function POST(request: NextRequest) {
 
     cronLogger.info(
       { updated: result.count, date: today.toISOString() },
-      "Installments marked as paid",
+      "Installments marked as paid"
     );
 
     return NextResponse.json({
@@ -138,7 +138,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(
       { error: "Internal server error" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }
@@ -314,7 +314,7 @@ if (!cronSecret) {
   cronLogger.error("CRON_SECRET not configured");
   return NextResponse.json(
     { error: "Server configuration error" },
-    { status: 500 },
+    { status: 500 }
   );
 }
 ```

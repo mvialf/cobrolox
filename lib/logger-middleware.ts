@@ -21,7 +21,7 @@ import { logger, generateRequestId } from "./logger";
 export type APIHandler = (
   request: NextRequest,
   logger: pino.Logger,
-  context?: { params?: Promise<Record<string, string>> },
+  context?: { params?: Promise<Record<string, string>> }
 ) => Promise<NextResponse> | NextResponse;
 
 /**
@@ -58,7 +58,7 @@ export type APIHandler = (
 export function withLogging(handler: APIHandler) {
   return async (
     request: NextRequest,
-    context: { params: Promise<Record<string, string>> },
+    context: { params: Promise<Record<string, string>> }
   ) => {
     const startTime = performance.now();
     const requestId = generateRequestId();
@@ -94,7 +94,7 @@ export function withLogging(handler: APIHandler) {
           status: response.status,
           duration,
         },
-        "Request completed",
+        "Request completed"
       );
 
       return response;
@@ -108,7 +108,7 @@ export function withLogging(handler: APIHandler) {
           err: error,
           duration,
         },
-        "Request failed",
+        "Request failed"
       );
 
       // Re-throw para que Next.js maneje el error
@@ -140,7 +140,7 @@ export async function logRequestBody<T = unknown>(
     exclude?: string[];
     /** Nivel de logging (default: debug) */
     level?: "trace" | "debug" | "info";
-  } = {},
+  } = {}
 ): Promise<T> {
   const { exclude = [], level = "debug" } = options;
 
@@ -188,7 +188,7 @@ export function logResponse(
     meta?: Record<string, unknown>;
     /** Nivel de logging (default: debug) */
     level?: "trace" | "debug" | "info";
-  } = {},
+  } = {}
 ): NextResponse {
   const { message = "Response ready", meta = {}, level = "debug" } = options;
 
@@ -197,7 +197,7 @@ export function logResponse(
       status: response.status,
       ...meta,
     },
-    message,
+    message
   );
 
   return response;
@@ -224,7 +224,7 @@ export function logResponse(
  */
 export function createBusinessLogger<T extends Record<string, unknown>>(
   logger: pino.Logger,
-  context: T,
+  context: T
 ): pino.Logger {
   return logger.child(context);
 }

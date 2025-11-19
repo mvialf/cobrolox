@@ -404,7 +404,7 @@ export function useConfiguration() {
 
   if (!context) {
     throw new Error(
-      "useConfiguration must be used within ConfigurationProvider",
+      "useConfiguration must be used within ConfigurationProvider"
     );
   }
 

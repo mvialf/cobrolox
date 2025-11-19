@@ -234,7 +234,7 @@ export async function updateProjectBalance(projectId: string) {
 
   const totalPaid = project.paymentAllocations.reduce(
     (sum, a) => sum + Number(a.allocatedAmount),
-    0,
+    0
   );
 
   await prisma.project.update({

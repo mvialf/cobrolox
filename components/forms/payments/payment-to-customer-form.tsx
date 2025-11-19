@@ -70,7 +70,7 @@ const MemoizedAllocationInput = React.memo(function AllocationInput({
     (amount: number) => {
       onChangeAllocation(index, amount);
     },
-    [index, onChangeAllocation],
+    [index, onChangeAllocation]
   );
 
   return (
@@ -87,7 +87,7 @@ const MemoizedAllocationInput = React.memo(function AllocationInput({
 interface PaymentToCustomerFormProps {
   onSubmit: (
     data: PaymentToCustomerFormValues,
-    currency: string,
+    currency: string
   ) => void | Promise<void>;
   isSubmitting?: boolean;
   preselectedCustomerId?: string; // ← NUEVO: Si viene, el cliente está pre-seleccionado
@@ -113,7 +113,7 @@ export function PaymentToCustomerForm({
 }: PaymentToCustomerFormProps) {
   // State para cliente seleccionado
   const [selectedCustomerId, setSelectedCustomerId] = useState<string | null>(
-    null,
+    null
   );
 
   // State para facturas del cliente
@@ -123,7 +123,7 @@ export function PaymentToCustomerForm({
 
   // State para modo de distribución
   const [distributionMode, setDistributionMode] = useState<"fifo" | "manual">(
-    "manual",
+    "manual"
   );
 
   // Form setup
@@ -136,7 +136,7 @@ export function PaymentToCustomerForm({
       notes: "",
       allocations: [],
     }),
-    [preselectedCustomerId],
+    [preselectedCustomerId]
   );
 
   const form = useForm<PaymentToCustomerFormValues>({
@@ -156,7 +156,7 @@ export function PaymentToCustomerForm({
     queryFn: async () => {
       if (!selectedCustomerId) return [];
       const res = await fetch(
-        `/api/invoices?customerId=${selectedCustomerId}&withBalance=true&pendingOnly=true&limit=100`,
+        `/api/invoices?customerId=${selectedCustomerId}&withBalance=true&pendingOnly=true&limit=100`
       );
       if (!res.ok) throw new Error("Error al cargar facturas");
       const data = await res.json();
@@ -169,7 +169,7 @@ export function PaymentToCustomerForm({
   // Memoize para evitar re-renders infinitos
   const invoices = useMemo(
     () => invoicesData || EMPTY_INVOICES,
-    [invoicesData],
+    [invoicesData]
   );
 
   // Fetch payment methods
@@ -186,7 +186,7 @@ export function PaymentToCustomerForm({
   // Memoize para evitar re-renders infinitos
   const paymentMethods = useMemo(
     () => paymentMethodsData || EMPTY_PAYMENT_METHODS,
-    [paymentMethodsData],
+    [paymentMethodsData]
   );
 
   // Auto-seleccionar el primer método de pago activo como default
@@ -257,7 +257,7 @@ export function PaymentToCustomerForm({
     // Esto mantiene todas las facturas visibles, solo cambia los montos
     fields.forEach((field, index) => {
       const fifoAllocation = fifoAllocations.find(
-        (f) => f.invoiceId === field.invoiceId,
+        (f) => f.invoiceId === field.invoiceId
       );
       update(index, {
         invoiceId: field.invoiceId,
@@ -271,7 +271,7 @@ export function PaymentToCustomerForm({
     (index: number) => {
       remove(index);
     },
-    [remove],
+    [remove]
   );
 
   // Handler: Cambiar monto asignado
@@ -283,7 +283,7 @@ export function PaymentToCustomerForm({
         allocatedAmount: amount,
       });
     },
-    [fields, update],
+    [fields, update]
   );
 
   // Handler: Reset installments cuando cambia método de pago
@@ -303,7 +303,7 @@ export function PaymentToCustomerForm({
   const handleSubmit = (values: PaymentToCustomerFormValues) => {
     // 1. Filtrar allocations con monto > 0
     const allocationsWithValue = values.allocations.filter(
-      (a) => a.allocatedAmount > 0,
+      (a) => a.allocatedAmount > 0
     );
 
     // 2. Validar que hay al menos una allocation con valor
@@ -317,7 +317,7 @@ export function PaymentToCustomerForm({
     // 3. Validar suma (con las allocations filtradas)
     const totalAllocated = allocationsWithValue.reduce(
       (sum, a) => sum + a.allocatedAmount,
-      0,
+      0
     );
     const difference = watchedAmount - totalAllocated;
     if (Math.abs(difference) >= 0.01) {
@@ -330,7 +330,7 @@ export function PaymentToCustomerForm({
     // 4. Derivar currency de la primera factura
     const firstAllocation = allocationsWithValue[0];
     const invoice = customerInvoices.find(
-      (inv) => inv.id === firstAllocation.invoiceId,
+      (inv) => inv.id === firstAllocation.invoiceId
     );
     const currency = invoice?.currency || "CLP";
 
@@ -415,7 +415,7 @@ export function PaymentToCustomerForm({
                     <span
                       className={cn(
                         "text-center font-semibold",
-                        isValidSum ? "text-green-600" : "text-red-600",
+                        isValidSum ? "text-green-600" : "text-red-600"
                       )}
                     >
                       {formatCurrency(Math.abs(difference), "CLP")}
@@ -434,7 +434,7 @@ export function PaymentToCustomerForm({
                         "text-sm",
                         !watchedAmount || watchedAmount <= 0
                           ? "text-muted-foreground cursor-not-allowed"
-                          : "cursor-pointer",
+                          : "cursor-pointer"
                       )}
                     >
                       Auto
@@ -475,7 +475,7 @@ export function PaymentToCustomerForm({
                   <TableBody>
                     {fields.map((field, index) => {
                       const invoice = customerInvoices.find(
-                        (inv) => inv.id === field.invoiceId,
+                        (inv) => inv.id === field.invoiceId
                       );
                       if (!invoice) return null;
 
@@ -484,7 +484,7 @@ export function PaymentToCustomerForm({
                       const rowClassName = cn(
                         isUnallocated &&
                           distributionMode === "fifo" &&
-                          "text-muted-foreground opacity-60",
+                          "text-muted-foreground opacity-60"
                       );
 
                       return (

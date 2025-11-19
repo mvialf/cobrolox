@@ -66,7 +66,7 @@ function CustomerActionsCell({
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [accountDialogOpen, setAccountDialogOpen] = useState(false);
   const [editingCustomerId, setEditingCustomerId] = useState<string | null>(
-    null,
+    null
   );
 
   // Extraer callbacks del table meta (type-safe)
