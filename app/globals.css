@@ -72,12 +72,24 @@
   --capture-bg: oklch(0.928 0.006 264.531);
   --capture-card: oklch(0.967 0.003 264.542);
   --capture-foreground: oklch(0.278 0.033 256.848);
+  --capture-muted: oklch(0.551 0.027 264.364);
+  --capture-accent: oklch(0.872 0.01 258.338);
+  --capture-destructive: oklch(0.6368 0.2078 25.3313);
   --capture-shadow:
     0 4px 6px -1px hsl(0 0% 0% / 0.1), 0 2px 4px -2px hsl(0 0% 0% / 0.1);
   --capture-border: oklch(0.872 0.01 258.338);
   --capture-orange: oklch(0.646 0.222 41.116);
   --capture-green: oklch(0.627 0.194 149.214);
   --capture-blue: oklch(0.546 0.245 262.881);
+  /* Colores para badges de estado en capture */
+  --capture-badge-red: oklch(0.577 0.245 27.325);
+  --capture-badge-red-foreground: oklch(1 0 0);
+  --capture-badge-green: oklch(0.527 0.2 142.495);
+  --capture-badge-green-foreground: oklch(1 0 0);
+  --capture-badge-orange: oklch(0.646 0.222 41.116);
+  --capture-badge-orange-foreground: oklch(1 0 0);
+  --capture-badge-gray: oklch(0.551 0.027 264.364);
+  --capture-badge-gray-foreground: oklch(1 0 0);
 }
 
 .dark {
@@ -178,10 +190,21 @@
   --color-capture-bg: var(--capture-bg);
   --color-capture-card: var(--capture-card);
   --color-capture-foreground: var(--capture-foreground);
+  --color-capture-muted: var(--capture-muted);
+  --color-capture-accent: var(--capture-accent);
+  --color-capture-destructive: var(--capture-destructive);
   --color-capture-border: var(--capture-border);
   --color-capture-orange: var(--capture-orange);
   --color-capture-green: var(--capture-green);
   --color-capture-blue: var(--capture-blue);
+  --color-capture-badge-red: var(--capture-badge-red);
+  --color-capture-badge-red-foreground: var(--capture-badge-red-foreground);
+  --color-capture-badge-green: var(--capture-badge-green);
+  --color-capture-badge-green-foreground: var(--capture-badge-green-foreground);
+  --color-capture-badge-orange: var(--capture-badge-orange);
+  --color-capture-badge-orange-foreground: var(--capture-badge-orange-foreground);
+  --color-capture-badge-gray: var(--capture-badge-gray);
+  --color-capture-badge-gray-foreground: var(--capture-badge-gray-foreground);
 
   --font-sans: var(--font-sans);
   --font-mono: var(--font-mono);
