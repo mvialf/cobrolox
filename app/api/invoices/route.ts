@@ -19,6 +19,8 @@ import { getInvoiceStatuses } from "@/lib/cache/invoice-statuses";
  *   - withBalance: si es "true", calcula balance (total - paidAmount)
  *   - pendingOnly: si es "true", solo facturas con balance > 0
  *   - includeCompleted: si es "true", incluye facturas completadas (default: false)
+ *   - orderBy: campo para ordenar (issueDate | dueDate | invoiceNumber | total | balance) default: issueDate
+ *   - orderDir: dirección del orden (asc | desc) default: desc
  */
 export const GET = withLogging(async (request, logger) => {
   const { searchParams } = new URL(request.url);
@@ -35,6 +37,23 @@ export const GET = withLogging(async (request, logger) => {
   const pendingOnly = searchParams.get("pendingOnly") === "true";
   const includeCompleted = searchParams.get("includeCompleted") === "true";
 
+  // Ordenamiento configurable (FEFO para pagos: orderBy=dueDate&orderDir=asc)
+  const allowedOrderFields = [
+    "issueDate",
+    "dueDate",
+    "invoiceNumber",
+    "total",
+    "balance",
+  ] as const;
+  const orderByParam = searchParams.get("orderBy") || "issueDate";
+  const orderBy = allowedOrderFields.includes(
+    orderByParam as (typeof allowedOrderFields)[number]
+  )
+    ? (orderByParam as (typeof allowedOrderFields)[number])
+    : "issueDate";
+  const orderDirParam = searchParams.get("orderDir") || "desc";
+  const orderDir = orderDirParam === "asc" ? "asc" : "desc";
+
   logger.debug(
     {
       page,
@@ -44,6 +63,8 @@ export const GET = withLogging(async (request, logger) => {
       withBalance,
       pendingOnly,
       includeCompleted,
+      orderBy,
+      orderDir,
     },
     "Fetching invoices with filters"
   );
@@ -91,7 +112,7 @@ export const GET = withLogging(async (request, logger) => {
         where,
         skip,
         take: limit, // Si es undefined, trae todos los registros
-        orderBy: { issueDate: "desc" }, // Orden cronológico descendente: más recientes primero
+        orderBy: { [orderBy]: orderDir }, // Configurable: default issueDate desc, FEFO usa dueDate asc
         include: {
           customer: {
             select: {

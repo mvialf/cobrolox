@@ -151,12 +151,13 @@ export function PaymentToCustomerForm({
   });
 
   // Fetch facturas pendientes del cliente seleccionado
+  // Ordenadas por FEFO (First-Expired-First-Out): vence primero → aparece primero
   const { data: invoicesData, isLoading: loadingInvoices } = useQuery({
     queryKey: ["customer-invoices", selectedCustomerId],
     queryFn: async () => {
       if (!selectedCustomerId) return [];
       const res = await fetch(
-        `/api/invoices?customerId=${selectedCustomerId}&withBalance=true&pendingOnly=true&limit=100`
+        `/api/invoices?customerId=${selectedCustomerId}&withBalance=true&pendingOnly=true&limit=100&orderBy=dueDate&orderDir=asc`
       );
       if (!res.ok) throw new Error("Error al cargar facturas");
       const data = await res.json();
