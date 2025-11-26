@@ -1,8 +1,38 @@
 "use client";
 
-import { StatusBadge } from "@/components/ui/status-badge";
+import { Badge } from "@/components/ui/badge";
 import { INVOICE_STATUS_LABELS } from "@/lib/constants/invoice-status-constants";
-import { InvoiceDueDateCell } from "@/components/cells/invoice-due-date-cell";
+import { CaptureInvoiceDueDateCell } from "@/components/cells/capture-invoice-due-date-cell";
+
+/**
+ * Badge de estado para contexto de captura
+ * Usa colores capture-* para consistencia en capturas
+ */
+function CaptureStatusBadge({
+  status,
+  label,
+}: {
+  status: string;
+  label: string;
+}) {
+  // Mapeo de estados a clases capture-*
+  const getStatusClasses = () => {
+    switch (status) {
+      case "overdue":
+        return "bg-capture-badge-red text-capture-badge-red-foreground";
+      case "current":
+        return "bg-capture-badge-green text-capture-badge-green-foreground";
+      case "completed":
+        return "bg-capture-badge-gray text-capture-badge-gray-foreground";
+      default:
+        return "bg-capture-badge-gray text-capture-badge-gray-foreground";
+    }
+  };
+
+  return (
+    <Badge className={`${getStatusClasses()} border-0`}>{label}</Badge>
+  );
+}
 
 // Tipo para la factura en la tabla
 export interface InvoiceTableData {
@@ -67,7 +97,7 @@ export function InvoiceTable({ invoices }: InvoiceTableProps) {
             <tr>
               <td
                 colSpan={5}
-                className="py-8 text-center text-muted-foreground"
+                className="py-8 text-center text-capture-muted"
               >
                 No hay facturas para mostrar
               </td>
@@ -94,7 +124,7 @@ export function InvoiceTable({ invoices }: InvoiceTableProps) {
                   {/* Saldo */}
                   <td className="py-3 pl-1 pr-2 text-end text-sm text-capture-foreground">
                     {invoice.balance === 0 ? (
-                      <span className="text-muted-foreground">Pagada</span>
+                      <span className="text-capture-muted">Pagada</span>
                     ) : (
                       <span className="text-sm">
                         {formatCurrency(invoice.balance)}
@@ -104,7 +134,7 @@ export function InvoiceTable({ invoices }: InvoiceTableProps) {
 
                   {/* Vencimiento */}
                   <td className="py-3 px-2 text-end text-sm">
-                    <InvoiceDueDateCell
+                    <CaptureInvoiceDueDateCell
                       dueDate={invoice.dueDate}
                       isPaid={invoice.balance === 0}
                     />
@@ -113,8 +143,8 @@ export function InvoiceTable({ invoices }: InvoiceTableProps) {
                   {/* Estado */}
                   <td className="py-3 pr-2 text-center">
                     <div className="flex justify-center">
-                      <StatusBadge
-                        bgClass={invoice.invoiceStatus.color.bgClass}
+                      <CaptureStatusBadge
+                        status={invoice.invoiceStatus.name}
                         label={statusLabel}
                       />
                     </div>
