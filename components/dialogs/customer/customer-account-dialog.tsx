@@ -94,14 +94,19 @@ export function CustomerAccountDialog({
     setSelectedStatuses(new Set());
   };
 
-  // Filtrar facturas según estados seleccionados
+  // Filtrar y ordenar facturas por fecha de vencimiento (urgentes primero)
   const filteredInvoices = useMemo(() => {
-    if (selectedStatuses.size === 0) {
-      return invoices; // Sin filtros = mostrar todas
-    }
-    return invoices.filter((inv) =>
-      selectedStatuses.has(inv.invoiceStatus.name)
-    );
+    const filtered =
+      selectedStatuses.size === 0
+        ? invoices
+        : invoices.filter((inv) => selectedStatuses.has(inv.invoiceStatus.name));
+
+    // Ordenar por dueDate ascendente (vencidas/próximas primero)
+    return [...filtered].sort((a, b) => {
+      const dateA = new Date(a.dueDate).getTime();
+      const dateB = new Date(b.dueDate).getTime();
+      return dateA - dateB;
+    });
   }, [invoices, selectedStatuses]);
 
   // Función para generar texto de fallback (usa facturas filtradas)
@@ -252,7 +257,7 @@ export function CustomerAccountDialog({
                     return (
                       <div
                         key={option.value}
-                        className="flex items-center space-x-2 rounded-sm px-2 py-1.5 hover:bg-accent cursor-pointer"
+                        className="flex items-center space-x-2 rounded-sm px-2 py-1.5 hover:bg-capture-accent cursor-pointer"
                         onClick={() => toggleStatus(option.value)}
                       >
                         <Checkbox
@@ -301,7 +306,7 @@ export function CustomerAccountDialog({
                     </Badge>
                   );
                 })}
-                <span className="text-sm text-muted-foreground">
+                <span className="text-sm text-capture-muted">
                   ({filteredInvoices.length} de {invoices.length})
                 </span>
               </div>
@@ -370,17 +375,17 @@ export function CustomerAccountDialog({
             <h3 className="text-lg font-semibold mb-3">
               Facturas del Cliente
               {!isLoading && !error && selectedStatuses.size > 0 && (
-                <span className="text-sm font-normal text-muted-foreground ml-2">
+                <span className="text-sm font-normal text-capture-muted ml-2">
                   ({filteredInvoices.length} de {invoices.length})
                 </span>
               )}
             </h3>
             {isLoading ? (
               <div className="flex items-center justify-center py-12">
-                <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+                <Loader2 className="h-8 w-8 animate-spin text-capture-muted" />
               </div>
             ) : error ? (
-              <div className="text-center py-12 text-destructive">
+              <div className="text-center py-12 text-capture-destructive">
                 Error al cargar facturas: {error}
               </div>
             ) : (
