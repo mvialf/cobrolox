@@ -19,6 +19,7 @@ on:
 env:
   APP_URL: ${{ secrets.APP_URL }}
   CRON_SECRET: ${{ secrets.CRON_SECRET }}
+  VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
 
 jobs:
   recalculate-balances:
@@ -49,6 +50,7 @@ jobs:
           RESPONSE=$(curl -s -w "\n%{http_code}" -X POST \
             "$APP_URL/api/cron/recalculate-balances" \
             -H "Authorization: Bearer $CRON_SECRET" \
+            -H "x-vercel-protection-bypass: $VERCEL_AUTOMATION_BYPASS_SECRET" \
             -H "Content-Type: application/json")
 
           HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
@@ -92,6 +94,7 @@ jobs:
           RESPONSE=$(curl -s -w "\n%{http_code}" -X POST \
             "$APP_URL/api/cron/mark-installments-paid" \
             -H "Authorization: Bearer $CRON_SECRET" \
+            -H "x-vercel-protection-bypass: $VERCEL_AUTOMATION_BYPASS_SECRET" \
             -H "Content-Type: application/json")
 
           HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
