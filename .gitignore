@@ -32,6 +32,7 @@ yarn-error.log*
 # local env files
 .env*.local
 .env
+.env.production
 !.env.example
 
 # vercel
@@ -44,6 +45,9 @@ next-env.d.ts
 # IDE
 .vscode
 .idea
+
+# MCP Configuration
+.mcp.json
 
 # Prisma
 prisma/.env
