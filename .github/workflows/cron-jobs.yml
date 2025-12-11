@@ -2,10 +2,8 @@ name: Scheduled Cron Jobs
 
 on:
   schedule:
-    # Recalcular balances: 6 AM UTC (3 AM Chile)
-    - cron: '0 6 * * *'
-    # Marcar cuotas pagadas: Medianoche UTC (9 PM Chile día anterior)
-    - cron: '0 0 * * *'
+    # Ambos jobs se ejecutan a las 3 AM Chile (7 AM UTC) todos los días
+    - cron: '0 7 * * *'
   workflow_dispatch:
     inputs:
       job:
@@ -26,11 +24,11 @@ jobs:
   recalculate-balances:
     name: Recalcular Balances de Clientes
     runs-on: ubuntu-latest
-    # Ejecutar a las 6 AM UTC o manualmente si se selecciona
+    # Ejecutar a las 3 AM Chile (7 AM UTC) o manualmente si se selecciona
     if: >
-      github.event.schedule == '0 6 * * *' ||
-      github.event_name == 'workflow_dispatch' &&
-      (github.event.inputs.job == 'all' || github.event.inputs.job == 'recalculate-balances')
+      github.event.schedule == '0 7 * * *' ||
+      (github.event_name == 'workflow_dispatch' &&
+       (github.event.inputs.job == 'all' || github.event.inputs.job == 'recalculate-balances'))
     steps:
       - name: Verificar configuración
         run: |
@@ -48,7 +46,7 @@ jobs:
         run: |
           echo "🔄 Llamando a $APP_URL/api/cron/recalculate-balances"
 
-          RESPONSE=$(curl -s -w "\n%{http_code}" -X GET \
+          RESPONSE=$(curl -s -w "\n%{http_code}" -X POST \
             "$APP_URL/api/cron/recalculate-balances" \
             -H "Authorization: Bearer $CRON_SECRET" \
             -H "Content-Type: application/json")
@@ -69,11 +67,11 @@ jobs:
   mark-installments-paid:
     name: Marcar Cuotas Vencidas como Pagadas
     runs-on: ubuntu-latest
-    # Ejecutar a medianoche UTC o manualmente si se selecciona
+    # Ejecutar a las 3 AM Chile (7 AM UTC) o manualmente si se selecciona
     if: >
-      github.event.schedule == '0 0 * * *' ||
-      github.event_name == 'workflow_dispatch' &&
-      (github.event.inputs.job == 'all' || github.event.inputs.job == 'mark-installments-paid')
+      github.event.schedule == '0 7 * * *' ||
+      (github.event_name == 'workflow_dispatch' &&
+       (github.event.inputs.job == 'all' || github.event.inputs.job == 'mark-installments-paid'))
     steps:
       - name: Verificar configuración
         run: |
@@ -91,7 +89,7 @@ jobs:
         run: |
           echo "🔄 Llamando a $APP_URL/api/cron/mark-installments-paid"
 
-          RESPONSE=$(curl -s -w "\n%{http_code}" -X GET \
+          RESPONSE=$(curl -s -w "\n%{http_code}" -X POST \
             "$APP_URL/api/cron/mark-installments-paid" \
             -H "Authorization: Bearer $CRON_SECRET" \
             -H "Content-Type: application/json")

@@ -1,12 +1,1 @@
-{
-  "crons": [
-    {
-      "path": "/api/cron/mark-installments-paid",
-      "schedule": "0 0 * * *"
-    },
-    {
-      "path": "/api/cron/recalculate-balances",
-      "schedule": "0 6 * * *"
-    }
-  ]
-}
+{}
