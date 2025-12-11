@@ -20,6 +20,7 @@ export const runtime = "nodejs";
  * - /forgot-password
  * - /reset-password
  * - /api/auth/* (endpoints de autenticación)
+ * - /api/cron/* (cron jobs protegidos por CRON_SECRET)
  * - /_next/* (archivos estáticos de Next.js)
  * - /favicon.ico
  *
@@ -38,9 +39,10 @@ export async function middleware(request: NextRequest) {
     "/reset-password",
   ];
 
-  // Permitir acceso a rutas de auth API, archivos estáticos y públicas
+  // Permitir acceso a rutas de auth API, cron API, archivos estáticos y públicas
   if (
     pathname.startsWith("/api/auth/") ||
+    pathname.startsWith("/api/cron/") ||
     pathname.startsWith("/_next/") ||
     pathname === "/favicon.ico" ||
     publicRoutes.includes(pathname)
