@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 import { DataTableColumnHeader } from "@/components/data-table";
-import { formatDate } from "@/lib/format";
+import { formatCurrency, formatDate } from "@/lib/format";
 import { useMarkInstallmentAsPaid } from "@/hooks/queries/use-installments";
 
 export interface Installment {
@@ -171,12 +171,7 @@ export const createColumns = ({
       const currency = row.original.payment.currency;
       return (
         <div className="text-right font-medium">
-          {new Intl.NumberFormat("es-CL", {
-            style: "currency",
-            currency,
-            minimumFractionDigits: 0,
-            maximumFractionDigits: 0,
-          }).format(amount)}
+          {formatCurrency(amount, currency)}
         </div>
       );
     },
