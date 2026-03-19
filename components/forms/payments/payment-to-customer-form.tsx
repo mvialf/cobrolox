@@ -470,6 +470,9 @@ export function PaymentToCustomerForm({
                       <TableHead className="text-right">
                         Monto Asignado
                       </TableHead>
+                      <TableHead className="text-right">
+                        Nuevo Balance
+                      </TableHead>
                       <TableHead className="w-[50px]"></TableHead>
                     </TableRow>
                   </TableHeader>
@@ -511,6 +514,24 @@ export function PaymentToCustomerForm({
                               onChangeAllocation={handleChangeAllocation}
                               index={index}
                             />
+                          </TableCell>
+                          <TableCell className="text-right">
+                            <span
+                              className={cn(
+                                "text-sm",
+                                field.allocatedAmount > 0 &&
+                                  invoice.balance - field.allocatedAmount <= 0
+                                  ? "text-green-600 font-medium"
+                                  : field.allocatedAmount > 0
+                                    ? "text-amber-600"
+                                    : "text-muted-foreground"
+                              )}
+                            >
+                              {formatCurrency(
+                                Math.max(0, invoice.balance - field.allocatedAmount),
+                                invoice.currency
+                              )}
+                            </span>
                           </TableCell>
                           <TableCell>
                             <Button
