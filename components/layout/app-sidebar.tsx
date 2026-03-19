@@ -8,16 +8,11 @@ import {
   Settings,
   ChevronUp,
   User2,
-  FileText,
   ChevronDown,
-  Phone,
   Users,
   Receipt,
   Wallet,
   BadgeCheck,
-  MessageSquare,
-  Table,
-  Tags,
   PanelRightOpen,
   PanelRightClose,
   Upload,
@@ -94,38 +89,6 @@ const navigationItems: NavigationItem[] = [
     title: "Importación",
     url: "/import",
     icon: Upload,
-  },
-  {
-    title: "Ejemplos",
-    url: "/examples",
-    icon: FileText,
-    items: [
-      {
-        title: "DataTable",
-        url: "/examples/data-table",
-        icon: Table,
-      },
-      {
-        title: "Regional Inputs",
-        url: "/examples/regional-inputs",
-        icon: Phone,
-      },
-      {
-        title: "Dialogs",
-        url: "/examples/dialogs",
-        icon: MessageSquare,
-      },
-      {
-        title: "Combobox",
-        url: "/examples/combobox",
-        icon: ChevronDown,
-      },
-      {
-        title: "Team Tags",
-        url: "/examples/team-tags",
-        icon: Tags,
-      },
-    ],
   },
 ];
 

@@ -1,6 +1,6 @@
 import { AppLayout } from "@/components/layout/app-layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Code, Settings, BookOpen, ArrowRight } from "lucide-react";
+import { Settings, ArrowRight } from "lucide-react";
 import Link from "next/link";
 
 export default function HomePage() {
@@ -54,25 +54,6 @@ export default function HomePage() {
 
         {/* Quick Links Grid */}
         <div className="grid gap-4 md:grid-cols-3">
-          {/* Ejemplos Card */}
-          <Card>
-            <CardHeader>
-              <Code className="h-8 w-8 mb-2 text-primary" />
-              <CardTitle>Ejemplos</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground mb-4">
-                Catálogo de componentes, formularios y patrones listos para usar
-              </p>
-              <Link
-                href="/examples"
-                className="text-sm text-primary flex items-center hover:underline"
-              >
-                Ver ejemplos <ArrowRight className="ml-1 h-4 w-4" />
-              </Link>
-            </CardContent>
-          </Card>
-
           {/* Configuración Card */}
           <Card>
             <CardHeader>
@@ -92,24 +73,6 @@ export default function HomePage() {
             </CardContent>
           </Card>
 
-          {/* Documentación Card */}
-          <Card>
-            <CardHeader>
-              <BookOpen className="h-8 w-8 mb-2 text-primary" />
-              <CardTitle>Documentación</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground mb-4">
-                Guías de arquitectura, patrones y decisiones técnicas
-              </p>
-              <a
-                href="/docs/template"
-                className="text-sm text-primary flex items-center hover:underline"
-              >
-                Leer documentación <ArrowRight className="ml-1 h-4 w-4" />
-              </a>
-            </CardContent>
-          </Card>
         </div>
 
         {/* Stack Info Card */}

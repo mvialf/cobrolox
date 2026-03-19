@@ -4,7 +4,7 @@ import { defineConfig, devices } from "@playwright/test";
  * Configuración de Playwright para E2E testing
  *
  * @see https://playwright.dev/docs/test-configuration
- * @see docs/template/decisions/010-playwright-mcp.md
+ * @see https://playwright.dev/docs/test-configuration
  */
 export default defineConfig({
   // Directorio donde están los tests E2E
