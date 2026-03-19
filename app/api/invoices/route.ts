@@ -105,14 +105,26 @@ export const GET = withLogging(async (request, logger) => {
       where.balance = { gt: 0 };
     }
 
-    // Obtener facturas con datos relacionados y total count
-    const [invoicesRaw, total] = await Promise.all([
+    // Filtro base sin balance (para filtros globales que incluyen completadas)
+    const whereBase: Prisma.InvoiceWhereInput = {};
+    if (search) whereBase.OR = where.OR;
+    if (customerId) whereBase.customerId = customerId;
+
+    // Obtener facturas, total count, filtros globales y último número en paralelo
+    const [
+      invoicesRaw,
+      total,
+      distinctCustomers,
+      distinctInvoiceStatuses,
+      distinctPaymentStatuses,
+      lastInvoiceRecord,
+    ] = await Promise.all([
       prisma.invoice.findMany({
         relationLoadStrategy: "join",
         where,
         skip,
-        take: limit, // Si es undefined, trae todos los registros
-        orderBy: { [orderBy]: orderDir }, // Configurable: default issueDate desc, FEFO usa dueDate asc
+        take: limit,
+        orderBy: { [orderBy]: orderDir },
         include: {
           customer: {
             select: {
@@ -135,6 +147,29 @@ export const GET = withLogging(async (request, logger) => {
         },
       }),
       prisma.invoice.count({ where }),
+      // Filtros globales: clientes con facturas (sin filtro de balance)
+      prisma.customer.findMany({
+        where: { invoices: { some: whereBase } },
+        select: { id: true, razonSocial: true },
+        orderBy: { razonSocial: "asc" },
+      }),
+      // Estados de factura activos
+      prisma.invoiceStatus.findMany({
+        where: { isActive: true },
+        select: { name: true },
+        orderBy: { order: "asc" },
+      }),
+      // Estados de pago activos
+      prisma.paymentInvoiceStatus.findMany({
+        where: { isActive: true },
+        select: { name: true },
+        orderBy: { order: "asc" },
+      }),
+      // Último número de factura (MAX)
+      prisma.invoice.findFirst({
+        select: { invoiceNumber: true },
+        orderBy: { invoiceNumber: "desc" },
+      }),
     ]);
 
     // Obtener estados del sistema (con cache - elimina 6 queries repetidas)
@@ -188,6 +223,23 @@ export const GET = withLogging(async (request, logger) => {
         limit: limit ?? total,
         total,
         totalPages: limit ? Math.ceil(total / limit) : 1,
+      },
+      filters: {
+        customers: distinctCustomers.map((c) => ({
+          value: c.id,
+          label: c.razonSocial,
+        })),
+        invoiceStatuses: distinctInvoiceStatuses.map((s) => ({
+          value: s.name,
+          label: s.name,
+        })),
+        paymentStatuses: distinctPaymentStatuses.map((s) => ({
+          value: s.name,
+          label: s.name,
+        })),
+      },
+      meta: {
+        lastInvoiceNumber: lastInvoiceRecord?.invoiceNumber ?? null,
       },
     });
   } catch (error) {

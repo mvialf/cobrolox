@@ -30,6 +30,12 @@ export interface InvoicesQueryParams {
   includeCompleted?: boolean; // Incluir facturas completadas
 }
 
+/** Opción de filtro */
+export interface FilterOption {
+  value: string;
+  label: string;
+}
+
 /** Respuesta de GET /api/invoices */
 export interface InvoicesResponse {
   invoices: InvoiceWithBalance[];
@@ -38,6 +44,14 @@ export interface InvoicesResponse {
     limit: number;
     total: number;
     totalPages: number;
+  };
+  filters?: {
+    customers: FilterOption[];
+    invoiceStatuses: FilterOption[];
+    paymentStatuses: FilterOption[];
+  };
+  meta?: {
+    lastInvoiceNumber: string | null;
   };
 }
 
