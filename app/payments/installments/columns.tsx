@@ -20,6 +20,7 @@ export interface Installment {
   dueDate: string;
   paidDate: string | null;
   status: string;
+  isOverdue: boolean;
   payment: {
     id: string;
     amount: number;
@@ -102,12 +103,7 @@ export const createColumns = ({
       <DataTableColumnHeader column={column} title="Vencimiento" />
     ),
     cell: ({ row }) => {
-      const date = new Date(row.getValue("dueDate"));
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-      const dueDate = new Date(date);
-      dueDate.setHours(0, 0, 0, 0);
-      const isOverdue = dueDate < today && row.original.status === "pending";
+      const { isOverdue } = row.original;
 
       return (
         <div className={isOverdue ? "text-red-600 font-medium" : ""}>

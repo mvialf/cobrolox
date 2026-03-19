@@ -32,6 +32,7 @@ export interface Installment {
   dueDate: string;
   paidDate: string | null;
   status: string;
+  isOverdue: boolean;
   payment: {
     id: string;
     amount: number;

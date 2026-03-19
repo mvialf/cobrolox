@@ -157,8 +157,14 @@ export async function GET(request: Request) {
       totalOverdue: Number(overdueAggregate._sum.amount ?? 0),
     };
 
+    // Agregar isOverdue como campo virtual a cada installment
+    const installmentsWithOverdue = installments.map((inst) => ({
+      ...inst,
+      isOverdue: inst.status === "pending" && inst.dueDate < today,
+    }));
+
     return NextResponse.json({
-      installments,
+      installments: installmentsWithOverdue,
       pagination: {
         page,
         limit,
