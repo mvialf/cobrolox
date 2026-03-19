@@ -497,7 +497,6 @@ Similar a MercadoPago pero:
 ### Documentación
 
 - [docs/project/architecture.md](../architecture.md#sistema-de-cuotas-installments) - Arquitectura de cuotas
-- [docs/project/implementation/2025-current.md](../implementation/2025-current.md) - Implementación #21: Sistema de Installments + Cron Job
 
 ### External References
 

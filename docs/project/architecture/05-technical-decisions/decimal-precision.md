@@ -174,7 +174,5 @@ if (amountsMatch(totalAllocated, paymentAmount)) {
 
 ## Ver También
 
-- [Financial Constants](../03-layers/business-logic.md#constants) - Constantes centralizadas
-- [Payment Validations](../03-layers/business-logic.md#validaciones-zod-schemas) - Validaciones
 
 **Última actualización:** 2025-10-30

@@ -300,7 +300,5 @@ PE: {
 ## Ver También
 
 - [Regional Config Decision](../05-technical-decisions/regional-config.md) - Por qué Context API
-- [Business Logic](../03-layers/business-logic.md#constants) - PAISES_CONFIG completo
-- [UI Components](../03-layers/ui-components.md#componentes-regionales) - Componentes
 
 **Última actualización:** 2025-10-30

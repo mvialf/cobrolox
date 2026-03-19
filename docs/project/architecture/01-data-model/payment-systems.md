@@ -520,7 +520,6 @@ if (paymentMethod.hasInstallments) {
 
 ## Ver También
 
-- [ER Diagram](er-diagram.md) - Diagrama completo del sistema
 - [Customer & Project Systems](customer-project-systems.md) - Clientes y proyectos
 - [Relationships](relationships.md) - Tabla de relaciones
 - [Flujos de Negocio](../02-business-flows/) - Flujos de creación de pagos

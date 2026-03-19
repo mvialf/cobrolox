@@ -313,8 +313,6 @@ Actualmente **no implementado**.
 
 ## Ver También
 
-- [API Layer Architecture](../03-layers/api-layer.md) - Arquitectura general
 - [Logging System](../04-logging/) - Sistema de logging estructurado
-- [Business Logic](../03-layers/business-logic.md) - Validaciones Zod
 
 **Última actualización:** 2025-10-30

@@ -393,7 +393,6 @@ model Payment {
 
 - [ADR-002: Dual Payment Flows](002-dual-payment-flows.md) - Flujos de pago que dependen de esta arquitectura
 - [docs/project/architecture.md](../architecture.md#migración-paymentallocation-architecture) - Sección de arquitectura N:M
-- [docs/project/implementation/2025-current.md](../implementation/2025-current.md) - Implementación #24: Migración PaymentAllocation Architecture
 
 ### External References
 

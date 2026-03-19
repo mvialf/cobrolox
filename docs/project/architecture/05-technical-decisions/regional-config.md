@@ -734,8 +734,6 @@ export function ConfigurationProvider({ orgId, children }) {
 
 ## Ver También
 
-- [Regional Components](../03-layers/ui-components.md#componentes-regionales) - PhoneInput, CurrencyInput, RutInput
 - [Address Fields](../02-business-flows/address-handling.md) - Manejo de direcciones
-- [Constants](../03-layers/business-logic.md#constants) - PAISES_CONFIG
 
 **Última actualización:** 2025-10-30

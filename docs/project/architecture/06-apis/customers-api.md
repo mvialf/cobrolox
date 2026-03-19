@@ -475,7 +475,5 @@ export const GET = withLogging(async (request, logger) => {
 ## Ver También
 
 - [Customer Model](../01-data-model/customers.md) - Modelo de datos
-- [Customer Validations](../03-layers/business-logic.md#validaciones-zod-schemas) - Schemas Zod
-- [API Layer](../03-layers/api-layer.md) - Arquitectura general
 
 **Última actualización:** 2025-10-30

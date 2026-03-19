@@ -1,16 +1,16 @@
 # CLAUDE.md
 
-Este archivo proporciona orientación a Claude Code cuando trabaja con este template.
+Orientación para Claude Code en el proyecto Cobrolox.
 
 ## Proyecto
 
-**Cobrolox** - Template SaaS para Chile especializado en facturación y cobros.
+**Cobrolox** - Sistema de gestión de facturación y cobros para Chile.
 
 **Stack:** Next.js 15 + React 19 + TypeScript + Tailwind v4 + shadcn/ui + Prisma + Neon
 
-**📚 Documentación completa:** Ver [README.md](README.md) y [docs/template/](docs/template/)
+**Documentación:** Ver [docs/project/](docs/project/)
 
-## ⚡ Comandos Críticos
+## Comandos Críticos
 
 **SIEMPRE ejecutar después de modificaciones:**
 
@@ -25,41 +25,14 @@ npm run typecheck   # TypeScript
 npm run dev         # Puerto 3000
 ```
 
-## 🎯 Qué Incluye Este Template
-
-### ✅ REUTILIZABLE (Mantener)
-
-- **Customer System** completo (CRUD + validación RUT)
-- **Payment System** completo (métodos + cuotas + installments)
-- **Settings System** (configuración de payment methods)
-- **Regional Chile** (RUT, regiones, comunas, direcciones)
-- **Layout System** (AppLayout + AppSidebar + PageHeader)
-- **50+ UI Components** (shadcn/ui)
-- **Testing** (Vitest + Playwright)
-
-### ❌ REMOVIDO (Era específico de Cobralon - ventanas)
-
-- Projects (reemplazar con Invoices)
-- Aftersales (garantías post-instalación)
-- UninstallTags (etiquetas de desinstalación)
-- ProjectStatus (reemplazar con InvoiceStatus)
-
-## 🚧 TODO para Nueva Implementación
-
-1. **Invoice Model** - Similar a viejo Project model pero para facturas
-2. **InvoiceStatus Model** - Estados de facturas (pendiente, pagada, vencida)
-3. **PaymentAllocation Model** - Relación N:M Payment ↔ Invoice
-
-Ver TODOs en `prisma/schema.prisma`
-
-## 🌐 Idioma
+## Idioma
 
 - **Respuestas:** Español
 - **Código/variables:** Inglés
 - **Comentarios:** Español
 - **Commits:** Español
 
-## 🔍 Consulta de Documentación
+## Consulta de Documentación
 
 - **Claude Code:** Usar `/docs` antes de especular
 - **Bibliotecas:** Usar MCP Context7 para docs actualizadas
@@ -71,7 +44,7 @@ Ver TODOs en `prisma/schema.prisma`
 - Preferir Tailwind utilities
 - Variables CSS: `var(--nombre-variable)`
 
-## 🔎 Búsqueda de Código
+## Búsqueda de Código
 
 ### Herramientas Directas
 
@@ -83,27 +56,6 @@ Ver TODOs en `prisma/schema.prisma`
 
 - `code-searcher` - Análisis multi-paso, patrones, dependencias
 - `git-searcher` - Historial, blame, commits
-
-## 📚 Importaciones de Docs
-
-### Template Framework
-
-```
-@docs/template/README.md
-@docs/template/architecture/overview.md
-@docs/template/guides/building-features/
-@docs/template/components/app-layout.md
-```
-
-### Decisiones (ADRs)
-
-```
-@docs/template/decisions/001-nextjs-15-app-router.md
-@docs/template/decisions/002-tailwind-css-v4.md
-@docs/template/decisions/003-shadcn-ui-new-york.md
-@docs/template/decisions/004-layout-system-dos-capas.md
-@docs/template/decisions/008-prisma-neon.md
-```
 
 ## Quick Reference
 
@@ -134,7 +86,7 @@ export default function Page() {
 npx shadcn@latest add [component-name]
 ```
 
-## 🗄️ Database
+## Database
 
 **Prisma Commands:**
 
@@ -146,17 +98,7 @@ npm run db:studio    # GUI
 npm run db:seed      # Seed data
 ```
 
-**Modelos Actuales:**
-
-- User, Customer, Payment, PaymentMethod, Installment, BadgeColor
-
-**Pendientes:**
-
-- Invoice, InvoiceStatus, PaymentAllocation
-
 ## Workflow de Features
-
-Ver guía completa: [docs/template/guides/building-features/](docs/template/guides/building-features/)
 
 **4 patrones principales:**
 
@@ -171,7 +113,3 @@ Ver guía completa: [docs/template/guides/building-features/](docs/template/guid
 - Extract When It Hurts (>10 líneas O 2+ usos)
 - Data Down, Events Up
 - Test What Matters
-
----
-
-**📖 Ver README.md para guía completa del template**

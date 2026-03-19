@@ -340,7 +340,6 @@ await prisma.payment.delete({ where: { id: paymentId } });
 
 ## Ver También
 
-- [ER Diagram](er-diagram.md) - Diagrama completo con relaciones visuales
 - [Customer & Project Systems](customer-project-systems.md) - Modelos principales
 - [Payment Systems](payment-systems.md) - Sistema de pagos
 - [Decisión: CASCADE vs RESTRICT](../05-technical-decisions/cascade-vs-restrict.md) - Decisión arquitectural

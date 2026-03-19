@@ -812,6 +812,5 @@ export function allocatePaymentFIFO(
 - [Payment Model](../01-data-model/payment-systems.md) - Modelo completo
 - [PaymentAllocation Decision](../05-technical-decisions/payment-allocation.md) - Por qué N:M table
 - [Installments](installments-api.md) - API de cuotas
-- [FIFO Logic](../03-layers/business-logic.md#payment-fifo) - Lógica de asignación
 
 **Última actualización:** 2025-10-30

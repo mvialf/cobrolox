@@ -496,7 +496,6 @@ UI mockup:
 
 - [ADR-001: PaymentAllocation Architecture](001-payment-allocation-architecture.md) - Arquitectura N:M que soporta dual flows
 - [docs/project/architecture.md](../architecture.md#flujos-de-negocio) - Diagramas de flujos de pago
-- [docs/project/implementation/2025-current.md](../implementation/2025-current.md) - Implementación #20: Sistema Completo de Payments
 
 ### External References
 

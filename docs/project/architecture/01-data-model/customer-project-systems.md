@@ -368,7 +368,6 @@ await prisma.badgeColor.createMany({ data: badgeColors });
 
 ## Ver También
 
-- [ER Diagram](er-diagram.md) - Diagrama completo con relaciones
 - [Payment Systems](payment-systems.md) - Sistema de pagos y asignaciones
 - [Relationships](relationships.md) - Tabla de relaciones con políticas onDelete
 - [APIs - Projects](../06-apis/projects-api.md) - Endpoints de proyectos

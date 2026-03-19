@@ -155,6 +155,5 @@ Este directorio contiene decisiones específicas del proyecto Cobralon (no del t
 ## Ver También
 
 - [Modelo de Datos](../01-data-model/) - Implementación de decisiones
-- [Business Logic Layer](../03-layers/business-logic.md) - Validaciones y cálculos
 
 **Última actualización:** 2025-10-30

@@ -226,7 +226,6 @@ Cuando usuario navega a otra página, collapsibles vuelven a estado cerrado.
 
 **Impacto:** Molesto pero no crítico - usuario se adapta.
 
-**Mitigación futura:** Agregar localStorage para persistir estado (ver [Layout Improvements Analysis](../analysis/layout-improvements.md#2-estado-de-collapsible-no-persiste)).
 
 ## Uso Real en el Proyecto
 
@@ -409,8 +408,6 @@ No agregamos localStorage para persistir estado de collapsibles porque:
 - [AppSidebar Component](../../../components/layout/app-sidebar.tsx) - Implementación completa
 - [ADR-004: Sistema de Layout 2 Capas](../../template/decisions/004-layout-system-dos-capas.md) - Arquitectura base
 - [ADR-011: PageHeader Action Slot](011-pageheader-action-slot.md) - Mejora complementaria
-- [Implementation Log: Mejoras Layout](../implementation/2025-current.md#-mejoras-arquitecturales-del-sistema-de-layout)
-- [Layout Improvements Analysis](../analysis/layout-improvements.md) - Deep dive técnico
 - [Radix UI Collapsible](https://www.radix-ui.com/primitives/docs/components/collapsible) - Primitive usado
 
 ---

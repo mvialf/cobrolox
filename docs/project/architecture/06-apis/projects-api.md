@@ -612,6 +612,5 @@ model Project {
 
 - [Project Model](../01-data-model/projects.md) - Modelo de datos
 - [Project Status](../01-data-model/project-status.md) - Estados configurables
-- [Balance Calculation](../03-layers/business-logic.md#project-balance) - Lógica de balance
 
 **Última actualización:** 2025-10-30

@@ -42,9 +42,8 @@ Sigue el **patrón de búsqueda de CLAUDE.md líneas 45-85**:
 
 ### Fase 3: Consultar Documentación del Proyecto
 
-- Lee ADRs relevantes en `docs/template/decisions/`
-- Consulta architecture docs en `docs/template/architecture/`
-- Revisa component docs en `docs/template/components/`
+- Lee ADRs relevantes en `docs/project/decisions/`
+- Consulta architecture docs en `docs/project/architecture/`
 
 ### Fase 4: Investigación Externa (si es necesario)
 
@@ -89,7 +88,7 @@ Sigue el **patrón de búsqueda de CLAUDE.md líneas 45-85**:
 ## 📚 Referencias
 
 - [archivo.tsx:línea](ruta/archivo.tsx#Lnúmero) - Descripción
-- [ADR-XXX](docs/template/decisions/XXX.md) - Decisión relacionada
+- [ADR-XXX](docs/project/decisions/XXX.md) - Decisión relacionada
 - Documentación externa - Recurso adicional
 
 ---
@@ -132,7 +131,7 @@ Sigue el **patrón de búsqueda de CLAUDE.md líneas 45-85**:
    - `Read` components/layout/app-layout.tsx
    - `Grep` para encontrar uso de hooks/state
    - `Read` ADR-004 sobre sistema de layout
-   - `Read` docs/template/architecture/overview.md
+   - `Read` docs/project/architecture/
 
 3. **Análisis:**
    - Identificar `useState`, event handlers, interactividad del sidebar

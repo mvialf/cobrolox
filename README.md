@@ -145,7 +145,6 @@ cobrolox/
 │   │   └── installments/      # Vista de cuotas
 │   ├── settings/              # Configuraciones
 │   │   └── payments/          # Config métodos de pago
-│   ├── examples/              # Ejemplos de uso
 │   └── api/                   # API Routes
 │       ├── customers/
 │       ├── payments/
@@ -252,12 +251,7 @@ npm run typecheck       # TypeScript check
 
 ## 📚 Documentación
 
-Ver carpeta `docs/template/` para:
-
-- [Architecture Overview](docs/template/architecture/overview.md)
-- [Component Guides](docs/template/components/)
-- [Testing Strategy](docs/template/methodology/testing.md)
-- [ADRs (Decisiones Arquitecturales)](docs/template/decisions/)
+Ver carpeta `docs/project/` para arquitectura, decisiones y guías del proyecto.
 
 ## 🇨🇱 Características Chile-Específicas
 

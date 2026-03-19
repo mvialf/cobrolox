@@ -28,7 +28,6 @@
 
 **Próximos pasos (cuando escalar a producción):**
 
-1. **Agregar autenticación:** Implementar [Template ADR-009 guía de auth](../../template/decisions/009-authentication-options.md)
    - Recomendado: NextAuth.js (10-15 hrs) O Stack Auth (5-10 hrs)
 
 2. **Restricciones de seguridad:**
@@ -680,8 +679,6 @@ export default async function ProjectsPage() {
 
 ### Código
 
-- **Template Auth Guide:** [docs/template/guides/authentication-setup.md](../../template/guides/authentication-setup.md)
-- **Template ADR-009:** [docs/template/decisions/009-authentication-options.md](../../template/decisions/009-authentication-options.md)
 
 ### Documentación Externa
 
@@ -747,7 +744,6 @@ Si alguno es ✅ → **Implementar Fase 2 (NextAuth.js)**
 
 - `docs/project/decisions/005-no-authentication-mvp.md` (este archivo)
 - `docs/project/architecture.md` - Sección de seguridad
-- Roadmap en `docs/project/implementation/2025-current.md`
 
 ---
 
