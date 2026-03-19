@@ -4,8 +4,8 @@ import { afterEach, vi } from "vitest";
 import { config } from "dotenv";
 import { resolve } from "path";
 
-// Cargar variables de entorno desde .env.local para tests
-config({ path: resolve(process.cwd(), ".env.local") });
+// Cargar variables de entorno para tests
+config({ path: resolve(process.cwd(), ".env") });
 
 // Cleanup después de cada test
 afterEach(() => {

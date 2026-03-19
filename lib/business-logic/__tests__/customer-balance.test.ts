@@ -23,11 +23,26 @@ describe("customer-balance", () => {
   let testInvoice3Id: string; // Factura pagada completamente (balance 0)
   let testPaymentId: string;
 
+  const TEST_RUT = "12345678-9";
+
   beforeAll(async () => {
+    // Limpiar datos previos si existen (de un run anterior que no hizo cleanup)
+    const existing = await prisma.customer.findUnique({
+      where: { rut: TEST_RUT },
+    });
+    if (existing) {
+      await prisma.paymentAllocation.deleteMany({
+        where: { payment: { customerId: existing.id } },
+      });
+      await prisma.payment.deleteMany({ where: { customerId: existing.id } });
+      await prisma.invoice.deleteMany({ where: { customerId: existing.id } });
+      await prisma.customer.delete({ where: { id: existing.id } });
+    }
+
     // Crear customer de test
     const customer = await prisma.customer.create({
       data: {
-        rut: "12345678-9",
+        rut: TEST_RUT,
         razonSocial: "Test Customer Balance",
         contact: "Test Contact",
         phone: "123456789",
