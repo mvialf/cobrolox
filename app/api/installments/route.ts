@@ -19,6 +19,7 @@ import { Prisma } from "@prisma/client";
  * Response:
  *   - installments: Array de installments con payment, customer y allocations incluidas
  *   - pagination: { page, limit, total, totalPages }
+ *   - stats: { total, pending, paid, overdue, totalPending, totalPaid, totalOverdue }
  */
 export async function GET(request: Request) {
   try {
@@ -62,62 +63,99 @@ export async function GET(request: Request) {
       };
     }
 
-    // Obtener installments y total count
-    const [installments, total] = await Promise.all([
-      prisma.installment.findMany({
-        relationLoadStrategy: "join", // Fix N+1: Force database-level JOINs
-        where,
-        skip,
-        take: limit,
-        orderBy: [
-          { dueDate: "asc" }, // Vencimientos más próximos primero
-          { installmentNumber: "asc" }, // Número de cuota
-        ],
-        include: {
-          payment: {
-            select: {
-              id: true,
-              amount: true,
-              currency: true,
-              date: true,
-              reference: true,
-              selectedInstallments: true,
-              customer: {
-                select: {
-                  id: true,
-                  razonSocial: true,
-                  phone: true,
+    // Fecha de hoy para calcular vencidas
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    // Filtro para cuotas vencidas (pending + dueDate < hoy)
+    const overdueWhere: Prisma.InstallmentWhereInput = {
+      ...where,
+      status: "pending",
+      dueDate: { lt: today },
+    };
+
+    // Obtener installments, total count y stats agregadas en paralelo
+    const [installments, total, statusGroups, overdueCount, overdueAggregate] =
+      await Promise.all([
+        prisma.installment.findMany({
+          relationLoadStrategy: "join",
+          where,
+          skip,
+          take: limit,
+          orderBy: [
+            { dueDate: "asc" },
+            { installmentNumber: "asc" },
+          ],
+          include: {
+            payment: {
+              select: {
+                id: true,
+                amount: true,
+                currency: true,
+                date: true,
+                reference: true,
+                selectedInstallments: true,
+                customer: {
+                  select: {
+                    id: true,
+                    razonSocial: true,
+                    phone: true,
+                  },
                 },
-              },
-              paymentMethod: {
-                select: {
-                  id: true,
-                  name: true,
-                  icon: true,
+                paymentMethod: {
+                  select: {
+                    id: true,
+                    name: true,
+                    icon: true,
+                  },
                 },
-              },
-              allocations: {
-                select: {
-                  id: true,
-                  allocatedAmount: true,
-                  invoice: {
-                    select: {
-                      id: true,
-                      invoiceNumber: true,
-                      total: true,
-                      currency: true,
-                      issueDate: true,
-                      dueDate: true,
+                allocations: {
+                  select: {
+                    id: true,
+                    allocatedAmount: true,
+                    invoice: {
+                      select: {
+                        id: true,
+                        invoiceNumber: true,
+                        total: true,
+                        currency: true,
+                        issueDate: true,
+                        dueDate: true,
+                      },
                     },
                   },
                 },
               },
             },
           },
-        },
-      }),
-      prisma.installment.count({ where }),
-    ]);
+        }),
+        prisma.installment.count({ where }),
+        prisma.installment.groupBy({
+          by: ["status"],
+          where,
+          _count: true,
+          _sum: { amount: true },
+        }),
+        prisma.installment.count({ where: overdueWhere }),
+        prisma.installment.aggregate({
+          where: overdueWhere,
+          _sum: { amount: true },
+        }),
+      ]);
+
+    // Construir stats desde los resultados agregados
+    const pendingGroup = statusGroups.find((g) => g.status === "pending");
+    const paidGroup = statusGroups.find((g) => g.status === "paid");
+
+    const stats = {
+      total,
+      pending: pendingGroup?._count ?? 0,
+      paid: paidGroup?._count ?? 0,
+      overdue: overdueCount,
+      totalPending: Number(pendingGroup?._sum.amount ?? 0),
+      totalPaid: Number(paidGroup?._sum.amount ?? 0),
+      totalOverdue: Number(overdueAggregate._sum.amount ?? 0),
+    };
 
     return NextResponse.json({
       installments,
@@ -127,6 +165,7 @@ export async function GET(request: Request) {
         total,
         totalPages: Math.ceil(total / limit),
       },
+      stats,
     });
   } catch (error) {
     console.error("Error fetching installments:", error);

@@ -60,6 +60,17 @@ export interface Installment {
   };
 }
 
+/** Stats agregadas de installments (calculadas en backend sobre el total) */
+export interface InstallmentsStats {
+  total: number;
+  pending: number;
+  paid: number;
+  overdue: number;
+  totalPending: number;
+  totalPaid: number;
+  totalOverdue: number;
+}
+
 /** Respuesta de GET /api/installments */
 export interface InstallmentsResponse {
   installments: Installment[];
@@ -69,6 +80,7 @@ export interface InstallmentsResponse {
     total: number;
     totalPages: number;
   };
+  stats?: InstallmentsStats;
 }
 
 // ============================================================================
