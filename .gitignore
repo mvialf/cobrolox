@@ -32,6 +32,9 @@ yarn-error.log*
 # local env files
 .env*.local
 .env
+
+# database backups
+backups/
 .env.production
 !.env.example
 
