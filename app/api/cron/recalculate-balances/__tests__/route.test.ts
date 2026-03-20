@@ -135,7 +135,7 @@ describe("POST /api/cron/recalculate-balances", () => {
 
       expect(customerBalance.recalculateAllCustomers).toHaveBeenCalledTimes(1);
       expect(mockLogger.info).toHaveBeenCalledWith(
-        "Starting scheduled customer balance recalculation"
+        "Starting scheduled balanceTotal recalculation"
       );
     });
 
@@ -173,7 +173,7 @@ describe("POST /api/cron/recalculate-balances", () => {
           durationMs: expect.any(Number),
           durationSeconds: expect.any(Number),
         }),
-        "Customer balance recalculation completed successfully"
+        "Customer balanceTotal recalculation completed"
       );
     });
 

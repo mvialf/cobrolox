@@ -225,8 +225,10 @@ describe("getInvoiceDueDateStatus", () => {
   });
 
   it("debe manejar casos límite en el threshold", () => {
-    const exactThresholdDate = addDays(new Date(), 7);
-    const oneDayAfterThreshold = addDays(new Date(), 8);
+    // Usar startOfDay para evitar que la hora del día afecte differenceInDays
+    const today = startOfDay(new Date());
+    const exactThresholdDate = addDays(today, 7);
+    const oneDayAfterThreshold = addDays(today, 9);
 
     expect(getInvoiceDueDateStatus(exactThresholdDate, 7)).toBe("due-soon");
     expect(getInvoiceDueDateStatus(oneDayAfterThreshold, 7)).toBe("current");
