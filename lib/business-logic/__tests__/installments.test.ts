@@ -5,38 +5,34 @@
  * - calculateInstallments()
  * - validateInstallmentsSum()
  * - getTotalPendingInstallments()
+ * - getInstallmentStatus()
  */
 
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi, afterEach } from "vitest";
 import {
   calculateInstallments,
   validateInstallmentsSum,
   getTotalPendingInstallments,
+  getInstallmentStatus,
 } from "../installments";
 
 describe("calculateInstallments", () => {
   it("debe dividir $1,000 en 3 cuotas con última absorbiendo centavos", () => {
     const result = calculateInstallments(1000, 3, new Date("2025-01-15"));
 
-    // Cálculo esperado:
-    // baseAmount = Math.floor((1000 / 3) * 100) / 100 = 333.33
-    // totalBase = 333.33 * 2 = 666.66
-    // lastAmount = 1000 - 666.66 = 333.34
-
     expect(result).toHaveLength(3);
     expect(result[0].installmentNumber).toBe(1);
     expect(result[0].amount).toBe(333.33);
-    expect(result[0].dueDate).toEqual(new Date("2025-01-15")); // +0 días
+    expect(result[0].dueDate).toEqual(new Date("2025-01-15"));
 
     expect(result[1].installmentNumber).toBe(2);
     expect(result[1].amount).toBe(333.33);
-    expect(result[1].dueDate).toEqual(new Date("2025-02-14")); // +30 días
+    expect(result[1].dueDate).toEqual(new Date("2025-02-14"));
 
     expect(result[2].installmentNumber).toBe(3);
-    expect(result[2].amount).toBeCloseTo(333.34, 2); // ← Absorbe 0.01
-    expect(result[2].dueDate).toEqual(new Date("2025-03-16")); // +60 días
+    expect(result[2].amount).toBeCloseTo(333.34, 2);
+    expect(result[2].dueDate).toEqual(new Date("2025-03-16"));
 
-    // Validar suma exacta
     const sum = result.reduce((acc, inst) => acc + inst.amount, 0);
     expect(sum).toBe(1000);
   });
@@ -56,11 +52,6 @@ describe("calculateInstallments", () => {
   it("debe manejar caso extremo: $100 en 7 cuotas", () => {
     const result = calculateInstallments(100, 7, new Date("2025-01-01"));
 
-    // Cálculo esperado:
-    // baseAmount = Math.floor((100 / 7) * 100) / 100 = 14.28
-    // totalBase = 14.28 * 6 = 85.68
-    // lastAmount = 100 - 85.68 = 14.32
-
     expect(result).toHaveLength(7);
     expect(result[0].amount).toBe(14.28);
     expect(result[1].amount).toBe(14.28);
@@ -68,7 +59,7 @@ describe("calculateInstallments", () => {
     expect(result[3].amount).toBe(14.28);
     expect(result[4].amount).toBe(14.28);
     expect(result[5].amount).toBe(14.28);
-    expect(result[6].amount).toBeCloseTo(14.32, 2); // ← Absorbe 0.04
+    expect(result[6].amount).toBeCloseTo(14.32, 2);
 
     const sum = result.reduce((acc, inst) => acc + inst.amount, 0);
     expect(sum).toBe(100);
@@ -77,9 +68,9 @@ describe("calculateInstallments", () => {
   it("debe generar fechas de vencimiento correctas (cada 30 días)", () => {
     const result = calculateInstallments(300, 3, new Date("2025-01-15"));
 
-    expect(result[0].dueDate).toEqual(new Date("2025-01-15")); // Cuota 1: +0 días
-    expect(result[1].dueDate).toEqual(new Date("2025-02-14")); // Cuota 2: +30 días
-    expect(result[2].dueDate).toEqual(new Date("2025-03-16")); // Cuota 3: +60 días
+    expect(result[0].dueDate).toEqual(new Date("2025-01-15"));
+    expect(result[1].dueDate).toEqual(new Date("2025-02-14"));
+    expect(result[2].dueDate).toEqual(new Date("2025-03-16"));
   });
 
   it("debe lanzar error si installments < 1", () => {
@@ -104,50 +95,31 @@ describe("calculateInstallments", () => {
     }).toThrow("El monto debe ser mayor a 0");
   });
 
-  // --- Tests adicionales: Absorción de centavos (montos muy pequeños) ---
-
   it("debe dividir $0.10 en 3 cuotas correctamente", () => {
     const result = calculateInstallments(0.1, 3, new Date("2025-01-01"));
-
-    // Cálculo esperado:
-    // baseAmount = Math.floor((0.1 / 3) * 100) / 100 = 0.03
-    // totalBase = 0.03 * 2 = 0.06
-    // lastAmount = 0.1 - 0.06 = 0.04
 
     expect(result).toHaveLength(3);
     expect(result[0].amount).toBe(0.03);
     expect(result[1].amount).toBe(0.03);
-    expect(result[2].amount).toBeCloseTo(0.04, 2); // Absorbe 0.01
+    expect(result[2].amount).toBeCloseTo(0.04, 2);
 
     const sum = result.reduce((acc, inst) => acc + inst.amount, 0);
-    expect(Math.abs(sum - 0.1)).toBeLessThan(0.001); // Tolerancia para float
+    expect(Math.abs(sum - 0.1)).toBeLessThan(0.001);
   });
 
   it("debe dividir $0.01 (1 centavo) en 2 cuotas", () => {
     const result = calculateInstallments(0.01, 2, new Date("2025-01-01"));
 
-    // Cálculo esperado:
-    // baseAmount = Math.floor((0.01 / 2) * 100) / 100 = 0.00
-    // totalBase = 0.00 * 1 = 0.00
-    // lastAmount = 0.01 - 0.00 = 0.01
-
     expect(result).toHaveLength(2);
-    expect(result[0].amount).toBe(0.0); // Primera cuota es 0
-    expect(result[1].amount).toBe(0.01); // Segunda cuota absorbe todo
+    expect(result[0].amount).toBe(0.0);
+    expect(result[1].amount).toBe(0.01);
 
     const sum = result.reduce((acc, inst) => acc + inst.amount, 0);
     expect(sum).toBe(0.01);
   });
 
-  // --- Tests adicionales: Números grandes ---
-
   it("debe dividir $1,000,000 en 3 cuotas correctamente", () => {
     const result = calculateInstallments(1_000_000, 3, new Date("2025-01-01"));
-
-    // Cálculo esperado:
-    // baseAmount = Math.floor((1000000 / 3) * 100) / 100 = 333333.33
-    // totalBase = 333333.33 * 2 = 666666.66
-    // lastAmount = 1000000 - 666666.66 = 333333.34
 
     expect(result).toHaveLength(3);
     expect(result[0].amount).toBe(333333.33);
@@ -165,27 +137,22 @@ describe("calculateInstallments", () => {
       new Date("2025-01-01")
     );
 
-    // Verificar que tiene 12 cuotas
     expect(result).toHaveLength(12);
 
-    // Verificar que la suma es exacta (dentro de tolerancia)
     const sum = result.reduce((acc, inst) => acc + inst.amount, 0);
     expect(Math.abs(sum - 999_999.99)).toBeLessThan(0.01);
 
-    // Verificar que la última cuota absorbe la diferencia
     const baseAmount = result[0].amount;
     const lastAmount = result[11].amount;
     expect(lastAmount).toBeGreaterThanOrEqual(baseAmount);
   });
-
-  // --- Tests adicionales: Casos extremos ---
 
   it("debe manejar 1 sola cuota (retornar array con 1 elemento)", () => {
     const result = calculateInstallments(1000, 1, new Date("2025-01-01"));
 
     expect(result).toHaveLength(1);
     expect(result[0].installmentNumber).toBe(1);
-    expect(result[0].amount).toBe(1000); // Monto completo
+    expect(result[0].amount).toBe(1000);
     expect(result[0].dueDate).toEqual(new Date("2025-01-01"));
   });
 
@@ -209,34 +176,27 @@ describe("calculateInstallments", () => {
         new Date("2025-01-01")
       );
 
-      // Verificar que la suma es exacta
       const sum = result.reduce((acc, inst) => acc + inst.amount, 0);
       expect(Math.abs(sum - amount)).toBeLessThan(0.01);
-
-      // Verificar que tiene el número correcto de cuotas
       expect(result).toHaveLength(installments);
     });
   });
-
-  // --- Tests adicionales: Precisión decimal ---
 
   it("debe mantener máximo 2 decimales en todas las cuotas", () => {
     const result = calculateInstallments(1000, 3, new Date("2025-01-01"));
 
     result.forEach((installment) => {
-      // Verificar que el número redondeado a 2 decimales es cercano al original
       const rounded = Math.round(installment.amount * 100) / 100;
       expect(installment.amount).toBeCloseTo(rounded, 2);
     });
   });
 
   it("debe redondear hacia abajo (no truncar) en cuotas base", () => {
-    // 100 / 3 = 33.333... → debe ser 33.33 (redondeado hacia abajo)
     const result = calculateInstallments(100, 3, new Date("2025-01-01"));
 
-    expect(result[0].amount).toBe(33.33); // No 33.34 ni 33
+    expect(result[0].amount).toBe(33.33);
     expect(result[1].amount).toBe(33.33);
-    expect(result[2].amount).toBe(33.34); // Última absorbe el resto
+    expect(result[2].amount).toBe(33.34);
   });
 
   it("debe garantizar suma exacta con tolerancia financiera", () => {
@@ -247,7 +207,6 @@ describe("calculateInstallments", () => {
 
       const sum = result.reduce((acc, inst) => acc + inst.amount, 0);
 
-      // La diferencia debe ser menor a 1 centavo
       expect(Math.abs(sum - amount)).toBeLessThan(0.01);
     });
   });
@@ -271,7 +230,6 @@ describe("validateInstallmentsSum", () => {
 
     const isValid = validateInstallmentsSum(installments, 1000);
 
-    // La función calculateInstallments garantiza suma exacta
     expect(isValid).toBe(true);
   });
 
@@ -284,28 +242,55 @@ describe("validateInstallmentsSum", () => {
 
     const isValid = validateInstallmentsSum(installments, 300);
 
-    // Suma = 250, esperado = 300, diferencia = 50 > tolerancia
     expect(isValid).toBe(false);
   });
 });
 
+describe("getInstallmentStatus", () => {
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it("debe retornar 'paid' para cuotas con dueDate en el pasado", () => {
+    const pastDate = new Date("2020-01-01");
+    expect(getInstallmentStatus(pastDate)).toBe("paid");
+  });
+
+  it("debe retornar 'paid' para cuotas con dueDate hoy", () => {
+    const today = new Date();
+    today.setHours(12, 0, 0, 0);
+    expect(getInstallmentStatus(today)).toBe("paid");
+  });
+
+  it("debe retornar 'pending' para cuotas con dueDate en el futuro", () => {
+    const futureDate = new Date("2099-12-31");
+    expect(getInstallmentStatus(futureDate)).toBe("pending");
+  });
+
+  it("debe retornar 'pending' para cuotas con dueDate mañana", () => {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    expect(getInstallmentStatus(tomorrow)).toBe("pending");
+  });
+});
+
 describe("getTotalPendingInstallments", () => {
-  it("debe sumar solo cuotas pendientes", () => {
+  it("debe sumar solo cuotas con vencimiento futuro", () => {
     const installments = [
-      { amount: 100, status: "paid" },
-      { amount: 100, status: "pending" },
-      { amount: 100, status: "pending" },
+      { amount: 100, dueDate: new Date("2020-01-01") }, // pasada → paid
+      { amount: 100, dueDate: new Date("2099-01-01") }, // futura → pending
+      { amount: 100, dueDate: new Date("2099-02-01") }, // futura → pending
     ];
 
     const totalPending = getTotalPendingInstallments(installments);
 
-    expect(totalPending).toBe(200); // Solo las pendientes
+    expect(totalPending).toBe(200);
   });
 
-  it("debe retornar 0 si todas están pagadas", () => {
+  it("debe retornar 0 si todas están vencidas", () => {
     const installments = [
-      { amount: 100, status: "paid" },
-      { amount: 100, status: "paid" },
+      { amount: 100, dueDate: new Date("2020-01-01") },
+      { amount: 100, dueDate: new Date("2020-06-01") },
     ];
 
     const totalPending = getTotalPendingInstallments(installments);
@@ -314,22 +299,10 @@ describe("getTotalPendingInstallments", () => {
   });
 
   it("debe manejar array vacío", () => {
-    const installments: Array<{ amount: number; status: string }> = [];
+    const installments: Array<{ amount: number; dueDate: Date }> = [];
 
     const totalPending = getTotalPendingInstallments(installments);
 
     expect(totalPending).toBe(0);
-  });
-
-  it('debe ignorar estados que no sean "pending"', () => {
-    const installments = [
-      { amount: 100, status: "pending" },
-      { amount: 100, status: "cancelled" },
-      { amount: 100, status: "overdue" },
-    ];
-
-    const totalPending = getTotalPendingInstallments(installments);
-
-    expect(totalPending).toBe(100); // Solo "pending"
   });
 });

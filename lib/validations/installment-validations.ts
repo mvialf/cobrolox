@@ -2,18 +2,6 @@ import { z } from "zod";
 import { FINANCIAL } from "../constants/financial-constants";
 
 /**
- * Estados posibles de una cuota
- */
-export const INSTALLMENT_STATUS = {
-  PENDING: "pending", // Pendiente de pago
-  PAID: "paid", // Pagada
-  OVERDUE: "overdue", // Vencida (dueDate pasó y no está pagada)
-} as const;
-
-export type InstallmentStatus =
-  (typeof INSTALLMENT_STATUS)[keyof typeof INSTALLMENT_STATUS];
-
-/**
  * Type para Payment simplificado (usado en Installment)
  */
 export type PaymentInfo = {
@@ -24,6 +12,9 @@ export type PaymentInfo = {
 
 /**
  * Type completo de Installment (from API)
+ *
+ * status e isOverdue se derivan de dueDate en el backend,
+ * no se almacenan en la BD.
  */
 export type Installment = {
   id: string;
@@ -31,8 +22,8 @@ export type Installment = {
   installmentNumber: number;
   amount: number;
   dueDate: Date;
-  paidDate: Date | null;
-  status: InstallmentStatus;
+  status: "paid" | "pending"; // derivado de dueDate
+  isOverdue: boolean; // derivado de dueDate
   createdAt: Date;
   updatedAt: Date;
   payment?: PaymentInfo;
@@ -42,118 +33,43 @@ export type Installment = {
  * Schema de validación para crear/editar cuotas de pago
  *
  * Installment representa una cuota de un pago dividido en cuotas.
- * Por ejemplo, un pago de $30,000 en 3 cuotas sin interés genera
- * 3 Installments de $10,000 cada una.
- *
- * Reglas de negocio:
- * - installmentNumber debe ser >= 1 (primera cuota = 1)
- * - amount debe ser positivo y con máximo 2 decimales
- * - dueDate debe ser futura (o hoy mínimo)
- * - Si status="paid", paidDate es obligatorio
- * - Si status="pending" o "overdue", paidDate debe ser null
+ * El status se deriva de dueDate (no se almacena).
  */
-export const installmentSchema = z
-  .object({
-    // ID del pago padre (obligatorio)
-    paymentId: z
-      .string({
-        required_error: "El ID del pago es obligatorio",
-      })
-      .uuid("ID de pago inválido"),
+export const installmentSchema = z.object({
+  // ID del pago padre (obligatorio)
+  paymentId: z
+    .string({
+      required_error: "El ID del pago es obligatorio",
+    })
+    .uuid("ID de pago inválido"),
 
-    // Número de cuota (obligatorio, >= 1)
-    installmentNumber: z
-      .number({
-        required_error: "El número de cuota es obligatorio",
-        invalid_type_error: "El número de cuota debe ser un número",
-      })
-      .int("El número de cuota debe ser un entero")
-      .min(1, "El número de cuota debe ser al menos 1"),
+  // Número de cuota (obligatorio, >= 1)
+  installmentNumber: z
+    .number({
+      required_error: "El número de cuota es obligatorio",
+      invalid_type_error: "El número de cuota debe ser un número",
+    })
+    .int("El número de cuota debe ser un entero")
+    .min(1, "El número de cuota debe ser al menos 1"),
 
-    // Monto de la cuota (obligatorio, positivo)
-    amount: z.coerce
-      .number({
-        required_error: "El monto es obligatorio",
-        invalid_type_error: "El monto debe ser un número",
-      })
-      .positive("El monto debe ser mayor a 0")
-      .multipleOf(
-        FINANCIAL.DECIMAL_PRECISION,
-        "El monto debe tener máximo 2 decimales"
-      ),
+  // Monto de la cuota (obligatorio, positivo)
+  amount: z.coerce
+    .number({
+      required_error: "El monto es obligatorio",
+      invalid_type_error: "El monto debe ser un número",
+    })
+    .positive("El monto debe ser mayor a 0")
+    .multipleOf(
+      FINANCIAL.DECIMAL_PRECISION,
+      "El monto debe tener máximo 2 decimales"
+    ),
 
-    // Fecha de vencimiento (obligatoria)
-    dueDate: z.date({
-      required_error: "La fecha de vencimiento es obligatoria",
-      invalid_type_error: "Fecha de vencimiento inválida",
-    }),
-
-    // Fecha de pago (opcional, solo si status="paid")
-    paidDate: z
-      .date({
-        invalid_type_error: "Fecha de pago inválida",
-      })
-      .nullable()
-      .optional(),
-
-    // Estado de la cuota (opcional, default "pending")
-    status: z
-      .enum([
-        INSTALLMENT_STATUS.PENDING,
-        INSTALLMENT_STATUS.PAID,
-        INSTALLMENT_STATUS.OVERDUE,
-      ])
-      .optional()
-      .default(INSTALLMENT_STATUS.PENDING),
-  })
-  .refine(
-    (data) => {
-      // Si status="paid", paidDate es obligatorio
-      if (data.status === INSTALLMENT_STATUS.PAID && !data.paidDate) {
-        return false;
-      }
-      return true;
-    },
-    {
-      message: "La fecha de pago es obligatoria para cuotas pagadas",
-      path: ["paidDate"],
-    }
-  )
-  .refine(
-    (data) => {
-      // Si status="pending" o "overdue", paidDate debe ser null
-      if (
-        (data.status === INSTALLMENT_STATUS.PENDING ||
-          data.status === INSTALLMENT_STATUS.OVERDUE) &&
-        data.paidDate
-      ) {
-        return false;
-      }
-      return true;
-    },
-    {
-      message: "Las cuotas pendientes o vencidas no pueden tener fecha de pago",
-      path: ["paidDate"],
-    }
-  )
-  .refine(
-    (data) => {
-      // Si hay paidDate, debe ser >= dueDate (o al menos cercana)
-      // Permitimos pagar antes del vencimiento, pero no mucho antes
-      if (data.paidDate && data.dueDate) {
-        // Permitir pagar hasta 1 año antes del vencimiento
-        const oneYearBeforeDue = new Date(data.dueDate);
-        oneYearBeforeDue.setFullYear(oneYearBeforeDue.getFullYear() - 1);
-        return data.paidDate >= oneYearBeforeDue;
-      }
-      return true;
-    },
-    {
-      message:
-        "La fecha de pago no puede ser más de 1 año antes del vencimiento",
-      path: ["paidDate"],
-    }
-  );
+  // Fecha de vencimiento (obligatoria)
+  dueDate: z.date({
+    required_error: "La fecha de vencimiento es obligatoria",
+    invalid_type_error: "Fecha de vencimiento inválida",
+  }),
+});
 
 /**
  * Type inferido del schema (para formularios)
@@ -168,8 +84,6 @@ export type CreateInstallmentPayload = {
   installmentNumber: number;
   amount: number;
   dueDate: Date;
-  paidDate?: Date | null;
-  status?: InstallmentStatus;
 };
 
 /**
@@ -190,8 +104,6 @@ export function formValuesToPayload(
     installmentNumber: values.installmentNumber,
     amount: values.amount,
     dueDate: values.dueDate,
-    paidDate: values.paidDate || null,
-    status: values.status || INSTALLMENT_STATUS.PENDING,
   };
 }
 
@@ -206,39 +118,5 @@ export function installmentToFormValues(
     installmentNumber: installment.installmentNumber,
     amount: installment.amount,
     dueDate: installment.dueDate,
-    paidDate: installment.paidDate,
-    status: installment.status,
-  };
-}
-
-/**
- * Helper para marcar una cuota como pagada
- *
- * @param installment - La cuota a marcar como pagada
- * @param paidDate - Fecha de pago (default: hoy)
- * @returns Payload para actualizar la cuota
- */
-export function markAsPaid(
-  installment: Installment,
-  paidDate?: Date
-): UpdateInstallmentPayload {
-  return {
-    status: INSTALLMENT_STATUS.PAID,
-    paidDate: paidDate || new Date(),
-  };
-}
-
-/**
- * Helper para marcar una cuota como vencida
- *
- * @param _installment - La cuota a marcar como vencida
- * @returns Payload para actualizar la cuota
- */
-export function markAsOverdue(
-  _installment: Installment
-): UpdateInstallmentPayload {
-  return {
-    status: INSTALLMENT_STATUS.OVERDUE,
-    paidDate: null,
   };
 }

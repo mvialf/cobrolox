@@ -1,7 +1,6 @@
 "use client";
 
 import { type ColumnDef } from "@tanstack/react-table";
-import { CheckCircle } from "lucide-react";
 import { DataTableDropdown } from "@/components/data-table";
 import {
   DropdownMenuItem,
@@ -11,14 +10,12 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { DataTableColumnHeader } from "@/components/data-table";
 import { formatCurrency, formatDate } from "@/lib/format";
-import { useMarkInstallmentAsPaid } from "@/hooks/queries/use-installments";
 
 export interface Installment {
   id: string;
   installmentNumber: number;
   amount: number;
   dueDate: string;
-  paidDate: string | null;
   status: string;
   isOverdue: boolean;
   payment: {
@@ -53,33 +50,11 @@ interface ColumnsProps {
   locale?: string;
 }
 
-// Componente para acciones que usa el hook de React Query
 function InstallmentActionsCell({ installment }: { installment: Installment }) {
-  const markAsPaidMutation = useMarkInstallmentAsPaid();
-  const isPending = installment.status === "pending";
-
-  const handleMarkAsPaid = async () => {
-    try {
-      await markAsPaidMutation.mutateAsync(installment.id);
-    } catch (error) {
-      // Error ya manejado por el hook (toast automático)
-      console.error("Error marking installment as paid:", error);
-    }
-  };
-
   return (
     <DataTableDropdown>
       <DropdownMenuLabel>Acciones</DropdownMenuLabel>
       <DropdownMenuSeparator />
-      {isPending && (
-        <DropdownMenuItem
-          onClick={handleMarkAsPaid}
-          disabled={markAsPaidMutation.isPending}
-        >
-          <CheckCircle className="mr-2 h-4 w-4" />
-          Marcar como pagado
-        </DropdownMenuItem>
-      )}
       <DropdownMenuItem
         onClick={() => navigator.clipboard.writeText(installment.id)}
       >
@@ -187,21 +162,6 @@ export const createColumns = ({
         <Badge variant={status === "paid" ? "success" : "secondary"}>
           {status === "paid" ? "Pagado" : "Pendiente"}
         </Badge>
-      );
-    },
-  },
-  {
-    accessorKey: "paidDate",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Fecha Pago" />
-    ),
-    cell: ({ row }) => {
-      const paidDate = row.getValue("paidDate") as string | null;
-      if (!paidDate)
-        return <span className="text-muted-foreground text-sm">-</span>;
-
-      return (
-        <div className="text-sm">{formatDate(paidDate, "short", locale)}</div>
       );
     },
   },

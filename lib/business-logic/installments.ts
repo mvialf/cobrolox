@@ -169,26 +169,41 @@ export function validateInstallmentsSum(
 }
 
 /**
- * Calcula el total de cuotas pendientes
+ * Deriva el estado de una cuota a partir de su fecha de vencimiento.
+ * Las cuotas son puramente informativas — no afectan balances ni FIFO.
  *
- * @param installments - Array de cuotas con estado
+ * @param dueDate - Fecha de vencimiento de la cuota
+ * @returns 'paid' si ya venció (dueDate <= hoy), 'pending' si aún no
+ */
+export function getInstallmentStatus(dueDate: Date): "paid" | "pending" {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const due = new Date(dueDate);
+  due.setHours(0, 0, 0, 0);
+  return due <= today ? "paid" : "pending";
+}
+
+/**
+ * Calcula el total de cuotas pendientes (con vencimiento futuro)
+ *
+ * @param installments - Array de cuotas con fecha de vencimiento
  * @returns Suma de montos de cuotas pendientes
  *
  * @example
  * ```ts
  * const installments = [
- *   { amount: 100, status: 'paid' },
- *   { amount: 100, status: 'pending' },
- *   { amount: 100, status: 'pending' }
+ *   { amount: 100, dueDate: new Date('2025-01-01') }, // pasada → paid
+ *   { amount: 100, dueDate: new Date('2099-01-01') }, // futura → pending
+ *   { amount: 100, dueDate: new Date('2099-02-01') }, // futura → pending
  * ]
  * getTotalPendingInstallments(installments)
  * // => 200 (solo las pendientes)
  * ```
  */
 export function getTotalPendingInstallments(
-  installments: Array<{ amount: number; status: string }>
+  installments: Array<{ amount: number; dueDate: Date }>
 ): number {
   return installments
-    .filter((inst) => inst.status === "pending")
+    .filter((inst) => getInstallmentStatus(inst.dueDate) === "pending")
     .reduce((sum, inst) => sum + inst.amount, 0);
 }

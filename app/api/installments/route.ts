@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { Prisma } from "@prisma/client";
+import { getInstallmentStatus } from "@/lib/business-logic/installments";
 
 /**
  * GET /api/installments
@@ -34,26 +35,34 @@ export async function GET(request: Request) {
 
     const skip = (page - 1) * limit;
 
+    // Fecha de hoy para derivar estados
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
     // Construir filtro dinámico
     const where: Prisma.InstallmentWhereInput = {};
 
-    if (status) {
-      where.status = status;
+    // Filtrar por status derivado de dueDate
+    if (status === "paid") {
+      where.dueDate = { lte: today };
+    } else if (status === "pending") {
+      where.dueDate = { gt: today };
     }
 
     if (paymentId) {
       where.paymentId = paymentId;
     }
 
-    // Filtro de rango de fechas (dueDate)
+    // Filtro de rango de fechas (dueDate) - merge con filtro de status
     if (startDate || endDate) {
-      where.dueDate = {};
+      const existing = (where.dueDate as Record<string, Date>) || {};
       if (startDate) {
-        where.dueDate.gte = new Date(startDate);
+        existing.gte = new Date(startDate);
       }
       if (endDate) {
-        where.dueDate.lte = new Date(endDate);
+        existing.lte = new Date(endDate);
       }
+      where.dueDate = existing;
     }
 
     // Filtro por cliente (via payment -> customer)
@@ -63,19 +72,17 @@ export async function GET(request: Request) {
       };
     }
 
-    // Fecha de hoy para calcular vencidas
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    // Filtros derivados para stats por dueDate
+    const baseWhere = { ...where };
+    // Eliminar filtro de dueDate del base para stats globales
+    const { dueDate: _dueDateFilter, ...whereWithoutDate } = baseWhere;
+    const statsWhere = status ? whereWithoutDate : where;
 
-    // Filtro para cuotas vencidas (pending + dueDate < hoy)
-    const overdueWhere: Prisma.InstallmentWhereInput = {
-      ...where,
-      status: "pending",
-      dueDate: { lt: today },
-    };
+    const paidWhere: Prisma.InstallmentWhereInput = { ...statsWhere, dueDate: { lte: today } };
+    const pendingWhere: Prisma.InstallmentWhereInput = { ...statsWhere, dueDate: { gt: today } };
 
-    // Obtener installments, total count y stats agregadas en paralelo
-    const [installments, total, statusGroups, overdueCount, overdueAggregate] =
+    // Obtener installments, total count y stats en paralelo
+    const [installments, total, paidCount, paidSum, pendingCount, pendingSum] =
       await Promise.all([
         prisma.installment.findMany({
           relationLoadStrategy: "join",
@@ -130,41 +137,31 @@ export async function GET(request: Request) {
           },
         }),
         prisma.installment.count({ where }),
-        prisma.installment.groupBy({
-          by: ["status"],
-          where,
-          _count: true,
-          _sum: { amount: true },
-        }),
-        prisma.installment.count({ where: overdueWhere }),
-        prisma.installment.aggregate({
-          where: overdueWhere,
-          _sum: { amount: true },
-        }),
+        prisma.installment.count({ where: paidWhere }),
+        prisma.installment.aggregate({ where: paidWhere, _sum: { amount: true } }),
+        prisma.installment.count({ where: pendingWhere }),
+        prisma.installment.aggregate({ where: pendingWhere, _sum: { amount: true } }),
       ]);
-
-    // Construir stats desde los resultados agregados
-    const pendingGroup = statusGroups.find((g) => g.status === "pending");
-    const paidGroup = statusGroups.find((g) => g.status === "paid");
 
     const stats = {
       total,
-      pending: pendingGroup?._count ?? 0,
-      paid: paidGroup?._count ?? 0,
-      overdue: overdueCount,
-      totalPending: Number(pendingGroup?._sum.amount ?? 0),
-      totalPaid: Number(paidGroup?._sum.amount ?? 0),
-      totalOverdue: Number(overdueAggregate._sum.amount ?? 0),
+      pending: pendingCount,
+      paid: paidCount,
+      overdue: 0, // Ya no hay concepto separado de overdue — pending incluye las vencidas
+      totalPending: Number(pendingSum._sum.amount ?? 0),
+      totalPaid: Number(paidSum._sum.amount ?? 0),
+      totalOverdue: 0,
     };
 
-    // Agregar isOverdue como campo virtual a cada installment
-    const installmentsWithOverdue = installments.map((inst) => ({
+    // Derivar status e isOverdue como campos virtuales
+    const installmentsWithStatus = installments.map((inst) => ({
       ...inst,
-      isOverdue: inst.status === "pending" && inst.dueDate < today,
+      status: getInstallmentStatus(inst.dueDate),
+      isOverdue: inst.dueDate < today && getInstallmentStatus(inst.dueDate) === "pending",
     }));
 
     return NextResponse.json({
-      installments: installmentsWithOverdue,
+      installments: installmentsWithStatus,
       pagination: {
         page,
         limit,

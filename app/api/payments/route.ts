@@ -507,7 +507,6 @@ export const POST = withLogging(async (request, logger) => {
                         : baseInstallmentAmount
                     ),
                     dueDate,
-                    status: "pending",
                   };
                 }),
               }
@@ -550,8 +549,6 @@ export const POST = withLogging(async (request, logger) => {
             installmentNumber: true,
             amount: true,
             dueDate: true,
-            paidDate: true,
-            status: true,
           },
           orderBy: {
             installmentNumber: "asc",

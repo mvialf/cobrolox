@@ -2,19 +2,9 @@ name: Scheduled Cron Jobs
 
 on:
   schedule:
-    # Ambos jobs se ejecutan a las 3 AM Chile (7 AM UTC) todos los días
+    # Se ejecuta a las 3 AM Chile (7 AM UTC) todos los días
     - cron: '0 7 * * *'
   workflow_dispatch:
-    inputs:
-      job:
-        description: 'Job a ejecutar'
-        required: true
-        default: 'all'
-        type: choice
-        options:
-          - all
-          - recalculate-balances
-          - mark-installments-paid
 
 env:
   APP_URL: ${{ secrets.APP_URL }}
@@ -25,11 +15,6 @@ jobs:
   recalculate-balances:
     name: Recalcular Balances de Clientes
     runs-on: ubuntu-latest
-    # Ejecutar a las 3 AM Chile (7 AM UTC) o manualmente si se selecciona
-    if: >
-      github.event.schedule == '0 7 * * *' ||
-      (github.event_name == 'workflow_dispatch' &&
-       (github.event.inputs.job == 'all' || github.event.inputs.job == 'recalculate-balances'))
     steps:
       - name: Verificar configuración
         run: |
@@ -65,47 +50,3 @@ jobs:
           fi
 
           echo "✅ Balances recalculados exitosamente"
-
-  mark-installments-paid:
-    name: Marcar Cuotas Vencidas como Pagadas
-    runs-on: ubuntu-latest
-    # Ejecutar a las 3 AM Chile (7 AM UTC) o manualmente si se selecciona
-    if: >
-      github.event.schedule == '0 7 * * *' ||
-      (github.event_name == 'workflow_dispatch' &&
-       (github.event.inputs.job == 'all' || github.event.inputs.job == 'mark-installments-paid'))
-    steps:
-      - name: Verificar configuración
-        run: |
-          if [ -z "$APP_URL" ]; then
-            echo "::error::APP_URL secret no está configurado"
-            exit 1
-          fi
-          if [ -z "$CRON_SECRET" ]; then
-            echo "::error::CRON_SECRET secret no está configurado"
-            exit 1
-          fi
-          echo "✅ Configuración verificada"
-
-      - name: Ejecutar mark-installments-paid
-        run: |
-          echo "🔄 Llamando a $APP_URL/api/cron/mark-installments-paid"
-
-          RESPONSE=$(curl -s -w "\n%{http_code}" -X POST \
-            "$APP_URL/api/cron/mark-installments-paid" \
-            -H "Authorization: Bearer $CRON_SECRET" \
-            -H "x-vercel-protection-bypass: $VERCEL_AUTOMATION_BYPASS_SECRET" \
-            -H "Content-Type: application/json")
-
-          HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
-          BODY=$(echo "$RESPONSE" | sed '$d')
-
-          echo "📊 Response (HTTP $HTTP_CODE):"
-          echo "$BODY" | jq . 2>/dev/null || echo "$BODY"
-
-          if [ "$HTTP_CODE" -ne 200 ]; then
-            echo "::error::API respondió con código $HTTP_CODE"
-            exit 1
-          fi
-
-          echo "✅ Cuotas procesadas exitosamente"
