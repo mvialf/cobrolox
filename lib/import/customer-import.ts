@@ -29,8 +29,6 @@ export type CustomerImportData = Omit<
   | "createdAt"
   | "updatedAt"
   | "balanceTotal"
-  | "balanceVigente"
-  | "balanceVencido"
 >;
 
 /**

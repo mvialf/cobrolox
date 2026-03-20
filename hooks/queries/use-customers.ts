@@ -13,9 +13,9 @@ export type Customer = {
   phone: string;
   email: string | null;
   balanceTotal?: number;
-  balanceVigente?: number;
-  balanceVencido?: number;
-  [key: string]: unknown; // Permite campos adicionales de la API
+  balanceVigente?: number; // Derivado al consultar (no almacenado)
+  balanceVencido?: number; // Derivado al consultar (no almacenado)
+  [key: string]: unknown;
 };
 
 /**

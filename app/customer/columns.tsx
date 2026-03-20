@@ -27,10 +27,10 @@ export interface Customer {
   contact: string; // Persona de contacto
   phone: string; // Obligatorio
   email: string | null; // Opcional
-  // Columnas de balance (calculadas y almacenadas)
-  balanceTotal: number; // Suma de todos los balances
-  balanceVigente: number; // Balance de facturas vigentes
-  balanceVencido: number; // Balance de facturas vencidas
+  // Balances (balanceTotal almacenado, vigente/vencido derivados al consultar)
+  balanceTotal: number;
+  balanceVigente: number;
+  balanceVencido: number;
 }
 
 // ============================================================================

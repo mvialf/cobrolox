@@ -5,39 +5,28 @@ import { recalculateAllCustomers } from "@/lib/business-logic/customer-balance";
 /**
  * POST /api/cron/recalculate-balances
  *
- * Cron job que recalcula balances de todos los clientes
+ * Safety net: recalcula balanceTotal de todos los clientes.
+ * balanceVigente/balanceVencido se derivan al consultar (no se almacenan).
  *
- * Este endpoint se ejecuta automáticamente según el schedule configurado en vercel.json
- * Por defecto: diariamente a las 3 AM (hora Chile)
- *
- * IMPORTANTE: Este endpoint debe estar protegido con CRON_SECRET
- * Vercel incluye automáticamente el header Authorization con el valor de CRON_SECRET
- *
- * @see https://vercel.com/docs/cron-jobs
+ * Se ejecuta como cron via GitHub Actions o manualmente.
  */
 export const POST = withLogging(async (request, logger) => {
-  // Verificar autenticación del cron job
   const authHeader = request.headers.get("authorization");
   const expectedAuth = `Bearer ${process.env.CRON_SECRET}`;
 
   if (authHeader !== expectedAuth) {
     logger.warn(
-      {
-        receivedAuth: authHeader ? "present" : "missing",
-      },
+      { receivedAuth: authHeader ? "present" : "missing" },
       "Unauthorized cron job attempt"
     );
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  logger.info("Starting scheduled customer balance recalculation");
+  logger.info("Starting scheduled balanceTotal recalculation");
 
   try {
     const startTime = Date.now();
-
-    // Recalcular balances de todos los clientes
     const count = await recalculateAllCustomers();
-
     const duration = Date.now() - startTime;
 
     logger.info(
@@ -46,7 +35,7 @@ export const POST = withLogging(async (request, logger) => {
         durationMs: duration,
         durationSeconds: Math.round(duration / 1000),
       },
-      "Customer balance recalculation completed successfully"
+      "Customer balanceTotal recalculation completed"
     );
 
     return NextResponse.json({
@@ -56,12 +45,7 @@ export const POST = withLogging(async (request, logger) => {
       timestamp: new Date().toISOString(),
     });
   } catch (error) {
-    logger.error(
-      {
-        err: error,
-      },
-      "Error during scheduled balance recalculation"
-    );
+    logger.error({ err: error }, "Error during scheduled balance recalculation");
 
     return NextResponse.json(
       {

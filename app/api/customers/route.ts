@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { withLogging } from "@/lib/logger-middleware";
+import { getDerivedBalances } from "@/lib/business-logic/customer-balance";
 
 /**
  * GET /api/customers
@@ -49,17 +50,29 @@ export const GET = withLogging(async (request, logger) => {
       : {};
 
     // Obtener clientes y total count
-    // NOTA: Las columnas balanceTotal, balanceVigente, balanceVencido
-    // se retornan automáticamente (son parte del modelo Customer)
     const [customers, total] = await Promise.all([
       prisma.customer.findMany({
         where,
         skip,
-        take: limit, // Si es undefined, trae todos los registros
+        take: limit,
         orderBy: { createdAt: "desc" },
       }),
       prisma.customer.count({ where }),
     ]);
+
+    // Derivar balanceVigente/balanceVencido con SQL (no se almacenan)
+    const customerIds = customers.map((c) => c.id);
+    const derivedBalances = await getDerivedBalances(customerIds);
+
+    // Merge: agregar campos derivados a cada customer
+    const customersWithBalances = customers.map((c) => {
+      const derived = derivedBalances.get(c.id);
+      return {
+        ...c,
+        balanceVigente: derived?.balanceVigente ?? 0,
+        balanceVencido: derived?.balanceVencido ?? 0,
+      };
+    });
 
     logger.info(
       {
@@ -71,7 +84,7 @@ export const GET = withLogging(async (request, logger) => {
     );
 
     return NextResponse.json({
-      customers,
+      customers: customersWithBalances,
       pagination: {
         page,
         limit: limit ?? total,

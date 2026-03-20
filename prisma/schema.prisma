@@ -118,10 +118,8 @@ model Customer {
   apartment    String?
   region       String
   comuna       String
-  // Balance Financiero (calculado y almacenado para performance)
+  // Balance Financiero (balanceTotal almacenado, vigente/vencido se derivan al consultar)
   balanceTotal   Decimal @default(0) @db.Decimal(12, 2) // Suma de todos los balances de facturas
-  balanceVigente Decimal @default(0) @db.Decimal(12, 2) // Suma de balance de facturas vigentes (no vencidas)
-  balanceVencido Decimal @default(0) @db.Decimal(12, 2) // Suma de balance de facturas vencidas
   // Metadata
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
@@ -133,7 +131,6 @@ model Customer {
   @@index([razonSocial])
   @@index([email])
   @@index([balanceTotal])
-  @@index([balanceVencido])
 }
 
 // ============================================
@@ -202,19 +199,17 @@ model Payment {
 }
 
 model Installment {
-  id                String    @id @default(uuid())
+  id                String   @id @default(uuid())
   paymentId         String
   installmentNumber Int
-  amount            Decimal   @db.Decimal(12, 2)
+  amount            Decimal  @db.Decimal(12, 2)
   dueDate           DateTime
-  paidDate          DateTime?
-  status            String    @default("pending")
-  createdAt         DateTime  @default(now())
-  updatedAt         DateTime  @updatedAt
-  payment           Payment   @relation(fields: [paymentId], references: [id], onDelete: Cascade)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  payment           Payment  @relation(fields: [paymentId], references: [id], onDelete: Cascade)
 
   @@index([paymentId])
-  @@index([status, dueDate])
+  @@index([dueDate])
 }
 
 // ============================================

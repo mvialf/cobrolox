@@ -1,16 +1,14 @@
 /**
  * Lógica de negocio para cálculo y actualización de balances de clientes
  *
- * Calcula tres tipos de balance almacenados en Customer:
- * - balanceTotal: Suma de todos los balances de facturas
- * - balanceVigente: Suma de balance de facturas no vencidas
- * - balanceVencido: Suma de balance de facturas vencidas
+ * - balanceTotal: almacenado en BD, se actualiza on-demand tras pagos/facturas
+ * - balanceVigente/balanceVencido: se derivan al consultar (no se almacenan)
  *
  * @module business-logic/customer-balance
  */
 
 import { prisma } from "@/lib/db";
-import { isAfter } from "date-fns";
+import { Prisma } from "@prisma/client";
 
 /**
  * Resultado del cálculo de balances de un cliente
@@ -22,65 +20,19 @@ export interface CustomerBalanceResult {
 }
 
 /**
- * Recalcula y actualiza los balances de un cliente en la base de datos
+ * Recalcula y actualiza balanceTotal de un cliente en la base de datos
  *
- * SINGLE SOURCE OF TRUTH para actualizar balances de clientes.
- * Debe llamarse después de cualquier operación que afecte facturas o pagos:
- * - Crear/modificar/eliminar Invoice
- * - Crear/modificar/eliminar Payment
- * - Crear/modificar/eliminar PaymentAllocation
+ * SINGLE SOURCE OF TRUTH para actualizar balanceTotal.
+ * Debe llamarse después de cualquier operación que afecte facturas o pagos.
  *
- * Implementa la siguiente lógica:
- * 1. Obtiene todas las facturas del cliente
- * 2. Para cada factura:
- *    - Calcula balance = total - paidAmount (suma de allocations)
- *    - Determina si está vigente o vencida (comparando dueDate con now)
- * 3. Suma los balances en tres categorías: total, vigente, vencido
- * 4. Actualiza las columnas del Customer en la BD
+ * balanceVigente y balanceVencido ya NO se almacenan — se derivan al consultar.
  *
  * @param customerId - ID del cliente a recalcular
- * @returns Balances calculados
- *
- * @example
- * ```ts
- * // Después de crear una factura
- * await prisma.invoice.create({ data: {...} })
- * await recalculateCustomerBalances(customerId)
- *
- * // Después de crear un pago con allocations
- * await prisma.payment.create({
- *   data: {
- *     ...paymentData,
- *     allocations: { create: [...] }
- *   }
- * })
- * await recalculateCustomerBalances(customerId)
- * ```
- *
- * @example Edge cases
- * ```ts
- * // Cliente sin facturas
- * await recalculateCustomerBalances('customer-id')
- * // => { balanceTotal: 0, balanceVigente: 0, balanceVencido: 0 }
- *
- * // Cliente con facturas pagadas completamente
- * // (todas con balance = 0)
- * await recalculateCustomerBalances('customer-id')
- * // => { balanceTotal: 0, balanceVigente: 0, balanceVencido: 0 }
- *
- * // Cliente con facturas vigentes y vencidas
- * // Factura 1: balance 500, dueDate futuro → vigente
- * // Factura 2: balance 300, dueDate pasado → vencido
- * await recalculateCustomerBalances('customer-id')
- * // => { balanceTotal: 800, balanceVigente: 500, balanceVencido: 300 }
- * ```
- *
- * @throws Error si el cliente no existe
+ * @returns Balances calculados (total, vigente, vencido)
  */
 export async function recalculateCustomerBalances(
   customerId: string
 ): Promise<CustomerBalanceResult> {
-  // 1. Verificar que el cliente existe
   const customer = await prisma.customer.findUnique({
     where: { id: customerId },
   });
@@ -89,7 +41,6 @@ export async function recalculateCustomerBalances(
     throw new Error(`Customer not found: ${customerId}`);
   }
 
-  // 2. Obtener todas las facturas del cliente con sus allocations
   const invoices = await prisma.invoice.findMany({
     where: { customerId },
     select: {
@@ -104,14 +55,12 @@ export async function recalculateCustomerBalances(
     },
   });
 
-  // 3. Calcular balances
   const now = new Date();
   let balanceTotal = 0;
   let balanceVigente = 0;
   let balanceVencido = 0;
 
   for (const invoice of invoices) {
-    // Calcular balance de esta factura (reutiliza lógica de /api/invoices)
     const total = Number(invoice.total);
     const paidAmount = invoice.allocations.reduce(
       (sum, alloc) => sum + Number(alloc.allocatedAmount),
@@ -119,57 +68,32 @@ export async function recalculateCustomerBalances(
     );
     const balance = total - paidAmount;
 
-    // Si no hay balance pendiente, skip
     if (balance <= 0) continue;
 
-    // Sumar al total
     balanceTotal += balance;
 
-    // Determinar si está vencida o vigente
-    // Factura vencida: dueDate < now
-    const isOverdue = isAfter(now, invoice.dueDate);
-
-    if (isOverdue) {
+    if (now > invoice.dueDate) {
       balanceVencido += balance;
     } else {
       balanceVigente += balance;
     }
   }
 
-  // 4. Actualizar Customer en la BD
+  // Solo persistir balanceTotal (vigente/vencido se derivan al consultar)
   await prisma.customer.update({
     where: { id: customerId },
-    data: {
-      balanceTotal,
-      balanceVigente,
-      balanceVencido,
-    },
+    data: { balanceTotal },
   });
 
-  return {
-    balanceTotal,
-    balanceVigente,
-    balanceVencido,
-  };
+  return { balanceTotal, balanceVigente, balanceVencido };
 }
 
 /**
  * Calcula los balances sin actualizar la BD (útil para preview/testing)
- *
- * @param customerId - ID del cliente
- * @returns Balances calculados sin persistir
- *
- * @example
- * ```ts
- * // Preview de balances antes de actualizar
- * const preview = await calculateCustomerBalances('customer-id')
- * console.log(`Total: ${preview.balanceTotal}`)
- * ```
  */
 export async function calculateCustomerBalances(
   customerId: string
 ): Promise<CustomerBalanceResult> {
-  // Verificar que el cliente existe
   const customer = await prisma.customer.findUnique({
     where: { id: customerId },
   });
@@ -178,7 +102,6 @@ export async function calculateCustomerBalances(
     throw new Error(`Customer not found: ${customerId}`);
   }
 
-  // Obtener facturas con allocations
   const invoices = await prisma.invoice.findMany({
     where: { customerId },
     select: {
@@ -193,7 +116,6 @@ export async function calculateCustomerBalances(
     },
   });
 
-  // Calcular balances (misma lógica que recalculateCustomerBalances)
   const now = new Date();
   let balanceTotal = 0;
   let balanceVigente = 0;
@@ -211,39 +133,18 @@ export async function calculateCustomerBalances(
 
     balanceTotal += balance;
 
-    const isOverdue = isAfter(now, invoice.dueDate);
-
-    if (isOverdue) {
+    if (now > invoice.dueDate) {
       balanceVencido += balance;
     } else {
       balanceVigente += balance;
     }
   }
 
-  return {
-    balanceTotal,
-    balanceVigente,
-    balanceVencido,
-  };
+  return { balanceTotal, balanceVigente, balanceVencido };
 }
 
 /**
  * Recalcula balances para múltiples clientes en batch
- *
- * Útil para:
- * - Job nocturno que recalcula todos los clientes
- * - Recalcular después de operaciones masivas
- * - Migration scripts
- *
- * @param customerIds - Array de IDs de clientes
- * @returns Array de resultados (uno por cliente)
- *
- * @example
- * ```ts
- * // Recalcular varios clientes después de importar pagos masivos
- * const affectedCustomerIds = ['id1', 'id2', 'id3']
- * await recalculateMultipleCustomers(affectedCustomerIds)
- * ```
  */
 export async function recalculateMultipleCustomers(
   customerIds: string[]
@@ -255,14 +156,8 @@ export async function recalculateMultipleCustomers(
       const result = await recalculateCustomerBalances(customerId);
       results.push(result);
     } catch (error) {
-      // Log error pero continuar con los demás
       console.error(`Error recalculating customer ${customerId}:`, error);
-      // Push un resultado con ceros para mantener el orden
-      results.push({
-        balanceTotal: 0,
-        balanceVigente: 0,
-        balanceVencido: 0,
-      });
+      results.push({ balanceTotal: 0, balanceVigente: 0, balanceVencido: 0 });
     }
   }
 
@@ -270,24 +165,7 @@ export async function recalculateMultipleCustomers(
 }
 
 /**
- * Recalcula balances de TODOS los clientes en el sistema
- *
- * ADVERTENCIA: Esta operación puede ser pesada en sistemas grandes.
- * Considerar ejecutar en background o en horarios de bajo tráfico.
- *
- * Útil para:
- * - Migration inicial después de agregar columnas de balance
- * - Job diario para recalcular facturas que pasaron de vigentes → vencidas
- * - Cleanup/maintenance
- *
- * @returns Número de clientes procesados
- *
- * @example
- * ```ts
- * // Script de migración
- * const processed = await recalculateAllCustomers()
- * console.log(`Processed ${processed} customers`)
- * ```
+ * Recalcula balanceTotal de TODOS los clientes en el sistema
  */
 export async function recalculateAllCustomers(): Promise<number> {
   const customers = await prisma.customer.findMany({
@@ -297,4 +175,51 @@ export async function recalculateAllCustomers(): Promise<number> {
   await recalculateMultipleCustomers(customers.map((c) => c.id));
 
   return customers.length;
+}
+
+/**
+ * Calcula balanceVigente y balanceVencido derivados para una lista de customer IDs.
+ * Usa una sola query SQL raw con aggregation condicional.
+ *
+ * @returns Map de customerId → { balanceVigente, balanceVencido }
+ */
+export async function getDerivedBalances(
+  customerIds?: string[]
+): Promise<Map<string, { balanceVigente: number; balanceVencido: number }>> {
+  const result = new Map<
+    string,
+    { balanceVigente: number; balanceVencido: number }
+  >();
+
+  if (customerIds && customerIds.length === 0) return result;
+
+  const whereClause = customerIds
+    ? Prisma.sql`AND i."customerId" IN (${Prisma.join(customerIds)})`
+    : Prisma.empty;
+
+  const rows = await prisma.$queryRaw<
+    Array<{
+      customerId: string;
+      balanceVigente: number;
+      balanceVencido: number;
+    }>
+  >(Prisma.sql`
+    SELECT
+      i."customerId",
+      COALESCE(SUM(CASE WHEN i."dueDate" > NOW() THEN i.total - i."paidAmount" ELSE 0 END), 0)::float AS "balanceVigente",
+      COALESCE(SUM(CASE WHEN i."dueDate" <= NOW() THEN i.total - i."paidAmount" ELSE 0 END), 0)::float AS "balanceVencido"
+    FROM "Invoice" i
+    WHERE i.total - i."paidAmount" > 0
+    ${whereClause}
+    GROUP BY i."customerId"
+  `);
+
+  for (const row of rows) {
+    result.set(row.customerId, {
+      balanceVigente: row.balanceVigente,
+      balanceVencido: row.balanceVencido,
+    });
+  }
+
+  return result;
 }
